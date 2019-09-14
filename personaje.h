@@ -1,10 +1,11 @@
 #ifndef PERSONAJE_H
 #define PERSONAJE_H
 
+#include <QGraphicsItem>
 #include <QPainter>
 #include <QPixmap>
 
-class Personaje
+class Personaje : public QGraphicsItem
 {
 public:
     Personaje();
