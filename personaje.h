@@ -8,33 +8,33 @@
 class Personaje : public QGraphicsItem
 {
 public:
-    Personaje();
+    Personaje(QGraphicsItem *padre = nullptr);
+    ~Personaje();
 
-    void setMoviendoR();
-    void setMoviendoL();
-    void setSaltando();
-    void setQuieto();
-    void setAtacando();
-    void setVidas();
+    void caminar();
+    void saltar();
+    void estarQuieto();
+    void atacar();
 
-    bool getMoviendoR();
-    bool getMoviendoL();
-    bool getSaltando();
-    bool getQuieto();
-    bool getAtacando();
-    int getVidas();
+    QRectF boundingRect() const;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 private:
-    bool moviendoR;
-    bool moviendoL;
-    bool saltando;
-    bool quieto;
-    bool atacando;
+    enum Estado
+    {
+        caminando,
+        saltando,
+        quieto,
+        atacando,
+    };
 
-    QPixmap spriteR;
-    QPixmap spriteL;
+    Estado estado;
+
+    QPixmap sprite;
+    QPixmap spriteCaminando;
     QPixmap spriteSaltando;
     QPixmap spriteQuieto;
+    QPixmap spriteAtacando;
 
     int vidas;
 
