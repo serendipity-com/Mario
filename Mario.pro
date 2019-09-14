@@ -17,9 +17,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     main.cpp \
+    personaje.cpp \
     widget.cpp
 
 HEADERS += \
+    personaje.h \
     widget.h
 
 FORMS += \
