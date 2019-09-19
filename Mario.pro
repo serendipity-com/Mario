@@ -18,11 +18,29 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     main.cpp \
     personaje.cpp \
-    widget.cpp
+    widget.cpp \
+    menu.cpp \
+    plataforma.cpp \
+    flor.cpp \
+    goomba.cpp \
+    resultados.cpp \
+    moneda.cpp \
+    hongo.cpp \
+    ladrillo.cpp \
+    niveluno.cpp
 
 HEADERS += \
     personaje.h \
-    widget.h
+    widget.h \
+    menu.h \
+    plataforma.h \
+    flor.h \
+    goomba.h \
+    resultados.h \
+    moneda.h \
+    hongo.h \
+    ladrillo.h \
+    niveluno.h
 
 FORMS += \
     widget.ui
