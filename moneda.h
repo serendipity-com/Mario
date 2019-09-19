@@ -6,6 +6,10 @@ class Moneda
 {
 public:
     Moneda();
+private:
+    sprite;
+    valor;
+    posicion;
 };
 
 #endif // MONEDA_H

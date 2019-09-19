@@ -6,6 +6,14 @@ class Hongo
 {
 public:
     Hongo();
+    void moverHongo();
+private:
+    sprite;
+    spriteVerde;
+    spriteRojo;
+    tipo;
+    posicionX;
+    posicionY;
 };
 
 #endif // HONGO_H
