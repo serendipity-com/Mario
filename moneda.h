@@ -1,15 +1,21 @@
 #ifndef MONEDA_H
 #define MONEDA_H
 
+#include <QGraphicsItem>
+#include <QPixmap>
+#include <QPainter>
 
-class Moneda
+class Moneda : public QGraphicsItem
 {
 public:
-    Moneda();
+    Moneda(QGraphicsItem *padre = nullptr);
+    void siguienteSprite();
+    QRectF boundingRect() const;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
 private:
-    sprite;
-    valor;
-    posicion;
+    QPixmap sprite;
+    int posSprite;
 };
 
 #endif // MONEDA_H

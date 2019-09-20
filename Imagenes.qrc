@@ -103,5 +103,6 @@
         <file>Imagenes/wallplatform.png</file>
         <file>Imagenes/Warp.png</file>
         <file>Imagenes/x5s.png</file>
+        <file>Imagenes/mario_splash.png</file>
     </qresource>
 </RCC>

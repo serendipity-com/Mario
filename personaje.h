@@ -16,6 +16,7 @@ public:
     void estarQuieto();
     void atacar();
 
+    void siguienteSprite();
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
@@ -35,6 +36,7 @@ private:
     QPixmap spriteSaltando;
     QPixmap spriteQuieto;
     QPixmap spriteAtacando;
+    int posSprite;
 
     int vidas;
 

@@ -1,6 +1,6 @@
 #include "personaje.h"
 
-Personaje::Personaje(QGraphicsItem *padre)
+Personaje::Personaje(QGraphicsItem *padre) : QGraphicsItem(padre)
 {
     estado = quieto;
     setFlag(ItemClipsToShape);
@@ -23,6 +23,7 @@ void Personaje::caminar()
     if (estado != caminando)
     {
         sprite = spriteCaminando;
+        posSprite = 0;
         estado = caminando;
     }
 }
@@ -36,12 +37,26 @@ void Personaje::estarQuieto()
 {
     sprite = spriteQuieto;
     estado = quieto;
+    posSprite = 0;
 }
 
 void Personaje::atacar()
 {
     sprite = spriteAtacando;
     estado = atacando;
+    posSprite = 0;
+}
+
+void Personaje::siguienteSprite()
+{
+    //Manejo de Sprites
+    //Distancia en caada sprite
+    posSprite += 57;
+    //Condicion volver al primer sprite, si sobre pasa la dimension la imagen plana
+    if(posSprite >= 1191)
+    {
+        posSprite = 0;
+    }
 }
 
 QRectF Personaje::boundingRect() const
@@ -51,7 +66,7 @@ QRectF Personaje::boundingRect() const
 
 void Personaje::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->drawPixmap(0,0, sprite, 0, 0,45, 73);
+    painter->drawPixmap(0,0, sprite, posSprite, 0,45, 73);
     setTransformOriginPoint(boundingRect().center());
     Q_UNUSED(widget)
     Q_UNUSED(option)

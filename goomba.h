@@ -1,22 +1,21 @@
 #ifndef GOOMBA_H
 #define GOOMBA_H
 
+#include <QGraphicsItem>
+#include <QPixmap>
+#include <QPainter>
 
-class Goomba
+class Goomba: public QGraphicsItem
 {
 public:
-    Goomba();
-    getSprite();
-    moverR();
-    moverL();
-    setPosicion();
-    getPosicion();
+    Goomba(QGraphicsItem *padre);
+    void siguienteSprite();
+    QRectF boundingRect() const;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
 private:
-    sprite;
-    bool moviendoR;
-    bool moviendoL;
-    posicionX;
-    posicionY;
+    QPixmap sprite;
+    int posSprite;
 };
 
 #endif // GOOMBA_H
