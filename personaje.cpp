@@ -71,3 +71,4 @@ void Personaje::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     Q_UNUSED(widget)
     Q_UNUSED(option)
 }
+
