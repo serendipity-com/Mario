@@ -1,17 +1,9 @@
 #include "goomba.h"
-//#include "player.h"
-//#include "smallmario.h"
-//#include "firemario.h"
-//#include <QPainter>
-//#include <QDebug>
 
-Goomba::Goomba(QRectF platformRect, int direction, QGraphicsItem *parent) : QGraphicsItem(parent), mCurrentFrame3(), mPlatform(platformRect), mDirection(direction)
+Goomba::Goomba(QGraphicsItem *parent) : QGraphicsItem(parent)
 {
     setFlag(ItemClipsToShape);
     sprite = QPixmap(":images/goombas.png");
-//    QTimer *timer = new QTimer(this);
-//    connect(timer,SIGNAL(timeout()),this,SLOT(nextFrame()));
-//    timer->start(100);
 }
 
 void Goomba::siguienteSprite()
@@ -36,13 +28,9 @@ void Goomba::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 {
     painter->drawPixmap(0,0, sprite, posSprite, 0,52, 50);
     setTransformOriginPoint(boundingRect().center());
-    Q_UNUSED(widget);
-    Q_UNUSED(option);
+    Q_UNUSED(widget)
+    Q_UNUSED(option)
 }
 
-//int Goomba::type() const {
-
-//    return Type;
-//}
 
 

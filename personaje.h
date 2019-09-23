@@ -5,8 +5,9 @@
 #include <QPainter>
 #include <QPixmap>
 
-class Personaje : public QGraphicsItem
+class Personaje :public QObject, public QGraphicsItem
 {
+    Q_OBJECT
 public:
     Personaje(QGraphicsItem *padre = nullptr);
     ~Personaje();

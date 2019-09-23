@@ -1,8 +1,7 @@
 #include "personaje.h"
 
-//En el constructor, establecemos direccion  a 0, lo que significa que Benjamin no se mueve en absoluto.
+//En el constructor, establecemos direccion  a 0, lo que significa que Jugador no se mueve en absoluto.
 //Si direccion es 1, Personje se mueve hacia la derecha, y si el valor es -1, se mueve hacia la izquierda.
-
 Personaje::Personaje(QGraphicsItem *padre) : QGraphicsItem(padre), estado(quieto), direccion(0)
 {
     setFlag(ItemClipsToShape);
@@ -46,7 +45,8 @@ void Personaje::atacar()
     estado = atacando;
     posSprite = 0;
 }
-//La direction()función es una función getter estándar para direccion devolver su valor.
+
+//La getDireccion()función es una función getter estándar para direccion devolver su valor.
 //La setDirection()función setter además verifica en qué dirección se mueve el Personaje.
 //Si se está moviendo hacia la izquierda, debemos voltear su imagen para que Benjamin mire
 //hacia la izquierda, la dirección en la que se está moviendo. Si se mueve hacia la derecha,
@@ -87,7 +87,6 @@ void Personaje::siguienteSprite()
 //paint()función, que realiza la pintura del elemento actual, y la
 //boundingRect()función, que debe devolver el límite del área sobre la paint()que pinta la  función
 QRectF Personaje::boundingRect() const
-
 {
     return QRectF(0,0,45,73);
 }
