@@ -16,6 +16,9 @@ public:
     void estarQuieto();
     void atacar();
 
+    int getDireccion();
+    void setDireccion(int inDireccion);
+
     void siguienteSprite();
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
@@ -38,10 +41,7 @@ private:
     QPixmap spriteAtacando;
     int posSprite;
 
-    int vidas;
-
-    int posicionX;
-    int posicionY;
+    int direccion;
 };
 
 #endif // PERSONAJE_H
