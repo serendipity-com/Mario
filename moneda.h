@@ -9,6 +9,7 @@ class Moneda : public QGraphicsItem
 {
 public:
     Moneda(QGraphicsItem *padre = nullptr);
+    ~Moneda();
 
     void siguienteSprite();
     QRectF boundingRect() const;

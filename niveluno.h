@@ -31,17 +31,20 @@ public:
     qreal getFactorSalto() const;
     void setFactorSalto(const qreal &pos);
 
+    void iniciarEscena();
+
 public slots:
     void moverJugador();
     void checkTimer();
 
-    void verificarColisiones();
+    void verificarColisioneMoneda();
 
 signals:
     void cambiarFactorSalto(qreal);
 
 protected:
     void keyPressEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
 
 private:
     int anchoEscena = 720;
@@ -63,10 +66,13 @@ private:
     QPropertyAnimation *animacionSaltar;
 
     int velocidad;
-
     QTimer timer;
 
     int entradaHorizontal;
+
+
+    Moneda *moneda;
+
 };
 
 #endif // NIVELUNO_H

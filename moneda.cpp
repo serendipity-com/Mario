@@ -7,6 +7,11 @@ Moneda::Moneda(QGraphicsItem *padre)
     sprite = QPixmap(":images/coin.png");
 }
 
+Moneda::~Moneda()
+{
+
+}
+
 
 void Moneda::siguienteSprite()
 {
