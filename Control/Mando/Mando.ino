@@ -52,10 +52,7 @@ int16_t gx, gy, gz;
 
 void setup() {
     lcd.begin(16, 2);
-    lcd.setCursor(0,0);
-    // Print a message to the LCD.
-    lcd.print("Hola");
-    
+  
     // join I2C bus (I2Cdev library doesn't do this automatically)
     #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
         Wire.begin();
@@ -75,7 +72,11 @@ void setup() {
 
     // verify connection
     Serial.println("Testing device connections...");
+    lcd.setCursor(0,0);
+    lcd.print("Conectando...");
     Serial.println(accelgyro.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
+    lcd.setCursor(0,1);
+    lcd.print(accelgyro.testConnection() ? "CONECTADO" : "FALLA CONEXION");
 }
 
 void loop() {
