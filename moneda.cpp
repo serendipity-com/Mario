@@ -4,7 +4,7 @@ Moneda::Moneda(QGraphicsItem *padre)
     : QGraphicsItem(padre)
 {
     setFlag(ItemClipsToShape);
-    sprite = QPixmap(":images/coin.png");
+    sprite = QPixmap(":Imagenes/coin.png");
 }
 
 Moneda::~Moneda()

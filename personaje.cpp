@@ -2,13 +2,16 @@
 
 //En el constructor, establecemos direccion  a 0, lo que significa que Jugador no se mueve en absoluto.
 //Si direccion es 1, Personje se mueve hacia la derecha, y si el valor es -1, se mueve hacia la izquierda.
-Personaje::Personaje(QGraphicsItem *padre) : QGraphicsItem(padre), estado(quieto), direccion(0)
+Personaje::Personaje(QGraphicsItem *padre) :
+    QGraphicsItem(padre)
+  , estado(quieto)
+  , direccion(0)
 {
     setFlag(ItemClipsToShape);
-    spriteCaminando = QPixmap(":images/mario.png");
-    spriteQuieto = QPixmap(":images/mariostop.png");
-    spriteSaltando = QPixmap(":images/mario_jump.png");
-    spriteAtacando = QPixmap(":images/mariostop.png");
+    spriteCaminando = QPixmap(":Imagenes/mario.png");
+    spriteQuieto = QPixmap(":Imagenes/mariostop.png");
+    spriteSaltando = QPixmap(":Imagenes/mario_jump.png");
+    spriteAtacando = QPixmap(":Imagenes/mariostop.png");
     sprite = spriteQuieto;
 }
 
@@ -60,12 +63,13 @@ void Personaje::setDireccion(int inDireccion)
 {
     if(direccion != inDireccion)
     {
+        direccion = inDireccion;
         if(direccion != 0)
         {
             QTransform transforma;
             if(direccion == -1)
             {
-                transforma.scale(-1,0);
+                transforma.scale(-1,1);
             }
             setTransform(transforma);
         }

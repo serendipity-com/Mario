@@ -37,7 +37,7 @@ public slots:
     void moverJugador();
     void checkTimer();
 
-    void verificarColisioneMoneda();
+    void verificarColisionMoneda();
 
 signals:
     void cambiarFactorSalto(qreal);
