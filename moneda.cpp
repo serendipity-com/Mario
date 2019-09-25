@@ -2,6 +2,7 @@
 
 Moneda::Moneda(QGraphicsItem *padre)
     : QGraphicsItem(padre)
+    , posSprite(0)
 {
     setFlag(ItemClipsToShape);
     sprite = QPixmap(":Imagenes/coin.png");
@@ -36,5 +37,10 @@ void Moneda::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     setTransformOriginPoint(boundingRect().center());
     Q_UNUSED(widget)
     Q_UNUSED(option)
+}
+
+int Moneda::type() const
+{
+    return Type;
 }
 

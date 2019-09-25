@@ -77,10 +77,15 @@ void NivelUno::verificarColisionMoneda()
         }
     }
 }
+//timerEvent se encarga de manejas los sprites de los objetos en escena.
+void NivelUno::timerEvent(QTimerEvent *)
+{
+    moneda->siguienteSprite();
+}
 
 void NivelUno::aplicarParalelismo(qreal propocion, QGraphicsItem *item)
 {
-    item->setX((item->boundingRect().width() - width()) * -propocion);
+    item->setX(-propocion * (item->boundingRect().width() - width()));
 }
 
 void NivelUno::saltar()
@@ -127,6 +132,7 @@ void NivelUno::iniciarEscena()
     //Agregamos monedas
     moneda = new Moneda();
     moneda->setPos(500, nivelTierra - moneda->boundingRect().height() - 250);
+    startTimer(100);
     addItem(moneda);
 
     //Agregamos personaje
@@ -180,6 +186,7 @@ void NivelUno::moverJugador()
         const qreal proporcion = qreal(desplazamientoMundo) / maxDesplazamientoMundo;
         aplicarParalelismo(proporcion, cielo);
         aplicarParalelismo(proporcion, tierra);
+        aplicarParalelismo(proporcion, moneda);
     }
 
 

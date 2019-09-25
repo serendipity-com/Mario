@@ -3,6 +3,7 @@
 
 #include <QGraphicsScene>
 #include <QTimer>
+#include <QTimerEvent>
 #include <QKeyEvent>
 #include <QPropertyAnimation>
 #include <QDebug>
@@ -23,6 +24,8 @@ class NivelUno: public QGraphicsScene
 public:
     explicit NivelUno(QObject *padre = nullptr);
     ~NivelUno();
+
+    void timerEvent(QTimerEvent *);
 
     void agregarEntradaHorizontal(int entrada);
     void aplicarParalelismo(qreal propocion, QGraphicsItem *item);
