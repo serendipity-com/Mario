@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Sonidos/ghost.wav</file>
+        <file>Sonidos/coin.wav</file>
+        <file>Sonidos/death.wav</file>
+        <file>Sonidos/fireball.wav</file>
+        <file>Sonidos/fsprout.wav</file>
+        <file>Sonidos/hitwarptube.wav</file>
+        <file>Sonidos/jump.wav</file>
+        <file>Sonidos/kick.wav</file>
+        <file>Sonidos/level1.mp3</file>
+        <file>Sonidos/levelclear.wav</file>
+        <file>Sonidos/powerup.wav</file>
+        <file>Sonidos/Select.wav</file>
+        <file>Sonidos/shrink.wav</file>
+        <file>Sonidos/sprout.wav</file>
+        <file>Sonidos/ThemeSong.mp3</file>
+    </qresource>
+</RCC>
