@@ -4,7 +4,13 @@ NivelUno::NivelUno(QObject *padre):
     QGraphicsScene(0,0,8000,720,padre)
   , anchoEscena(8000)
   , personaje(nullptr)
-  , cielo(nullptr)
+  , cielo1(nullptr)
+  , cielo2(nullptr)
+  , cielo3(nullptr)
+  , cielo4(nullptr)
+  , cielo5(nullptr)
+  , cielo6(nullptr)
+  , cielo7(nullptr)
   , tierra(nullptr)
   , nivelTierra(660)
   , alturaSalto(200)
@@ -32,6 +38,17 @@ NivelUno::NivelUno(QObject *padre):
 NivelUno::~NivelUno()
 {
     delete personaje;
+
+    delete cielo1;
+    delete cielo2;
+    delete cielo3;
+    delete cielo4;
+    delete cielo5;
+    delete cielo6;
+    delete cielo7;
+    delete tierra;
+
+    delete animacionSaltar;
 }
 
 void NivelUno::agregarEntradaHorizontal(int entrada)
@@ -120,14 +137,32 @@ void NivelUno::iniciarEscena()
     setSceneRect(0,0,1280,720);
 
     //Agregamos el cielo
-    cielo = new BackgroundItem(QPixmap(":Imagenes/sky.png"));
-    cielo->setPos(0,0);
-    addItem(cielo);
+    cielo1 = new BackgroundItem(QPixmap(":/Imagenes/1-1.png"));
+    cielo1->setPos(0,-100);
+    addItem(cielo1);
+    cielo2 = new BackgroundItem(QPixmap(":Imagenes/1-2.png"));
+    cielo2->setPos(0,0);
+    addItem(cielo2);
+    cielo3 = new BackgroundItem(QPixmap(":Imagenes/1-3.png"));
+    cielo3->setPos(0,0);
+    addItem(cielo3);
+    cielo4 = new BackgroundItem(QPixmap(":Imagenes/1-4.png"));
+    cielo4->setPos(0,0);
+    addItem(cielo4);
+    cielo5 = new BackgroundItem(QPixmap(":Imagenes/1-5.png"));
+    cielo5->setPos(0,-90);
+    addItem(cielo5);
+    cielo6 = new BackgroundItem(QPixmap(":Imagenes/1-6.png"));
+    cielo6->setPos(0,-90);
+    addItem(cielo6);
+    cielo7 = new BackgroundItem(QPixmap(":Imagenes/1-7.png"));
+    cielo7->setPos(0,-170);
+    addItem(cielo7);
 
     //Agregamos el piso
-    tierra = new BackgroundItem(QPixmap(":Imagenes/ground.png"));
+    tierra = new BackgroundItem(QPixmap(":Imagenes/1-8.png"));
     addItem(tierra);
-    tierra->setPos(0,nivelTierra);
+    tierra->setPos(0,-190);
 
     //Agregamos monedas
     moneda = new Moneda();
@@ -184,7 +219,13 @@ void NivelUno::moverJugador()
         personaje->setX(posicionX - desplazamientoMundo);
 
         const qreal proporcion = qreal(desplazamientoMundo) / maxDesplazamientoMundo;
-        aplicarParalelismo(proporcion, cielo);
+        aplicarParalelismo(proporcion, cielo1);
+        aplicarParalelismo(proporcion, cielo2);
+        aplicarParalelismo(proporcion, cielo3);
+        aplicarParalelismo(proporcion, cielo4);
+        aplicarParalelismo(proporcion, cielo5);
+        aplicarParalelismo(proporcion, cielo6);
+        aplicarParalelismo(proporcion, cielo7);
         aplicarParalelismo(proporcion, tierra);
         aplicarParalelismo(proporcion, moneda);
     }

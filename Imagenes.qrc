@@ -104,5 +104,13 @@
         <file>Imagenes/Warp.png</file>
         <file>Imagenes/x5s.png</file>
         <file>Imagenes/mario_splash.png</file>
+        <file>Imagenes/1-1.png</file>
+        <file>Imagenes/1-2.png</file>
+        <file>Imagenes/1-3.png</file>
+        <file>Imagenes/1-4.png</file>
+        <file>Imagenes/1-5.png</file>
+        <file>Imagenes/1-6.png</file>
+        <file>Imagenes/1-7.png</file>
+        <file>Imagenes/1-8.png</file>
     </qresource>
 </RCC>

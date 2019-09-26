@@ -54,9 +54,14 @@ private:
 
     Personaje *personaje;
 
-    BackgroundItem *cielo;
+    BackgroundItem *cielo1;
+    BackgroundItem *cielo2;
+    BackgroundItem *cielo3;
+    BackgroundItem *cielo4;
+    BackgroundItem *cielo5;
+    BackgroundItem *cielo6;
+    BackgroundItem *cielo7;
     BackgroundItem *tierra;
-    BackgroundItem *bloques;
 
     qreal minX;
     qreal maxX;
