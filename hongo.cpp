@@ -12,18 +12,14 @@ Hongo::~Hongo()
 
 }
 
-void Hongo::siguienteSprite()
-{
-
-}
 
 QRectF Hongo::boundingRect() const {
-    return QRectF(0,0,70,50);
+    return QRectF(0,0,40,40);
 
 }
 
 void Hongo::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    painter->drawPixmap(0,0, sprite, posSprite, 0,70, 50);
+    painter->drawPixmap(0,0, sprite, 0, 0, 40, 40);
     setTransformOriginPoint(boundingRect().center());
     Q_UNUSED(widget)
     Q_UNUSED(option)

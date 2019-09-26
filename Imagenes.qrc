@@ -1,107 +1,54 @@
 <RCC>
     <qresource prefix="/">
-        <file>Imagenes/584df32d6a5ae41a83ddedff.png</file>
         <file>Imagenes/AD_Mario_Logo.png</file>
-        <file>Imagenes/AD_Mario_Logo_Bar.png</file>
-        <file>Imagenes/AD_Spacer_Bar.png</file>
-        <file>Imagenes/background.png</file>
-        <file>Imagenes/blood.png</file>
-        <file>Imagenes/blood_small.png</file>
         <file>Imagenes/bomb.png</file>
         <file>Imagenes/bouncefireball.png</file>
-        <file>Imagenes/brick.png</file>
         <file>Imagenes/brick3.png</file>
-        <file>Imagenes/c2.png</file>
         <file>Imagenes/castle.png</file>
-        <file>Imagenes/champ.png</file>
-        <file>Imagenes/champ_gris.png</file>
         <file>Imagenes/clock.png</file>
-        <file>Imagenes/coin.png</file>
+        <file>Imagenes/moneda.png</file>
         <file>Imagenes/conveyorR.png</file>
         <file>Imagenes/count.png</file>
-        <file>Imagenes/dark_eater.png</file>
-        <file>Imagenes/dark_eater_die.png</file>
-        <file>Imagenes/dark_eater_right.png</file>
         <file>Imagenes/fantom_sprite.png</file>
         <file>Imagenes/fire.png</file>
-        <file>Imagenes/fire_ball.png</file>
-        <file>Imagenes/fireBall.png</file>
-        <file>Imagenes/fireballx2.png</file>
         <file>Imagenes/firemario.png</file>
         <file>Imagenes/firemariostop.png</file>
         <file>Imagenes/flag.png</file>
-        <file>Imagenes/floor_bottom.jpg</file>
-        <file>Imagenes/floor_grass.png</file>
-        <file>Imagenes/floor_left.png</file>
-        <file>Imagenes/floor_right.png</file>
-        <file>Imagenes/floor_uni.png</file>
-        <file>Imagenes/floor2.png</file>
         <file>Imagenes/flower.png</file>
         <file>Imagenes/fredo.png</file>
         <file>Imagenes/gameover.png</file>
-        <file>Imagenes/gameovers.png</file>
-        <file>Imagenes/go.png</file>
         <file>Imagenes/go2.png</file>
-        <file>Imagenes/gold_big.png</file>
-        <file>Imagenes/gold_big2.png</file>
-        <file>Imagenes/gold_big3.png</file>
-        <file>Imagenes/gold_small.png</file>
-        <file>Imagenes/gold_sprites.png</file>
         <file>Imagenes/goomba.png</file>
         <file>Imagenes/goombas.png</file>
-        <file>Imagenes/ground.png</file>
-        <file>Imagenes/groundx.png</file>
-        <file>Imagenes/hcastle.png</file>
         <file>Imagenes/heart.png</file>
         <file>Imagenes/icon.ico</file>
         <file>Imagenes/level_complete.png</file>
         <file>Imagenes/loginlogo.png</file>
-        <file>Imagenes/logo.png</file>
         <file>Imagenes/m40.png</file>
         <file>Imagenes/mario.png</file>
-        <file>Imagenes/mario_graphics1.png</file>
-        <file>Imagenes/Mario_Logo.png</file>
-        <file>Imagenes/Mario_Logo_Bar.png</file>
         <file>Imagenes/mario_sprites.png</file>
         <file>Imagenes/mario_stop.png</file>
         <file>Imagenes/mario_walk_sprites.png</file>
         <file>Imagenes/mario_walk_sprites_left.png</file>
-        <file>Imagenes/mariosplash.png</file>
         <file>Imagenes/mariostop.png</file>
         <file>Imagenes/mflag.png</file>
         <file>Imagenes/mushroom.png</file>
-        <file>Imagenes/mysticTree.png</file>
-        <file>Imagenes/mysticTree_die.png</file>
         <file>Imagenes/notebox.png</file>
-        <file>Imagenes/peach_sprite.png</file>
         <file>Imagenes/piranha.png</file>
-        <file>Imagenes/questbox.png</file>
+        <file>Imagenes/sorpresa.png</file>
         <file>Imagenes/redt.png</file>
-        <file>Imagenes/safegold.png</file>
-        <file>Imagenes/Scene.png</file>
         <file>Imagenes/scoretext.png</file>
-        <file>Imagenes/shock.png</file>
-        <file>Imagenes/shrink.png</file>
+        <file>Imagenes/mario_small.png</file>
         <file>Imagenes/sign.png</file>
-        <file>Imagenes/sky.png</file>
         <file>Imagenes/smallMarioStop.png</file>
-        <file>Imagenes/Spacer_Bar.png</file>
-        <file>Imagenes/speech.jpg</file>
-        <file>Imagenes/speech.png</file>
-        <file>Imagenes/speech_fuck.png</file>
-        <file>Imagenes/speech_gold.png</file>
-        <file>Imagenes/speech_hell.png</file>
         <file>Imagenes/spiny.png</file>
         <file>Imagenes/stairblock.png</file>
-        <file>Imagenes/super_paper_mario_peach_sprites_by_princess_peach_64-d5i5upa.png</file>
-        <file>Imagenes/title.png</file>
         <file>Imagenes/turtle.png</file>
         <file>Imagenes/ustretch.png</file>
         <file>Imagenes/wallf2.png</file>
         <file>Imagenes/wallg.png</file>
         <file>Imagenes/walli.png</file>
-        <file>Imagenes/wallplatform.png</file>
-        <file>Imagenes/Warp.png</file>
+        <file>Imagenes/tubo.png</file>
         <file>Imagenes/x5s.png</file>
         <file>Imagenes/mario_splash.png</file>
         <file>Imagenes/1-1.png</file>

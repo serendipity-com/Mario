@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     backgrounditem.cpp \
+    ladrillosorpresa.cpp \
     main.cpp \
     personaje.cpp \
     widget.cpp \
@@ -32,6 +33,7 @@ SOURCES += \
 
 HEADERS += \
     backgrounditem.h \
+    ladrillosorpresa.h \
     personaje.h \
     widget.h \
     menu.h \

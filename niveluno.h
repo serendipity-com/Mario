@@ -13,6 +13,7 @@
 #include "personaje.h"
 #include "backgrounditem.h"
 #include "moneda.h"
+#include "ladrillosorpresa.h"
 
 
 class NivelUno: public QGraphicsScene
@@ -82,7 +83,7 @@ private:
 
     Moneda *moneda;
     Moneda *moneda1;
-
+    LadrilloSorpresa *sorpresa;
 };
 
 #endif // NIVELUNO_H

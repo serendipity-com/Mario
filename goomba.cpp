@@ -21,12 +21,12 @@ void Goomba::siguienteSprite()
 
 QRectF Goomba::boundingRect() const {
 
-    return QRectF(0,0,52,50);
+    return QRectF(0,0,53,50);
 }
 
 void Goomba::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->drawPixmap(0,0, sprite, posSprite, 0,52, 50);
+    painter->drawPixmap(0,0, sprite, posSprite, 0,53, 50);
     setTransformOriginPoint(boundingRect().center());
     Q_UNUSED(widget)
     Q_UNUSED(option)

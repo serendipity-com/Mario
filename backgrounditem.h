@@ -6,7 +6,7 @@
 class BackgroundItem : public QGraphicsPixmapItem
 {
 public:
-    explicit BackgroundItem(const QPixmap &pixmap, QGraphicsItem *parent = 0);
+    explicit BackgroundItem(const QPixmap &pixmap, QGraphicsItem *parent = nullptr);
 
 public:
     virtual QPainterPath shape() const;

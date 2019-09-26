@@ -19,6 +19,7 @@ NivelUno::NivelUno(QObject *padre):
   , entradaHorizontal(0)
   , moneda(nullptr)
   , moneda1(nullptr)
+  ,sorpresa(nullptr)
 {
     iniciarEscena();
 
@@ -50,6 +51,10 @@ NivelUno::~NivelUno()
     delete tierra;
 
     delete animacionSaltar;
+
+    delete moneda1;
+    delete moneda;
+    delete sorpresa;
 }
 
 void NivelUno::agregarEntradaHorizontal(int entrada)
@@ -100,6 +105,7 @@ void NivelUno::timerEvent(QTimerEvent *)
 {
     moneda->siguienteSprite();
     moneda1->siguienteSprite();
+    sorpresa->siguienteSprite();
 }
 
 void NivelUno::aplicarParalelismo(qreal propocion, QGraphicsItem *item)
@@ -173,7 +179,12 @@ void NivelUno::iniciarEscena()
     moneda1 = new Moneda();
     moneda1->setPos(1400, nivelTierra - moneda1->boundingRect().height() - 100);
     addItem(moneda1);
-    startTimer(100);
+
+    //Agregamos ladrillo sorpresa
+    sorpresa = new LadrilloSorpresa();
+    sorpresa->setPos(600,nivelTierra - sorpresa->boundingRect().height());
+    addItem(sorpresa);
+
 
 
     //Agregamos personaje
@@ -184,6 +195,7 @@ void NivelUno::iniciarEscena()
     posicionX = minX;
     addItem(personaje);
 
+    startTimer(100);
 }
 
 void NivelUno::moverJugador()
@@ -205,7 +217,7 @@ void NivelUno::moverJugador()
         }
         posicionX = newX;
 
-        const int longituCambio = 150;
+        const int longituCambio = 200;
         int derechaLongitudCambio = width() - longituCambio;
 
         const int posicionVisibleJugador = posicionX - desplazamientoMundo;
@@ -224,10 +236,11 @@ void NivelUno::moverJugador()
         desplazamientoMundo = qBound(0, desplazamientoMundo, maxDesplazamientoMundo);
         personaje->setX(posicionX - desplazamientoMundo);
 
-        if(personaje->pos().x() >= 1100 && personaje->getDireccion()  == 1)
+        if(personaje->pos().x() >= 1080 && personaje->getDireccion()  == 1)
         {
             moneda->setX(-dx + moneda->pos().x());
             moneda1->setX(-dx + moneda1->pos().x());
+            sorpresa->setX(-dx + sorpresa->pos().x());
         }
 
         const qreal proporcion = qreal(desplazamientoMundo) / maxDesplazamientoMundo;
