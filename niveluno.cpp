@@ -18,6 +18,7 @@ NivelUno::NivelUno(QObject *padre):
   , velocidad(7)
   , entradaHorizontal(0)
   , moneda(nullptr)
+  , moneda1(nullptr)
 {
     iniciarEscena();
 
@@ -98,6 +99,7 @@ void NivelUno::verificarColisionMoneda()
 void NivelUno::timerEvent(QTimerEvent *)
 {
     moneda->siguienteSprite();
+    moneda1->siguienteSprite();
 }
 
 void NivelUno::aplicarParalelismo(qreal propocion, QGraphicsItem *item)
@@ -167,12 +169,16 @@ void NivelUno::iniciarEscena()
     //Agregamos monedas
     moneda = new Moneda();
     moneda->setPos(500, nivelTierra - moneda->boundingRect().height() - 250);
-    startTimer(100);
     addItem(moneda);
+    moneda1 = new Moneda();
+    moneda1->setPos(1400, nivelTierra - moneda1->boundingRect().height() - 100);
+    addItem(moneda1);
+    startTimer(100);
+
 
     //Agregamos personaje
     personaje =  new Personaje();
-    minX = personaje->boundingRect().width() / 2;
+    minX = personaje->boundingRect().width();
     maxX = anchoEscena - personaje->boundingRect().width() / 2;
     personaje->setPos(minX,nivelTierra - personaje->boundingRect().height());
     posicionX = minX;
@@ -182,7 +188,7 @@ void NivelUno::iniciarEscena()
 
 void NivelUno::moverJugador()
 {
-    qDebug() << "Mover Personaje";
+    qDebug() << minX <<" : "<< maxX;
     verificarColisionMoneda();
     /*A continuación, calculamos el turno que debe obtener el elemento del jugador y
      *  lo almacenamos dx. La distancia que el jugador debe moverse cada 30 milisegundos
@@ -218,6 +224,12 @@ void NivelUno::moverJugador()
         desplazamientoMundo = qBound(0, desplazamientoMundo, maxDesplazamientoMundo);
         personaje->setX(posicionX - desplazamientoMundo);
 
+        if(personaje->pos().x() >= 1100 && personaje->getDireccion()  == 1)
+        {
+            moneda->setX(-dx + moneda->pos().x());
+            moneda1->setX(-dx + moneda1->pos().x());
+        }
+
         const qreal proporcion = qreal(desplazamientoMundo) / maxDesplazamientoMundo;
         aplicarParalelismo(proporcion, cielo1);
         aplicarParalelismo(proporcion, cielo2);
@@ -227,7 +239,6 @@ void NivelUno::moverJugador()
         aplicarParalelismo(proporcion, cielo6);
         aplicarParalelismo(proporcion, cielo7);
         aplicarParalelismo(proporcion, tierra);
-        aplicarParalelismo(proporcion, moneda);
     }
 
 

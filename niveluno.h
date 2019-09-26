@@ -8,6 +8,7 @@
 #include <QPropertyAnimation>
 #include <QDebug>
 #include <QGraphicsView>
+#include <QList>
 
 #include "personaje.h"
 #include "backgrounditem.h"
@@ -50,7 +51,7 @@ protected:
     void keyReleaseEvent(QKeyEvent *event);
 
 private:
-    int anchoEscena = 720;
+    int anchoEscena;
 
     Personaje *personaje;
 
@@ -80,6 +81,7 @@ private:
 
 
     Moneda *moneda;
+    Moneda *moneda1;
 
 };
 
