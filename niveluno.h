@@ -43,6 +43,7 @@ public slots:
     void checkTimer();
 
     void verificarColisionMoneda();
+    void verificarColisionPlataforma();
 
 signals:
     void cambiarFactorSalto(qreal);

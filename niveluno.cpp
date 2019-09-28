@@ -100,6 +100,24 @@ void NivelUno::verificarColisionMoneda()
         }
     }
 }
+
+void NivelUno::verificarColisionPlataforma()
+{
+    for(QGraphicsItem *item : collidingItems(personaje))
+    {
+        if(LadrilloSorpresa *m = qgraphicsitem_cast<LadrilloSorpresa*>(item))
+        {
+            if(personaje->estarTocandoPlataforma(m))
+            {
+                nivelTierra = 660 - m->boundingRect().height();
+            }
+        }
+        else
+        {
+            nivelTierra = 660;
+        }
+    }
+}
 //timerEvent se encarga de manejas los sprites de los objetos en escena.
 void NivelUno::timerEvent(QTimerEvent *)
 {
@@ -201,6 +219,7 @@ void NivelUno::iniciarEscena()
 void NivelUno::moverJugador()
 {
     qDebug() << minX <<" : "<< maxX;
+    verificarColisionPlataforma();
     verificarColisionMoneda();
     /*A continuación, calculamos el turno que debe obtener el elemento del jugador y
      *  lo almacenamos dx. La distancia que el jugador debe moverse cada 30 milisegundos

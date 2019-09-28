@@ -24,6 +24,10 @@ public:
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
+    bool estarTocandoCabeza(QGraphicsItem *item);
+    bool estarTocandoPies(QGraphicsItem *item);
+    bool estarTocandoPlataforma(QGraphicsItem *item);
+
 private:
     enum Estado
     {
