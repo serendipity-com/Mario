@@ -11,6 +11,7 @@
 #include <QList>
 
 #include "personaje.h"
+#include "personajefisica.h"
 #include "backgrounditem.h"
 #include "moneda.h"
 #include "ladrillosorpresa.h"
@@ -39,6 +40,7 @@ public:
     void iniciarEscena();
 
 public slots:
+    void actualizar();
     void moverJugador();
     void checkTimer();
 

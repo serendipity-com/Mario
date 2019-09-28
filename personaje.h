@@ -4,6 +4,8 @@
 #include <QGraphicsItem>
 #include <QPainter>
 #include <QPixmap>
+#include <QTransform>
+#include "personajefisica.h"
 
 class Personaje :public QObject, public QGraphicsItem
 {
@@ -28,6 +30,9 @@ public:
     bool estarTocandoPies(QGraphicsItem *item);
     bool estarTocandoPlataforma(QGraphicsItem *item);
 
+    void actualizar();
+    PersonajeFisica *getFisica();
+
 private:
     enum Estado
     {
@@ -47,6 +52,8 @@ private:
     int posSprite;
 
     int direccion;
+
+    PersonajeFisica *personaje;
 };
 
 #endif // PERSONAJE_H

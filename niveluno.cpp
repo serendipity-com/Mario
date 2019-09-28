@@ -15,7 +15,7 @@ NivelUno::NivelUno(QObject *padre):
   , nivelTierra(660)
   , alturaSalto(200)
   , animacionSaltar(new QPropertyAnimation(this))
-  , velocidad(7)
+  , velocidad(60)
   , entradaHorizontal(0)
   , moneda(nullptr)
   , moneda1(nullptr)
@@ -23,9 +23,9 @@ NivelUno::NivelUno(QObject *padre):
 {
     iniciarEscena();
 
-    timer.setInterval(20);
-    connect(&timer, &QTimer::timeout, this, &NivelUno::moverJugador);
-
+    timer.setInterval(10);
+    connect(&timer, &QTimer::timeout, this, &NivelUno::actualizar);
+    timer.start();
     //animacion de salto
     animacionSaltar = new QPropertyAnimation(this);
     animacionSaltar->setTargetObject(this);
@@ -111,10 +111,6 @@ void NivelUno::verificarColisionPlataforma()
             {
                 nivelTierra = 660 - m->boundingRect().height();
             }
-        }
-        else
-        {
-            nivelTierra = 660;
         }
     }
 }
@@ -216,6 +212,11 @@ void NivelUno::iniciarEscena()
     startTimer(100);
 }
 
+void NivelUno::actualizar()
+{
+    personaje->actualizar();
+}
+
 void NivelUno::moverJugador()
 {
     qDebug() << minX <<" : "<< maxX;
@@ -282,13 +283,18 @@ void NivelUno::keyPressEvent(QKeyEvent *event)
     {
         return;
     }
+
+    PersonajeFisica *p = personaje->getFisica();
+
     switch (event->key())
     {
     case Qt::Key_Right:
-        agregarEntradaHorizontal(1);
+        p->setVel(velocidad,p->getVelY(), p->getPosX(), p->getVelY());
+        //agregarEntradaHorizontal(1);
         break;
     case Qt::Key_Left:
-        agregarEntradaHorizontal(-1);
+        p->setVel(-velocidad,p->getVelY(), p->getPosX(), p->getVelY());
+        //agregarEntradaHorizontal(-1);
         break;
     case Qt::Key_Space:
         saltar();
@@ -303,12 +309,13 @@ void NivelUno::keyReleaseEvent(QKeyEvent *event)
     if (event->isAutoRepeat()) {
         return;
     }
+
     switch (event->key()) {
     case Qt::Key_Right:
-        agregarEntradaHorizontal(-1);
+        //agregarEntradaHorizontal(-1);
         break;
     case Qt::Key_Left:
-        agregarEntradaHorizontal(1);
+        //agregarEntradaHorizontal(1);
         break;
 
     default:

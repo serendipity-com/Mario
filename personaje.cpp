@@ -2,8 +2,7 @@
 
 //En el constructor, establecemos direccion  a 0, lo que significa que Jugador no se mueve en absoluto.
 //Si direccion es 1, Personje se mueve hacia la derecha, y si el valor es -1, se mueve hacia la izquierda.
-Personaje::Personaje(QGraphicsItem *padre) :
-    QGraphicsItem(padre)
+Personaje::Personaje(QGraphicsItem *padre) : QGraphicsItem(padre)
   , estado(quieto)
   , direccion(0)
 {
@@ -13,11 +12,13 @@ Personaje::Personaje(QGraphicsItem *padre) :
     spriteSaltando = QPixmap(":Imagenes/mario_jump.png");
     spriteAtacando = QPixmap(":Imagenes/mariostop.png");
     sprite = spriteQuieto;
+
+    personaje = new PersonajeFisica(boundingRect().width(),660-boundingRect().height());
 }
 
 Personaje::~Personaje()
 {
-
+    delete personaje;
 }
 
 void Personaje::caminar()
@@ -122,4 +123,15 @@ bool Personaje::estarTocandoPlataforma(QGraphicsItem *item)
     QRectF rect(pos().x(), (pos().y() + boundingRect().height()) - 5, boundingRect().width(), 10);
     QRectF otherRect(item->pos().x(), item->pos().y(), item->boundingRect().width(), item->boundingRect().height());
     return rect.intersects(otherRect);
+}
+
+void Personaje::actualizar()
+{
+    personaje->actualizar();
+    setPos(personaje->getPosX(),1280 - personaje->getPosY());
+}
+
+PersonajeFisica *Personaje::getFisica()
+{
+    return personaje;
 }
