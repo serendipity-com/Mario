@@ -15,15 +15,11 @@
 #include "backgrounditem.h"
 #include "moneda.h"
 #include "ladrillosorpresa.h"
-
+#include "ladrillo.h"
 
 class NivelUno: public QGraphicsScene
 {
     Q_OBJECT
-    Q_PROPERTY(qreal getFactorSalto
-               READ getFactorSalto
-               WRITE setFactorSalto
-               NOTIFY cambiarFactorSalto)
 public:
     explicit NivelUno(QObject *padre = nullptr);
     ~NivelUno();
@@ -33,19 +29,17 @@ public:
     void agregarEntradaHorizontal(int entrada);
     void aplicarParalelismo(qreal propocion, QGraphicsItem *item);
 
-    void saltar();
-    qreal getFactorSalto() const;
-    void setFactorSalto(const qreal &pos);
-
     void iniciarEscena();
 
 public slots:
     void actualizar();
     void moverJugador();
+    void siguienteSprite();
     void checkTimer();
 
     void verificarColisionMoneda();
-    void verificarColisionPlataforma();
+    void verificarColisionPlataforma(PersonajeFisica *p);
+    void verificarColisionBordes(PersonajeFisica *p);
 
 signals:
     void cambiarFactorSalto(qreal);
@@ -74,19 +68,20 @@ private:
     qreal posicionX;
     int desplazamientoMundo;
 
-    int alturaSalto;
-    qreal factorSalto;
-    QPropertyAnimation *animacionSaltar;
-
     int velocidad;
     QTimer timer;
+    QTimer timerSprite;
 
     int entradaHorizontal;
 
 
     Moneda *moneda;
     Moneda *moneda1;
+    Ladrillo *ladrillo;
+    Ladrillo *ladrillo2;
+    Ladrillo *ladrillo3;
     LadrilloSorpresa *sorpresa;
+    LadrilloSorpresa *sorpresa2;
 };
 
 #endif // NIVELUNO_H

@@ -13,9 +13,7 @@ NivelUno::NivelUno(QObject *padre):
   , cielo7(nullptr)
   , tierra(nullptr)
   , nivelTierra(660)
-  , alturaSalto(200)
-  , animacionSaltar(new QPropertyAnimation(this))
-  , velocidad(60)
+  , velocidad(50)
   , entradaHorizontal(0)
   , moneda(nullptr)
   , moneda1(nullptr)
@@ -23,18 +21,14 @@ NivelUno::NivelUno(QObject *padre):
 {
     iniciarEscena();
 
+    timerSprite.setInterval(50);
+    connect(&timerSprite, &QTimer::timeout, this, &NivelUno::siguienteSprite);
+
     timer.setInterval(10);
     connect(&timer, &QTimer::timeout, this, &NivelUno::actualizar);
     timer.start();
-    //animacion de salto
-    animacionSaltar = new QPropertyAnimation(this);
-    animacionSaltar->setTargetObject(this);
-    animacionSaltar->setPropertyName("getFactorSalto");
-    animacionSaltar->setStartValue(0);
-    animacionSaltar->setKeyValueAt(0.5, 1);
-    animacionSaltar->setEndValue(0);
-    animacionSaltar->setDuration(800);
-    animacionSaltar->setEasingCurve(QEasingCurve::OutInQuint);
+
+
 }
 
 NivelUno::~NivelUno()
@@ -50,11 +44,13 @@ NivelUno::~NivelUno()
     delete cielo7;
     delete tierra;
 
-    delete animacionSaltar;
-
     delete moneda1;
     delete moneda;
+    delete ladrillo;
+    delete ladrillo2;
+    delete ladrillo3;
     delete sorpresa;
+    delete sorpresa2;
 }
 
 void NivelUno::agregarEntradaHorizontal(int entrada)
@@ -74,13 +70,12 @@ void NivelUno::checkTimer()
     if(personaje->getDireccion() == 0)
     {
         personaje->estarQuieto();
-        timer.stop();
+        timerSprite.stop();
     }
-    else if(!timer.isActive())
+    else if(!timerSprite.isActive())
     {
         personaje->caminar();
-        timer.start();
-        qDebug()<<"Mover";
+        timerSprite.start();
     }
 }
 
@@ -101,17 +96,54 @@ void NivelUno::verificarColisionMoneda()
     }
 }
 
-void NivelUno::verificarColisionPlataforma()
+void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
 {
     for(QGraphicsItem *item : collidingItems(personaje))
     {
         if(LadrilloSorpresa *m = qgraphicsitem_cast<LadrilloSorpresa*>(item))
         {
-            if(personaje->estarTocandoPlataforma(m))
+            if(personaje->estarTocandoCabeza(m))
             {
-                nivelTierra = 660 - m->boundingRect().height();
+                p->setVel(p->getVelX(), -1*(0.2)*p->getVelY(),p->getPosX(), p->getPosY());
+            }
+            else if(personaje->estarTocandoPlataforma(m))
+            {
+                p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), p->getPosY());
             }
         }
+        else if(Ladrillo *l = qgraphicsitem_cast<Ladrillo*>(item))
+        {
+            if(personaje->estarTocandoCabeza(l))
+            {
+                p->setVel(p->getVelX(), -1*(0.2)*p->getVelY(),p->getPosX(), p->getPosY());
+            }
+            else if(personaje->estarTocandoPlataforma(l))
+            {
+                p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), p->getPosY());
+            }
+        }
+    }
+}
+
+void NivelUno::verificarColisionBordes(PersonajeFisica *p)
+{
+
+    if(p->getPosX() < personaje->boundingRect().width())
+    {
+        p->setVel(0,-1*(0.1)*p->getVelY(),personaje->boundingRect().width(),p->getPosY());
+    }
+    if(p->getPosX() > 1280 - personaje->boundingRect().width() - 200)
+    {
+        p->setVel(0,-1*(0.1)*p->getVelY(),1280 - personaje->boundingRect().width() - 200,p->getPosY());
+    }
+
+    if(p->getPosY() > 660 - personaje->boundingRect().height())
+    {
+        p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(),p->getPosX(),nivelTierra - personaje->boundingRect().height());
+    }
+    if(p->getPosY() < personaje->boundingRect().height())
+    {
+        p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), personaje->boundingRect().height() );
     }
 }
 //timerEvent se encarga de manejas los sprites de los objetos en escena.
@@ -120,6 +152,7 @@ void NivelUno::timerEvent(QTimerEvent *)
     moneda->siguienteSprite();
     moneda1->siguienteSprite();
     sorpresa->siguienteSprite();
+    sorpresa2->siguienteSprite();
 }
 
 void NivelUno::aplicarParalelismo(qreal propocion, QGraphicsItem *item)
@@ -127,32 +160,6 @@ void NivelUno::aplicarParalelismo(qreal propocion, QGraphicsItem *item)
     item->setX(-propocion * (item->boundingRect().width() - width()));
 }
 
-void NivelUno::saltar()
-{
-    if(QAbstractAnimation::Stopped == animacionSaltar->state())
-    {
-        animacionSaltar->start();
-    }
-}
-
-qreal NivelUno::getFactorSalto() const
-{
-    return factorSalto;
-}
-
-void NivelUno::setFactorSalto(const qreal &pos)
-{
-    if (pos != factorSalto)
-    {
-        factorSalto =pos;
-        emit cambiarFactorSalto(factorSalto);
-        qreal tierraY = (nivelTierra - personaje->boundingRect().height());
-        qreal y = tierraY - animacionSaltar->currentValue().toReal() * alturaSalto;
-        personaje->setY(y);
-
-        verificarColisionMoneda();
-    }
-}
 
 void NivelUno::iniciarEscena()
 {
@@ -194,11 +201,24 @@ void NivelUno::iniciarEscena()
     moneda1->setPos(1400, nivelTierra - moneda1->boundingRect().height() - 100);
     addItem(moneda1);
 
-    //Agregamos ladrillo sorpresa
-    sorpresa = new LadrilloSorpresa();
-    sorpresa->setPos(600,nivelTierra - sorpresa->boundingRect().height());
-    addItem(sorpresa);
 
+
+    //Agregamos ladrillo sorpresa
+    ladrillo = new Ladrillo();
+    ladrillo->setPos(550,500);
+    addItem(ladrillo);
+    sorpresa = new LadrilloSorpresa();
+    sorpresa->setPos(600,500);
+    addItem(sorpresa);
+    ladrillo2 = new Ladrillo();
+    ladrillo2->setPos(650,500);
+    addItem(ladrillo2);
+    sorpresa2 = new LadrilloSorpresa();
+    sorpresa2->setPos(700,500);
+    addItem(sorpresa2);
+    ladrillo3 = new Ladrillo();
+    ladrillo3->setPos(750,500);
+    addItem(ladrillo3);
 
 
     //Agregamos personaje
@@ -214,13 +234,15 @@ void NivelUno::iniciarEscena()
 
 void NivelUno::actualizar()
 {
-    personaje->actualizar();
+    verificarColisionPlataforma(personaje->getFisica());
+    personaje->actualizar(nivelTierra);
+    moverJugador();
+    verificarColisionBordes(personaje->getFisica());
 }
 
 void NivelUno::moverJugador()
 {
-    qDebug() << minX <<" : "<< maxX;
-    verificarColisionPlataforma();
+
     verificarColisionMoneda();
     /*A continuación, calculamos el turno que debe obtener el elemento del jugador y
      *  lo almacenamos dx. La distancia que el jugador debe moverse cada 30 milisegundos
@@ -228,8 +250,8 @@ void NivelUno::moverJugador()
     const int direccion = personaje->getDireccion();
     if(direccion != 0)
     {
-        personaje->siguienteSprite();
-        const int dx = direccion * velocidad;
+        PersonajeFisica *p = personaje->getFisica();
+        const int dx = 7*direccion;
         qreal newX = qBound(minX, posicionX + dx, maxX);
         if (newX == posicionX)
         {
@@ -237,7 +259,7 @@ void NivelUno::moverJugador()
         }
         posicionX = newX;
 
-        const int longituCambio = 200;
+        const int longituCambio = 300;
         int derechaLongitudCambio = width() - longituCambio;
 
         const int posicionVisibleJugador = posicionX - desplazamientoMundo;
@@ -254,51 +276,60 @@ void NivelUno::moverJugador()
 
         const int maxDesplazamientoMundo = anchoEscena - qRound(width());
         desplazamientoMundo = qBound(0, desplazamientoMundo, maxDesplazamientoMundo);
-        personaje->setX(posicionX - desplazamientoMundo);
 
-        if(personaje->pos().x() >= 1080 && personaje->getDireccion()  == 1)
+        if(personaje->pos().x() >= 1035 && personaje->getDireccion()  == 1)
         {
             moneda->setX(-dx + moneda->pos().x());
             moneda1->setX(-dx + moneda1->pos().x());
+            ladrillo->setX(-dx + ladrillo->pos().x());
+            ladrillo2->setX(-dx + ladrillo2->pos().x());
+            ladrillo3->setX(-dx + ladrillo3->pos().x());
             sorpresa->setX(-dx + sorpresa->pos().x());
-        }
+            sorpresa2->setX(-dx + sorpresa2->pos().x());
 
-        const qreal proporcion = qreal(desplazamientoMundo) / maxDesplazamientoMundo;
-        aplicarParalelismo(proporcion, cielo1);
-        aplicarParalelismo(proporcion, cielo2);
-        aplicarParalelismo(proporcion, cielo3);
-        aplicarParalelismo(proporcion, cielo4);
-        aplicarParalelismo(proporcion, cielo5);
-        aplicarParalelismo(proporcion, cielo6);
-        aplicarParalelismo(proporcion, cielo7);
-        aplicarParalelismo(proporcion, tierra);
+
+            const qreal proporcion = qreal(desplazamientoMundo) / maxDesplazamientoMundo;
+            aplicarParalelismo(proporcion, cielo1);
+            aplicarParalelismo(proporcion, cielo2);
+            aplicarParalelismo(proporcion, cielo3);
+            aplicarParalelismo(proporcion, cielo4);
+            aplicarParalelismo(proporcion, cielo5);
+            aplicarParalelismo(proporcion, cielo6);
+            aplicarParalelismo(proporcion, cielo7);
+            aplicarParalelismo(proporcion, tierra);
+        }
     }
 
 
 }
 
+void NivelUno::siguienteSprite()
+{
+    personaje->siguienteSprite();
+}
+
 void NivelUno::keyPressEvent(QKeyEvent *event)
 {
-    if (event->isAutoRepeat())
-    {
-        return;
-    }
-
     PersonajeFisica *p = personaje->getFisica();
 
     switch (event->key())
     {
     case Qt::Key_Right:
-        p->setVel(velocidad,p->getVelY(), p->getPosX(), p->getVelY());
-        //agregarEntradaHorizontal(1);
+
+        agregarEntradaHorizontal(1);
+        p->setVel(velocidad,p->getVelY(), p->getPosX(), p->getPosY());
         break;
     case Qt::Key_Left:
-        p->setVel(-velocidad,p->getVelY(), p->getPosX(), p->getVelY());
-        //agregarEntradaHorizontal(-1);
+        agregarEntradaHorizontal(-1);
+        p->setVel(-velocidad,p->getVelY(), p->getPosX(), p->getPosY());
         break;
     case Qt::Key_Space:
-        saltar();
+        if(p->getPosY() <= 1+personaje->boundingRect().height())
+        {
+            p->setVel(p->getVelX(), 300, p->getPosX(), p->getPosY());
+        }
         break;
+
     default:
         break;
     }
@@ -306,16 +337,13 @@ void NivelUno::keyPressEvent(QKeyEvent *event)
 
 void NivelUno::keyReleaseEvent(QKeyEvent *event)
 {
-    if (event->isAutoRepeat()) {
-        return;
-    }
 
     switch (event->key()) {
     case Qt::Key_Right:
-        //agregarEntradaHorizontal(-1);
+        agregarEntradaHorizontal(-1);
         break;
     case Qt::Key_Left:
-        //agregarEntradaHorizontal(1);
+        agregarEntradaHorizontal(1);
         break;
 
     default:

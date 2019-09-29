@@ -13,7 +13,7 @@ Personaje::Personaje(QGraphicsItem *padre) : QGraphicsItem(padre)
     spriteAtacando = QPixmap(":Imagenes/mariostop.png");
     sprite = spriteQuieto;
 
-    personaje = new PersonajeFisica(boundingRect().width(),660-boundingRect().height());
+    personaje = new PersonajeFisica(0,720);
 }
 
 Personaje::~Personaje()
@@ -125,10 +125,10 @@ bool Personaje::estarTocandoPlataforma(QGraphicsItem *item)
     return rect.intersects(otherRect);
 }
 
-void Personaje::actualizar()
+void Personaje::actualizar(int lim)
 {
     personaje->actualizar();
-    setPos(personaje->getPosX(),1280 - personaje->getPosY());
+    setPos(personaje->getPosX(), lim - personaje->getPosY());
 }
 
 PersonajeFisica *Personaje::getFisica()

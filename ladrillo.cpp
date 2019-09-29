@@ -9,7 +9,7 @@ Ladrillo::Ladrillo(QGraphicsItem *padre) : QGraphicsItem(padre)
 
 QRectF Ladrillo::boundingRect() const
 {
-    return QRectF(0,0,48,50);
+    return QRectF(0,0,50,50);
 }
 
 void Ladrillo::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
