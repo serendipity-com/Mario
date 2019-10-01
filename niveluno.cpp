@@ -17,7 +17,10 @@ NivelUno::NivelUno(QObject *padre):
   , entradaHorizontal(0)
   , moneda(nullptr)
   , moneda1(nullptr)
-  ,sorpresa(nullptr)
+  , sorpresa(nullptr)
+  , sorpresa2(nullptr)
+  , tubo(nullptr)
+  , flor(nullptr)
 {
     iniciarEscena();
 
@@ -51,6 +54,8 @@ NivelUno::~NivelUno()
     delete ladrillo3;
     delete sorpresa;
     delete sorpresa2;
+    delete tubo;
+    delete flor;
 }
 
 void NivelUno::agregarEntradaHorizontal(int entrada)
@@ -124,6 +129,17 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                 p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), p->getPosY());
             }
         }
+        else if(Tubo *t = qgraphicsitem_cast<Tubo*>(item))
+        {
+            if(personaje->estarTocandoPlataforma(t))
+            {
+                p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), p->getPosY());
+            }
+            else
+            {
+                p->setVel(0,-1*(0.1)*p->getVelY(), p->getPosX(),p->getPosY());
+            }
+        }
     }
 }
 
@@ -155,6 +171,7 @@ void NivelUno::timerEvent(QTimerEvent *)
     moneda1->siguienteSprite();
     sorpresa->siguienteSprite();
     sorpresa2->siguienteSprite();
+    flor->siguienteSprite();
 }
 
 void NivelUno::aplicarParalelismo(qreal propocion, QGraphicsItem *item)
@@ -193,7 +210,7 @@ void NivelUno::iniciarEscena()
     //Agregamos el piso
     tierra = new BackgroundItem(QPixmap(":Imagenes/1-8.png"));
     addItem(tierra);
-    tierra->setPos(0,-190);
+    tierra->setPos(0,-183);
 
     //Agregamos monedas
     moneda = new Moneda();
@@ -205,7 +222,7 @@ void NivelUno::iniciarEscena()
 
 
 
-    //Agregamos ladrillo sorpresa
+    //Agregamos ladrillos
     ladrillo = new Ladrillo();
     ladrillo->setPos(550,500);
     addItem(ladrillo);
@@ -222,6 +239,14 @@ void NivelUno::iniciarEscena()
     ladrillo3->setPos(750,500);
     addItem(ladrillo3);
 
+    //Agregamos tubos
+    tubo = new Tubo();
+    tubo->setPos(900, nivelTierra- tubo->boundingRect().height());
+    addItem(tubo);
+    //Agregamos flor carnobora
+    flor = new Flor();
+    flor->setPos(880, tubo->pos().y() - flor->boundingRect().height());
+    addItem(flor);
 
     //Agregamos personaje
     personaje =  new Personaje();
@@ -288,7 +313,8 @@ void NivelUno::moverJugador()
             ladrillo3->setX(-dx + ladrillo3->pos().x());
             sorpresa->setX(-dx + sorpresa->pos().x());
             sorpresa2->setX(-dx + sorpresa2->pos().x());
-
+            tubo->setX(-dx + tubo->pos().x());
+            flor->setX(-dx + flor->pos().x());
 
             const qreal proporcion = qreal(desplazamientoMundo) / maxDesplazamientoMundo;
             aplicarParalelismo(proporcion, cielo1);

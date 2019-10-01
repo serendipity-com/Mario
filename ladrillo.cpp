@@ -7,6 +7,11 @@ Ladrillo::Ladrillo(QGraphicsItem *padre) : QGraphicsItem(padre)
     posSprite = 0;
 }
 
+Ladrillo::~Ladrillo()
+{
+
+}
+
 QRectF Ladrillo::boundingRect() const
 {
     return QRectF(0,0,50,50);

@@ -16,6 +16,8 @@
 #include "moneda.h"
 #include "ladrillosorpresa.h"
 #include "ladrillo.h"
+#include "tubo.h"
+#include "flor.h"
 
 class NivelUno: public QGraphicsScene
 {
@@ -82,6 +84,8 @@ private:
     Ladrillo *ladrillo3;
     LadrilloSorpresa *sorpresa;
     LadrilloSorpresa *sorpresa2;
+    Tubo *tubo;
+    Flor *flor;
 };
 
 #endif // NIVELUNO_H
