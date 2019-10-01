@@ -21,12 +21,12 @@ NivelUno::NivelUno(QObject *padre):
 {
     iniciarEscena();
 
-    timerSprite.setInterval(50);
-    connect(&timerSprite, &QTimer::timeout, this, &NivelUno::siguienteSprite);
+    timerSprite = new QTimer(this);
+    connect(timerSprite, SIGNAL(timeout()), this, SLOT(siguienteSprite()));
 
-    timer.setInterval(10);
-    connect(&timer, &QTimer::timeout, this, &NivelUno::actualizar);
-    timer.start();
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(actualizar()));
+    timer->start(10);
 
 
 }
@@ -70,12 +70,14 @@ void NivelUno::checkTimer()
     if(personaje->getDireccion() == 0)
     {
         personaje->estarQuieto();
-        timerSprite.stop();
+        timerSprite->stop();
+        qDebug() << "No";
     }
-    else if(!timerSprite.isActive())
+    else if(!timerSprite->isActive())
     {
         personaje->caminar();
-        timerSprite.start();
+        timerSprite->start(50);
+        qDebug() << "Si";
     }
 }
 
@@ -315,13 +317,14 @@ void NivelUno::keyPressEvent(QKeyEvent *event)
     switch (event->key())
     {
     case Qt::Key_Right:
-
-        agregarEntradaHorizontal(1);
         p->setVel(velocidad,p->getVelY(), p->getPosX(), p->getPosY());
+        if (event->isAutoRepeat()){return;}
+        agregarEntradaHorizontal(1);
         break;
     case Qt::Key_Left:
-        agregarEntradaHorizontal(-1);
         p->setVel(-velocidad,p->getVelY(), p->getPosX(), p->getPosY());
+        if (event->isAutoRepeat()){return;}
+        agregarEntradaHorizontal(-1);
         break;
     case Qt::Key_Space:
         if(p->getPosY() <= 1+personaje->boundingRect().height())
@@ -329,16 +332,16 @@ void NivelUno::keyPressEvent(QKeyEvent *event)
             p->setVel(p->getVelX(), 300, p->getPosX(), p->getPosY());
         }
         break;
-
-    default:
-        break;
     }
 }
 
 void NivelUno::keyReleaseEvent(QKeyEvent *event)
 {
-
-    switch (event->key()) {
+    if (event->isAutoRepeat()) {
+        return;
+    }
+    switch (event->key())
+    {
     case Qt::Key_Right:
         agregarEntradaHorizontal(-1);
         break;

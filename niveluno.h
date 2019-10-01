@@ -42,7 +42,7 @@ public slots:
     void verificarColisionBordes(PersonajeFisica *p);
 
 signals:
-    void cambiarFactorSalto(qreal);
+
 
 protected:
     void keyPressEvent(QKeyEvent *event);
@@ -69,8 +69,8 @@ private:
     int desplazamientoMundo;
 
     int velocidad;
-    QTimer timer;
-    QTimer timerSprite;
+    QTimer *timer;
+    QTimer *timerSprite;
 
     int entradaHorizontal;
 
