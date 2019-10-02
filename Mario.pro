@@ -31,7 +31,8 @@ SOURCES += \
     moneda.cpp \
     hongo.cpp \
     ladrillo.cpp \
-    niveluno.cpp
+    niveluno.cpp \
+    menujugador.cpp
 
 HEADERS += \
     backgrounditem.h \
@@ -48,10 +49,12 @@ HEADERS += \
     moneda.h \
     hongo.h \
     ladrillo.h \
-    niveluno.h
+    niveluno.h \
+    menujugador.h
 
 FORMS += \
-    widget.ui
+    widget.ui \
+    menujugador.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
