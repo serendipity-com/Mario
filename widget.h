@@ -2,6 +2,7 @@
 #define WIDGET_H
 
 #include <QWidget>
+#include <menujugador.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
@@ -15,7 +16,12 @@ public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
 
+private slots:
+    void on_UnJugador_clicked();
+
+
 private:
     Ui::Widget *ui;
+    MenuJugador *menuJugador;
 };
 #endif // WIDGET_H

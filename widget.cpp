@@ -5,7 +5,10 @@ Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Widget)
 {
-    ui->setupUi(this);
+    ui->setupUi(this); //crear elementos
+    menuJugador = new MenuJugador();
+
+
 }
 
 Widget::~Widget()
@@ -13,3 +16,9 @@ Widget::~Widget()
     delete ui;
 }
 
+
+void Widget::on_UnJugador_clicked()
+{
+    menuJugador->show();
+    this->close();
+}
