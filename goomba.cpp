@@ -2,8 +2,31 @@
 
 Goomba::Goomba(QGraphicsItem *parent) : QGraphicsItem(parent)
 {
+    direccion = 1;
     setFlag(ItemClipsToShape);
-    sprite = QPixmap(":images/goombas.png");
+    sprite = QPixmap(":/Imagenes/goombas.png");
+}
+
+int Goomba::getDireccion()
+{
+    return direccion;
+}
+
+void Goomba::setDireccion(int inDireccion)
+{
+    if(direccion != inDireccion)
+    {
+        direccion = inDireccion;
+        if(direccion != 0)
+        {
+            QTransform transforma;
+            if(direccion == -1)
+            {
+                transforma.scale(-1,1);
+            }
+            setTransform(transforma);
+        }
+    }
 }
 
 void Goomba::siguienteSprite()
@@ -30,6 +53,11 @@ void Goomba::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     setTransformOriginPoint(boundingRect().center());
     Q_UNUSED(widget)
     Q_UNUSED(option)
+}
+
+int Goomba::type() const
+{
+    return Type;
 }
 
 

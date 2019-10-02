@@ -18,6 +18,7 @@
 #include "ladrillo.h"
 #include "tubo.h"
 #include "flor.h"
+#include "goomba.h"
 
 class NivelUno: public QGraphicsScene
 {
@@ -33,18 +34,15 @@ public:
 
     void iniciarEscena();
 
+    void verificarColisionMoneda();
+    void verificarColisionPlataforma(PersonajeFisica *p);
+    void verificarColisionBordes(PersonajeFisica *p);
+    void cambiarDireccionGomba();
 public slots:
     void actualizar();
     void moverJugador();
     void siguienteSprite();
     void checkTimer();
-
-    void verificarColisionMoneda();
-    void verificarColisionPlataforma(PersonajeFisica *p);
-    void verificarColisionBordes(PersonajeFisica *p);
-
-signals:
-
 
 protected:
     void keyPressEvent(QKeyEvent *event);
@@ -88,6 +86,7 @@ private:
     Tubo *tubo;
     Tubo *tubo2;
     Flor *flor;
+    Goomba *goomba;
 };
 
 #endif // NIVELUNO_H

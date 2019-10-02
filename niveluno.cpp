@@ -25,6 +25,7 @@ NivelUno::NivelUno(QObject *padre):
   , sorpresa2(nullptr)
   , tubo(nullptr)
   , flor(nullptr)
+  , goomba(nullptr)
 {
     iniciarEscena();
 
@@ -62,6 +63,7 @@ NivelUno::~NivelUno()
     delete tubo;
     delete tubo2;
     delete flor;
+    delete goomba;
 }
 
 void NivelUno::agregarEntradaHorizontal(int entrada)
@@ -171,6 +173,42 @@ void NivelUno::verificarColisionBordes(PersonajeFisica *p)
         p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), personaje->boundingRect().height() );
     }
 }
+
+void NivelUno::cambiarDireccionGomba()
+{
+    for(QGraphicsItem *item : collidingItems(tubo))
+    {
+        if(Goomba *m = qgraphicsitem_cast<Goomba*>(item))
+        {
+            if(m->getDireccion() == -1)
+            {
+                m->setDireccion(1);
+                m->setX(m->pos().x() - 55);
+            }
+            else
+            {
+                m->setDireccion(-1);
+                m->setX(m->pos().x() + 55);
+            }
+        }
+    }
+    for(QGraphicsItem *item : collidingItems(tubo2))
+    {
+        if(Goomba *m = qgraphicsitem_cast<Goomba*>(item))
+        {
+            if(m->getDireccion() == -1)
+            {
+                m->setDireccion(1);
+                m->setX(m->pos().x() - 55);
+            }
+            else
+            {
+                m->setDireccion(-1);
+                m->setX(m->pos().x() + 55);
+            }
+        }
+    }
+}
 //timerEvent se encarga de manejas los sprites de los objetos en escena.
 void NivelUno::timerEvent(QTimerEvent *)
 {
@@ -179,6 +217,9 @@ void NivelUno::timerEvent(QTimerEvent *)
     sorpresa->siguienteSprite();
     sorpresa2->siguienteSprite();
     flor->siguienteSprite();
+
+    goomba->siguienteSprite();
+    goomba->setX(-(7)*goomba->getDireccion() + goomba->pos().x());
 }
 
 void NivelUno::aplicarParalelismo(qreal propocion, QGraphicsItem *item)
@@ -259,6 +300,10 @@ void NivelUno::iniciarEscena()
     flor = new Flor();
     flor->setPos(880, tubo->pos().y() - flor->boundingRect().height());
     addItem(flor);
+    //Agregamos eneeigo Goomba
+    goomba = new Goomba();
+    goomba->setPos(tubo->pos().x() + goomba->boundingRect().width() + 50, nivelTierra - goomba->boundingRect().height());
+    addItem(goomba);
 
     //Agregamos personaje
     personaje =  new Personaje();
@@ -277,6 +322,7 @@ void NivelUno::actualizar()
     personaje->actualizar(nivelTierra);
     moverJugador();
     verificarColisionBordes(personaje->getFisica());
+    cambiarDireccionGomba();
 }
 
 void NivelUno::moverJugador()
@@ -329,6 +375,7 @@ void NivelUno::moverJugador()
             tubo->setX(-dx + tubo->pos().x());
             tubo2->setX(-dx + tubo2->pos().x());
             flor->setX(-dx + flor->pos().x());
+            goomba->setX(-dx + goomba->pos().x());
 
 
             const qreal proporcion = qreal(desplazamientoMundo) / maxDesplazamientoMundo;

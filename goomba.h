@@ -9,16 +9,22 @@ class Goomba :  public QObject, public QGraphicsItem
 {
     Q_OBJECT
 public:
+    enum{ Type = UserType + 8};
     Goomba(QGraphicsItem *padre = nullptr);
+
+    int getDireccion();
+    void setDireccion(int inDireccion);
+
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-
+    int type() const;
 public slots:
     void siguienteSprite();
 
 private:
     QPixmap sprite;
     int posSprite;
+    int direccion;
 };
 
 #endif // GOOMBA_H
