@@ -17,6 +17,10 @@ NivelUno::NivelUno(QObject *padre):
   , entradaHorizontal(0)
   , moneda(nullptr)
   , moneda1(nullptr)
+  , ladrillo(nullptr)
+  , ladrillo2(nullptr)
+  , ladrillo3(nullptr)
+  , ladrillo4(nullptr)
   , sorpresa(nullptr)
   , sorpresa2(nullptr)
   , tubo(nullptr)
@@ -52,9 +56,11 @@ NivelUno::~NivelUno()
     delete ladrillo;
     delete ladrillo2;
     delete ladrillo3;
+    delete ladrillo4;
     delete sorpresa;
     delete sorpresa2;
     delete tubo;
+    delete tubo2;
     delete flor;
 }
 
@@ -76,13 +82,13 @@ void NivelUno::checkTimer()
     {
         personaje->estarQuieto();
         timerSprite->stop();
-        qDebug() << "No";
+        //qDebug() << "No";
     }
     else if(!timerSprite->isActive())
     {
         personaje->caminar();
         timerSprite->start(50);
-        qDebug() << "Si";
+        //qDebug() << "Si";
     }
 }
 
@@ -111,33 +117,33 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
         {
             if(personaje->estarTocandoCabeza(m))
             {
-                p->setVel(p->getVelX(), -1*(0.2)*p->getVelY(),p->getPosX(), p->getPosY());
+                p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(),p->getPosX(), p->getPosY());
             }
             else if(personaje->estarTocandoPlataforma(m))
             {
-                p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), p->getPosY());
+                p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personaje->boundingRect().height()+1);
             }
         }
-        else if(Ladrillo *l = qgraphicsitem_cast<Ladrillo*>(item))
+        if(Ladrillo *l = qgraphicsitem_cast<Ladrillo*>(item))
         {
             if(personaje->estarTocandoCabeza(l))
             {
-                p->setVel(p->getVelX(), -1*(0.2)*p->getVelY(),p->getPosX(), p->getPosY());
+                p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(),p->getPosX(), p->getPosY());
             }
             else if(personaje->estarTocandoPlataforma(l))
             {
-                p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), p->getPosY());
+                p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - l->pos().y() + personaje->boundingRect().height()+1);
             }
         }
         else if(Tubo *t = qgraphicsitem_cast<Tubo*>(item))
         {
             if(personaje->estarTocandoPlataforma(t))
             {
-                p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), p->getPosY());
+                p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - t->pos().y() + personaje->boundingRect().height() + 1);
             }
             else
             {
-                p->setVel(0,-1*(0.1)*p->getVelY(), p->getPosX(),p->getPosY());
+                p->setVel(p->getVelX(),-1*(0.1)*p->getVelY(), p->getPosX(),p->getPosY());
             }
         }
     }
@@ -159,6 +165,7 @@ void NivelUno::verificarColisionBordes(PersonajeFisica *p)
     {
         p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(),p->getPosX(),nivelTierra - personaje->boundingRect().height());
     }
+    //Colision borde inferior
     if(p->getPosY() < personaje->boundingRect().height())
     {
         p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), personaje->boundingRect().height() );
@@ -212,15 +219,6 @@ void NivelUno::iniciarEscena()
     addItem(tierra);
     tierra->setPos(0,-183);
 
-    //Agregamos monedas
-    moneda = new Moneda();
-    moneda->setPos(500, nivelTierra - moneda->boundingRect().height() - 250);
-    addItem(moneda);
-    moneda1 = new Moneda();
-    moneda1->setPos(1400, nivelTierra - moneda1->boundingRect().height() - 100);
-    addItem(moneda1);
-
-
 
     //Agregamos ladrillos
     ladrillo = new Ladrillo();
@@ -238,11 +236,25 @@ void NivelUno::iniciarEscena()
     ladrillo3 = new Ladrillo();
     ladrillo3->setPos(750,500);
     addItem(ladrillo3);
+    ladrillo4 = new Ladrillo();
+    ladrillo4->setPos(650,300);
+    addItem(ladrillo4);
+
+    //Agregamos monedas
+    moneda = new Moneda();
+    moneda->setPos(550, ladrillo->pos().y() - moneda->boundingRect().height());
+    addItem(moneda);
+    moneda1 = new Moneda();
+    moneda1->setPos(750, ladrillo3->pos().y() - moneda->boundingRect().height());
+    addItem(moneda1);
 
     //Agregamos tubos
     tubo = new Tubo();
     tubo->setPos(900, nivelTierra- tubo->boundingRect().height());
     addItem(tubo);
+    tubo2 = new Tubo();
+    tubo2->setPos(1500, nivelTierra- tubo->boundingRect().height());
+    addItem(tubo2);
     //Agregamos flor carnobora
     flor = new Flor();
     flor->setPos(880, tubo->pos().y() - flor->boundingRect().height());
@@ -311,10 +323,13 @@ void NivelUno::moverJugador()
             ladrillo->setX(-dx + ladrillo->pos().x());
             ladrillo2->setX(-dx + ladrillo2->pos().x());
             ladrillo3->setX(-dx + ladrillo3->pos().x());
+            ladrillo4->setX(-dx + ladrillo4->pos().x());
             sorpresa->setX(-dx + sorpresa->pos().x());
             sorpresa2->setX(-dx + sorpresa2->pos().x());
             tubo->setX(-dx + tubo->pos().x());
+            tubo2->setX(-dx + tubo2->pos().x());
             flor->setX(-dx + flor->pos().x());
+
 
             const qreal proporcion = qreal(desplazamientoMundo) / maxDesplazamientoMundo;
             aplicarParalelismo(proporcion, cielo1);
@@ -353,10 +368,7 @@ void NivelUno::keyPressEvent(QKeyEvent *event)
         agregarEntradaHorizontal(-1);
         break;
     case Qt::Key_Space:
-        if(p->getPosY() <= 1+personaje->boundingRect().height())
-        {
-            p->setVel(p->getVelX(), 300, p->getPosX(), p->getPosY());
-        }
+            p->setVel(p->getVelX(), 250, p->getPosX(), p->getPosY());
         break;
     }
 }

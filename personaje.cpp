@@ -128,6 +128,7 @@ bool Personaje::estarTocandoPlataforma(QGraphicsItem *item)
 void Personaje::actualizar(int lim)
 {
     personaje->actualizar();
+    //qDebug() << lim - personaje->getPosY();
     setPos(personaje->getPosX(), lim - personaje->getPosY());
 }
 

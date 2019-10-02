@@ -82,9 +82,11 @@ private:
     Ladrillo *ladrillo;
     Ladrillo *ladrillo2;
     Ladrillo *ladrillo3;
+    Ladrillo *ladrillo4;
     LadrilloSorpresa *sorpresa;
     LadrilloSorpresa *sorpresa2;
     Tubo *tubo;
+    Tubo *tubo2;
     Flor *flor;
 };
 
