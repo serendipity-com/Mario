@@ -6,6 +6,7 @@ MenuJugador::MenuJugador(QWidget *parent) :
     ui(new Ui::MenuJugador)
 {
     ui->setupUi(this);
+
     //Leer información de archivo que contiene nombre de usuario y nivel en el que quedó
     //map<QString, unsigned int>
 }
@@ -13,6 +14,11 @@ MenuJugador::MenuJugador(QWidget *parent) :
 MenuJugador::~MenuJugador()
 {
     delete ui;
+}
+
+void MenuJugador::construirInformacion()
+{
+
 }
 
 
