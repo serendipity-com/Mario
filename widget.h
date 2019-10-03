@@ -17,7 +17,7 @@ public:
     ~Widget();
 
 private slots:
-    void on_UnJugador_clicked();
+    void unJugador();
 
 
 private:

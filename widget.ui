@@ -6,49 +6,32 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>720</width>
-    <height>480</height>
+    <width>619</width>
+    <height>284</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Widget</string>
   </property>
-  <widget class="QPushButton" name="UnJugador">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>50</y>
-     <width>421</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Un Jugador</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="Multijugador">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>160</y>
-     <width>421</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Multijugador</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="lineEdit">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>100</y>
-     <width>113</width>
-     <height>25</height>
-    </rect>
-   </property>
-  </widget>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="0">
+    <widget class="QPushButton" name="UnJugador">
+     <property name="text">
+      <string>Un Jugador</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLineEdit" name="lineEdit"/>
+   </item>
+   <item row="3" column="0">
+    <widget class="QPushButton" name="Multijugador">
+     <property name="text">
+      <string>Multijugador</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

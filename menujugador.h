@@ -17,10 +17,8 @@ public:
 
 private slots:
 
-
-    void on_CargarPartida_clicked();
-
-    void on_NuevaPartida_clicked();
+    void cargarPartida();
+    void nuevaPartida();
 
 private:
     Ui::MenuJugador *ui;

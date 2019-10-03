@@ -19,12 +19,12 @@ MenuJugador::~MenuJugador()
 
 
 
-void MenuJugador::on_CargarPartida_clicked()
+void MenuJugador::cargarPartida()
 {
 
 }
 
-void MenuJugador::on_NuevaPartida_clicked()
+void MenuJugador::nuevaPartida()
 {
     //Se encarga de verificar si el usuario ya existe
 }

@@ -7,7 +7,7 @@ Widget::Widget(QWidget *parent)
 {
     ui->setupUi(this); //crear elementos
     menuJugador = new MenuJugador();
-
+    connect(ui->UnJugador, &QPushButton::clicked, this, &Widget::unJugador);
 
 }
 
@@ -17,7 +17,7 @@ Widget::~Widget()
 }
 
 
-void Widget::on_UnJugador_clicked()
+void Widget::unJugador()
 {
     menuJugador->show();
     this->close();
