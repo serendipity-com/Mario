@@ -2,7 +2,7 @@
 #define MENUJUGADOR_H
 
 #include <QWidget>
-#include <QMap>
+#include <map>
 #include <QList>
 #include <QString>
 #include <QFile>
@@ -19,7 +19,7 @@ public:
     explicit MenuJugador(QWidget *parent = 0);
     ~MenuJugador();
 
-private:
+public: //private?
     void construirInformacion();
 
 private slots:
@@ -29,7 +29,7 @@ private slots:
 
 private:
     Ui::MenuJugador *ui;
-    QMap <QString, QList<int>> informacion;
+    map <QString, QList<int>> informacion;
 
 };
 

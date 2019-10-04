@@ -6,9 +6,6 @@ MenuJugador::MenuJugador(QWidget *parent) :
     ui(new Ui::MenuJugador)
 {
     ui->setupUi(this);
-
-    //Leer información de archivo que contiene nombre de usuario y nivel en el que quedó
-    //map<QString, unsigned int>
 }
 
 MenuJugador::~MenuJugador()
@@ -17,8 +14,25 @@ MenuJugador::~MenuJugador()
 }
 
 void MenuJugador::construirInformacion()
-{
+//Lee información de archivo que contiene nombre de usuario, nivel y puntaje en el que quedó
 
+{
+    QFile inputFile("BaseDatos.txt");
+    if (inputFile.open(QIODevice::ReadOnly))
+    {
+       QTextStream in(&inputFile);
+       while (!in.atEnd())
+       {
+           QString line = in.readLine();
+           int ch = line.indexOf(":");
+           QString nombre = line.mid(0, ch);
+           QString valores  = line.mid(ch+1);
+           int nivel = valores[0].digitValue();
+           int puntaje = line.mid(ch+2).toInt();
+           informacion.insert({nombre, {nivel,puntaje}});
+       }
+       inputFile.close();
+    }
 }
 
 
