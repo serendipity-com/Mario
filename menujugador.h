@@ -7,6 +7,7 @@
 #include <QString>
 #include <QFile>
 #include <QTextStream>
+#include <QDataStream>
 
 using namespace std;
 namespace Ui {
@@ -17,14 +18,12 @@ class MenuJugador : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MenuJugador(QWidget *parent = nullptr);
+    explicit MenuJugador(QWidget *parent = 0);
     ~MenuJugador();
-
-public: //private?
     void construirInformacion();
 
 private slots:
-
+    void enter();
     void cargarPartida();
     void nuevaPartida();
 

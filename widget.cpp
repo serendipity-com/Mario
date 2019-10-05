@@ -8,17 +8,19 @@ Widget::Widget(QWidget *parent)
     ui->setupUi(this); //crear elementos
     menuJugador = new MenuJugador();
     connect(ui->UnJugador, &QPushButton::clicked, this, &Widget::unJugador);
-
 }
 
 Widget::~Widget()
 {
     delete ui;
+    delete menuJugador;
 }
 
 
 void Widget::unJugador()
 {
+    QMessageBox::information(this, "¡Saludos!", "Ingrese nombre de usuario");
     menuJugador->show();
+    menuJugador->construirInformacion(); //Se llena el map con base de datos
     this->close();
 }
