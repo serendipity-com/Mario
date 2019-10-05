@@ -9,7 +9,7 @@ class Ladrillo : public QGraphicsItem
 {
 public:
     enum{ Type = UserType + 5};
-    Ladrillo(QGraphicsItem *padre = nullptr);
+    Ladrillo(int _longitud, QGraphicsItem *padre = nullptr);
     ~Ladrillo();
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
@@ -17,6 +17,7 @@ public:
 private:
     QPixmap sprite;
     int posSprite;
+    int longitud;
 };
 
 #endif // LADRILLO_H

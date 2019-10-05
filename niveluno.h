@@ -19,6 +19,7 @@
 #include "tubo.h"
 #include "flor.h"
 #include "goomba.h"
+#include "administradorsonidos.h"
 
 class NivelUno: public QGraphicsScene
 {
@@ -74,19 +75,15 @@ private:
 
     int entradaHorizontal;
 
+    AdministradorSonidos *sonidos;
 
-    Moneda *moneda;
-    Moneda *moneda1;
-    Ladrillo *ladrillo;
-    Ladrillo *ladrillo2;
-    Ladrillo *ladrillo3;
-    Ladrillo *ladrillo4;
-    LadrilloSorpresa *sorpresa;
-    LadrilloSorpresa *sorpresa2;
-    Tubo *tubo;
-    Tubo *tubo2;
-    Flor *flor;
-    Goomba *goomba;
+    //complementos de la escena
+    QList <Moneda *> monedas;
+    QList <Ladrillo*> ladrillos;
+    QList <LadrilloSorpresa*> ladrillosSorpresa;
+    QList <Tubo *> tubos;
+    QList <Flor *> floresCar;
+    QList <Goomba*> gombas;
 };
 
 #endif // NIVELUNO_H

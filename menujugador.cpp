@@ -14,9 +14,8 @@ MenuJugador::~MenuJugador()
 }
 
 void MenuJugador::construirInformacion()
-//Lee información de archivo que contiene nombre de usuario, nivel y puntaje en el que quedó
-
 {
+    //Lee información de archivo que contiene nombre de usuario, nivel y puntaje en el que quedó
     QFile inputFile("BaseDatos.txt");
     if (inputFile.open(QIODevice::ReadOnly))
     {

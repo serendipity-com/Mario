@@ -1,6 +1,7 @@
 #include "ladrillo.h"
 
-Ladrillo::Ladrillo(QGraphicsItem *padre) : QGraphicsItem(padre)
+Ladrillo::Ladrillo(int _longitud, QGraphicsItem *padre) : QGraphicsItem(padre)
+  , longitud(_longitud)
 {
     setFlag(ItemClipsToShape);
     sprite = QPixmap(":/Imagenes/ladrillo.png");
@@ -14,12 +15,15 @@ Ladrillo::~Ladrillo()
 
 QRectF Ladrillo::boundingRect() const
 {
-    return QRectF(0,0,50,50);
+    return QRectF(0,0,50*longitud,50);
 }
 
 void Ladrillo::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->drawPixmap(0,0, sprite, posSprite, 0,50, 50);
+    for(int i = 0; i < 50*longitud; i++)
+    {
+        painter->drawPixmap(i*50,0, sprite, posSprite, 0,50, 50);
+    }
     setTransformOriginPoint(boundingRect().center());
     Q_UNUSED(widget)
     Q_UNUSED(option)

@@ -15,19 +15,10 @@ NivelUno::NivelUno(QObject *padre):
   , nivelTierra(660)
   , velocidad(50)
   , entradaHorizontal(0)
-  , moneda(nullptr)
-  , moneda1(nullptr)
-  , ladrillo(nullptr)
-  , ladrillo2(nullptr)
-  , ladrillo3(nullptr)
-  , ladrillo4(nullptr)
-  , sorpresa(nullptr)
-  , sorpresa2(nullptr)
-  , tubo(nullptr)
-  , flor(nullptr)
-  , goomba(nullptr)
 {
     iniciarEscena();
+
+    sonidos = new AdministradorSonidos();
 
     timerSprite = new QTimer(this);
     connect(timerSprite, SIGNAL(timeout()), this, SLOT(siguienteSprite()));
@@ -35,8 +26,6 @@ NivelUno::NivelUno(QObject *padre):
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(actualizar()));
     timer->start(10);
-
-
 }
 
 NivelUno::~NivelUno()
@@ -52,18 +41,12 @@ NivelUno::~NivelUno()
     delete cielo7;
     delete tierra;
 
-    delete moneda1;
-    delete moneda;
-    delete ladrillo;
-    delete ladrillo2;
-    delete ladrillo3;
-    delete ladrillo4;
-    delete sorpresa;
-    delete sorpresa2;
-    delete tubo;
-    delete tubo2;
-    delete flor;
-    delete goomba;
+    monedas.clear();
+    ladrillos.clear();
+    ladrillosSorpresa.clear();
+    tubos.clear();
+    floresCar.clear();
+    gombas.clear();
 }
 
 void NivelUno::agregarEntradaHorizontal(int entrada)
@@ -107,6 +90,7 @@ void NivelUno::verificarColisionMoneda()
         if(Moneda *m = qgraphicsitem_cast<Moneda*>(item))
         {
             removeItem(m);
+            sonidos->reproducirMoneda();
         }
     }
 }
@@ -123,7 +107,7 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
             }
             else if(personaje->estarTocandoPlataforma(m))
             {
-                p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personaje->boundingRect().height()+1);
+                p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personaje->boundingRect().height());
             }
         }
         if(Ladrillo *l = qgraphicsitem_cast<Ladrillo*>(item))
@@ -134,14 +118,14 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
             }
             else if(personaje->estarTocandoPlataforma(l))
             {
-                p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - l->pos().y() + personaje->boundingRect().height()+1);
+                p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - l->pos().y() + personaje->boundingRect().height());
             }
         }
         else if(Tubo *t = qgraphicsitem_cast<Tubo*>(item))
         {
             if(personaje->estarTocandoPlataforma(t))
             {
-                p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - t->pos().y() + personaje->boundingRect().height() + 1);
+                p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - t->pos().y() + personaje->boundingRect().height());
             }
             else
             {
@@ -176,50 +160,52 @@ void NivelUno::verificarColisionBordes(PersonajeFisica *p)
 
 void NivelUno::cambiarDireccionGomba()
 {
-    for(QGraphicsItem *item : collidingItems(tubo))
+    for (int i = 0; i < tubos.size(); i++)
     {
-        if(Goomba *m = qgraphicsitem_cast<Goomba*>(item))
+        for(QGraphicsItem *item : collidingItems(tubos.at(i)))
         {
-            if(m->getDireccion() == -1)
+            if(Goomba *m = qgraphicsitem_cast<Goomba*>(item))
             {
-                m->setDireccion(1);
-                m->setX(m->pos().x() - 55);
-            }
-            else
-            {
-                m->setDireccion(-1);
-                m->setX(m->pos().x() + 55);
-            }
-        }
-    }
-    for(QGraphicsItem *item : collidingItems(tubo2))
-    {
-        if(Goomba *m = qgraphicsitem_cast<Goomba*>(item))
-        {
-            if(m->getDireccion() == -1)
-            {
-                m->setDireccion(1);
-                m->setX(m->pos().x() - 55);
-            }
-            else
-            {
-                m->setDireccion(-1);
-                m->setX(m->pos().x() + 55);
+                if(m->getDireccion() == -1)
+                {
+                    m->setDireccion(1);
+                    m->setX(m->pos().x() - 65);
+                }
+                else
+                {
+                    m->setDireccion(-1);
+                    m->setX(m->pos().x() + 65);
+                }
             }
         }
     }
 }
+
 //timerEvent se encarga de manejas los sprites de los objetos en escena.
 void NivelUno::timerEvent(QTimerEvent *)
 {
-    moneda->siguienteSprite();
-    moneda1->siguienteSprite();
-    sorpresa->siguienteSprite();
-    sorpresa2->siguienteSprite();
-    flor->siguienteSprite();
+    for (int i = 0;i < monedas.size(); i++)
+    {
+        monedas.at(i)->siguienteSprite();
+    }
+    for (int i = 0;i < ladrillosSorpresa.size(); i++)
+    {
+        ladrillosSorpresa.at(i)->siguienteSprite();
+    }
+    for (int i = 0;i < gombas.size(); i++)
+    {
+        gombas.at(i)->siguienteSprite();
+    }
+    for (int i = 0;i < floresCar.size(); i++)
+    {
+        floresCar.at(i)->siguienteSprite();
+    }
 
-    goomba->siguienteSprite();
-    goomba->setX(-(7)*goomba->getDireccion() + goomba->pos().x());
+    //mueve los goomba
+    for (int i = 0;i < gombas.size(); i++)
+    {
+        gombas.at(i)->setX(gombas.at(i)->pos().x() + gombas.at(i)->getDireccion() * (-7));
+    }
 }
 
 void NivelUno::aplicarParalelismo(qreal propocion, QGraphicsItem *item)
@@ -227,7 +213,7 @@ void NivelUno::aplicarParalelismo(qreal propocion, QGraphicsItem *item)
     item->setX(-propocion * (item->boundingRect().width() - width()));
 }
 
-
+//crea valores inciales
 void NivelUno::iniciarEscena()
 {
     setSceneRect(0,0,1280,720);
@@ -262,48 +248,56 @@ void NivelUno::iniciarEscena()
 
 
     //Agregamos ladrillos
-    ladrillo = new Ladrillo();
-    ladrillo->setPos(550,500);
-    addItem(ladrillo);
-    sorpresa = new LadrilloSorpresa();
-    sorpresa->setPos(600,500);
-    addItem(sorpresa);
-    ladrillo2 = new Ladrillo();
-    ladrillo2->setPos(650,500);
-    addItem(ladrillo2);
-    sorpresa2 = new LadrilloSorpresa();
-    sorpresa2->setPos(700,500);
-    addItem(sorpresa2);
-    ladrillo3 = new Ladrillo();
-    ladrillo3->setPos(750,500);
-    addItem(ladrillo3);
-    ladrillo4 = new Ladrillo();
-    ladrillo4->setPos(650,300);
-    addItem(ladrillo4);
+    int posLadrillo[4][3] = {{550,500,1}, {650,500,1}, {750,500,1}, {650,300,1}};
+    int posLadrilloSorpresa[2][2] = {{600,500}, {700,500}};
+    for (int i = 0; i < 4; i++)
+    {
+        ladrillos.append(new Ladrillo(posLadrillo[i][2]));
+        ladrillos.last()->setPos(posLadrillo[i][0],posLadrillo[i][1]);
+        addItem(ladrillos.last());
+    }
+    for (int j = 0; j < 2; j++)
+    {
+        ladrillosSorpresa.append(new LadrilloSorpresa());
+        ladrillosSorpresa.last()->setPos(posLadrilloSorpresa[j][0],posLadrilloSorpresa[j][1]);
+        addItem(ladrillosSorpresa.last());
+    }
 
     //Agregamos monedas
-    moneda = new Moneda();
-    moneda->setPos(550, ladrillo->pos().y() - moneda->boundingRect().height());
-    addItem(moneda);
-    moneda1 = new Moneda();
-    moneda1->setPos(750, ladrillo3->pos().y() - moneda->boundingRect().height());
-    addItem(moneda1);
+    int posMonedas[6][2] ={{550,450}, {600,450}, {650,450}, {700,450}, {750,450}, {650,250}};
+    for (int i= 0; i < 6;i++)
+    {
+        monedas.append(new Moneda());
+        monedas.last()->setPos(posMonedas[i][0], posMonedas[i][1]);
+        addItem(monedas.last());
+    }
 
     //Agregamos tubos
-    tubo = new Tubo();
-    tubo->setPos(900, nivelTierra- tubo->boundingRect().height());
-    addItem(tubo);
-    tubo2 = new Tubo();
-    tubo2->setPos(1500, nivelTierra- tubo->boundingRect().height());
-    addItem(tubo2);
+    int posTubos[2] = {900, 1500};
+    for (int i = 0; i < 2; i++)
+    {
+        tubos.append(new Tubo());
+        tubos.last()->setPos(posTubos[i], nivelTierra - tubos.last()->boundingRect().height());
+        addItem(tubos.last());
+    }
+
     //Agregamos flor carnobora
-    flor = new Flor();
-    flor->setPos(880, tubo->pos().y() - flor->boundingRect().height());
-    addItem(flor);
-    //Agregamos eneeigo Goomba
-    goomba = new Goomba();
-    goomba->setPos(tubo->pos().x() + goomba->boundingRect().width() + 50, nivelTierra - goomba->boundingRect().height());
-    addItem(goomba);
+    int posFloresCar[1] = {880};
+    for (int i = 0; i < 1; i++)
+    {
+        floresCar.append(new Flor());
+        floresCar.last()->setPos(posFloresCar[i], tubos.at(1)->pos().y() - floresCar.last()->boundingRect().height());
+        addItem(floresCar.last());
+    }
+
+    //Agregamos enemigo Goomba
+    int posGombas[2] = {800,1000};
+    for (int i = 0; i < 2; i++)
+    {
+        gombas.append(new Goomba());
+        gombas.last()->setPos(posGombas[i], nivelTierra - gombas.last()->boundingRect().height());
+        addItem(gombas.last());
+    }
 
     //Agregamos personaje
     personaje =  new Personaje();
@@ -318,9 +312,9 @@ void NivelUno::iniciarEscena()
 
 void NivelUno::actualizar()
 {
-    verificarColisionPlataforma(personaje->getFisica());
     personaje->actualizar(nivelTierra);
     moverJugador();
+    verificarColisionPlataforma(personaje->getFisica());
     verificarColisionBordes(personaje->getFisica());
     cambiarDireccionGomba();
 }
@@ -364,19 +358,39 @@ void NivelUno::moverJugador()
 
         if(personaje->pos().x() >= 1035 && personaje->getDireccion()  == 1)
         {
-            moneda->setX(-dx + moneda->pos().x());
-            moneda1->setX(-dx + moneda1->pos().x());
-            ladrillo->setX(-dx + ladrillo->pos().x());
-            ladrillo2->setX(-dx + ladrillo2->pos().x());
-            ladrillo3->setX(-dx + ladrillo3->pos().x());
-            ladrillo4->setX(-dx + ladrillo4->pos().x());
-            sorpresa->setX(-dx + sorpresa->pos().x());
-            sorpresa2->setX(-dx + sorpresa2->pos().x());
-            tubo->setX(-dx + tubo->pos().x());
-            tubo2->setX(-dx + tubo2->pos().x());
-            flor->setX(-dx + flor->pos().x());
-            goomba->setX(-dx + goomba->pos().x());
+            //mueve los ladrillos
+            for (int i = 0;i < ladrillos.size(); i++)
+            {
+                ladrillos.at(i)->setX(-dx + ladrillos.at(i)->pos().x());
+            }
+            for (int i = 0;i < ladrillosSorpresa.size(); i++)
+            {
+                ladrillosSorpresa.at(i)->setX(-dx + ladrillosSorpresa.at(i)->pos().x());
+            }
 
+            //mueve las monedas
+            for (int i = 0;i < monedas.size(); i++)
+            {
+                monedas.at(i)->setX(-dx + monedas.at(i)->pos().x());
+            }
+
+            //mover goombas
+            for (int i = 0;i < gombas.size(); i++)
+            {
+                gombas.at(i)->setX(-dx + gombas.at(i)->pos().x());
+            }
+
+            //mover tubos
+            for (int i = 0;i < tubos.size(); i++)
+            {
+                tubos.at(i)->setX(-dx + tubos.at(i)->pos().x());
+            }
+
+            //mover flores
+            for (int i = 0;i < floresCar.size(); i++)
+            {
+                floresCar.at(i)->setX(-dx + floresCar.at(i)->pos().x());
+            }
 
             const qreal proporcion = qreal(desplazamientoMundo) / maxDesplazamientoMundo;
             aplicarParalelismo(proporcion, cielo1);
@@ -389,8 +403,6 @@ void NivelUno::moverJugador()
             aplicarParalelismo(proporcion, tierra);
         }
     }
-
-
 }
 
 void NivelUno::siguienteSprite()
@@ -416,21 +428,21 @@ void NivelUno::keyPressEvent(QKeyEvent *event)
         break;
     case Qt::Key_Space:
             p->setVel(p->getVelX(), 250, p->getPosX(), p->getPosY());
+            sonidos->reproducirSalto();
         break;
     }
 }
 
 void NivelUno::keyReleaseEvent(QKeyEvent *event)
 {
-    if (event->isAutoRepeat()) {
-        return;
-    }
     switch (event->key())
     {
     case Qt::Key_Right:
+        if (event->isAutoRepeat()) {return;}
         agregarEntradaHorizontal(-1);
         break;
     case Qt::Key_Left:
+        if (event->isAutoRepeat()) {return;}
         agregarEntradaHorizontal(1);
         break;
 
