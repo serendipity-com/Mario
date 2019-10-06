@@ -1,10 +1,11 @@
 #include "comunicacionarduino.h"
-#include "ui_comunicacionarduino.h"
+//#include "ui_comunicacionarduino.h"
 #include <QDebug>
 
-ComunicacionArduino::ComunicacionArduino(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::ComunicacionArduino)
+ComunicacionArduino::ComunicacionArduino()
+//ComunicacionArduino::ComunicacionArduino(QWidget *parent) :
+//    QWidget(parent),
+//    ui(new Ui::ComunicacionArduino)
 {
 //    ui->setupUi(this);
     serial = new QSerialPort(); //Inicializar la variable serial
@@ -27,7 +28,7 @@ ComunicacionArduino::ComunicacionArduino(QWidget *parent) :
 
 ComunicacionArduino::~ComunicacionArduino()
 {
-    delete ui;
+//    delete ui;
 }
 
 void ComunicacionArduino::arduino_init()
