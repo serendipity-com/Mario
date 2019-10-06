@@ -7,7 +7,7 @@
 class PersonajeFisica
 {
 public:
-    PersonajeFisica(qreal x, qreal _posY, qreal _alto, qreal _ancho);
+    PersonajeFisica(qreal _posX, qreal _posY, qreal _alto, qreal _ancho);
 
     void actualizar();
 

@@ -17,6 +17,7 @@ NivelUno::NivelUno(QObject *padre):
   , nivelTierra(660)
   , velocidad(50)
   , entradaHorizontal(0)
+  , hongo(nullptr)
 {
     iniciarEscena();
 
@@ -43,6 +44,8 @@ NivelUno::~NivelUno()
     delete cielo6;
     delete cielo7;
     delete tierra;
+
+    delete hongo;
 
     monedas.clear();
     ladrillos.clear();
@@ -185,6 +188,11 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                 if(personajeSmall->estarTocandoCabeza(m))
                 {
                     p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(),p->getPosX(), p->getPosY());
+                    if(m->getRegalo() == 3)
+                    {
+                        hongo->setPos(m->pos().x(), m->pos().y() - 40);
+                        addItem(hongo);
+                    }
                 }
                 else if(personajeSmall->estarTocandoPlataforma(m))
                 {
@@ -254,6 +262,17 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
             }
         }
     }
+    for(QGraphicsItem *item : collidingItems(hongo))
+    {
+        if(LadrilloSorpresa *m = qgraphicsitem_cast<LadrilloSorpresa*>(item))
+        {
+            hongo->setVel(-10, hongo->getVelY(), hongo->getPosX(), nivelTierra - m->pos().y() + 40);
+        }
+        if(Ladrillo *m = qgraphicsitem_cast<Ladrillo*>(item))
+        {
+            hongo->setVel(-10, hongo->getVelY(), hongo->getPosX(), nivelTierra - m->pos().y() + 40);
+        }
+    }
 }
 
 void NivelUno::verificarColisionBordes(PersonajeFisica *p)
@@ -270,6 +289,11 @@ void NivelUno::verificarColisionBordes(PersonajeFisica *p)
     if(p->getPosY() < p->getAlto())
     {
         p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), p->getAlto());
+    }
+    //piso con hongo
+    if(hongo->getPosY() < 40)
+    {
+        hongo->setVel(-10, -1*(0.4)*hongo->getVelY(), hongo->getPosX(), 40);
     }
 }
 
@@ -377,8 +401,10 @@ void NivelUno::iniciarEscena()
     {
         ladrillosSorpresa.append(new LadrilloSorpresa());
         ladrillosSorpresa.last()->setPos(posLadrilloSorpresa[j][0],posLadrilloSorpresa[j][1]);
+        if(j == 0){ladrillosSorpresa.last()->setRegalo(3);}
         addItem(ladrillosSorpresa.last());
     }
+    hongo = new Hongo();
 
     //Agregamos monedas
     int posMonedas[24][2] ={{550,450}, {600,450}, {650,450}, {700,450}, {750,450}, {650,250}, {1150,350}, {1200,350}, {1350,150}, {1400,150}
@@ -436,6 +462,7 @@ void NivelUno::iniciarEscena()
     startTimer(100);
 }
 
+//cambiar posicion actual del personaje
 void NivelUno::actualizar()
 {
 
@@ -453,6 +480,7 @@ void NivelUno::actualizar()
         verificarColisionPlataforma(personajeSmall->getFisica());
         verificarColisionBordes(personajeSmall->getFisica());
     }
+    hongo->actualizar(nivelTierra);
     verificarColisionMoneda();
     cambiarDireccionGomba();
 }

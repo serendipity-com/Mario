@@ -6,6 +6,24 @@ LadrilloSorpresa::LadrilloSorpresa(QGraphicsItem *padre) : QGraphicsItem(padre)
     sprite = QPixmap(":/Imagenes/sorpresa.png");
 }
 
+void LadrilloSorpresa::setRegalo(int in)
+{
+    switch (in)
+    {
+        case 1: regalo = flor;
+            break;
+        case 2: regalo = moneda;
+            break;
+        case 3: regalo = hongo;
+            break;
+    }
+}
+
+int LadrilloSorpresa::getRegalo()
+{
+    return regalo;
+}
+
 void LadrilloSorpresa::siguienteSprite()
 {
     //Manejo de Sprites

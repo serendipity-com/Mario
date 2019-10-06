@@ -15,6 +15,7 @@
 #include "personajefisica.h"
 #include "backgrounditem.h"
 #include "moneda.h"
+#include "hongo.h"
 #include "ladrillosorpresa.h"
 #include "ladrillo.h"
 #include "tubo.h"
@@ -91,6 +92,7 @@ private:
     //complementos de la escena
     QList <Moneda *> monedas;
     QList <Ladrillo*> ladrillos;
+    Hongo *hongo;
     QList <LadrilloSorpresa*> ladrillosSorpresa;
     QList <Tubo *> tubos;
     QList <Flor *> floresCar;
