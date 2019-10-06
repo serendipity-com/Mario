@@ -95,6 +95,26 @@ void NivelUno::verificarColisionMoneda()
     }
 }
 
+void NivelUno::verificarColisionEnemigos(PersonajeFisica *p)
+{
+    for(QGraphicsItem *item : collidingItems(personaje))
+    {
+        if(Goomba *m = qgraphicsitem_cast<Goomba*>(item))
+        {
+            if(personaje->estarTocandoPies(m) )
+            {
+                qDebug() << "Mata";
+                removeItem(m);
+                p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personaje->boundingRect().height());
+            }
+            else
+            {
+                qDebug() << "Muere";
+            }
+        }
+    }
+}
+
 void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
 {
     for(QGraphicsItem *item : collidingItems(personaje))
@@ -129,7 +149,7 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
             }
             else
             {
-                p->setVel(p->getVelX(),-1*(0.1)*p->getVelY(), p->getPosX(),p->getPosY());
+                p->setVel(-1*(0.2)*p->getVelX(),p->getVelY(), p->getPosX(),p->getPosY());
             }
         }
     }
@@ -147,10 +167,10 @@ void NivelUno::verificarColisionBordes(PersonajeFisica *p)
         p->setVel(0,-1*(0.1)*p->getVelY(),1280 - personaje->boundingRect().width() - 200,p->getPosY());
     }
 
-    if(p->getPosY() > 660 - personaje->boundingRect().height())
-    {
-        p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(),p->getPosX(),nivelTierra - personaje->boundingRect().height());
-    }
+//    if(p->getPosY() > 660 - personaje->boundingRect().height())
+//    {
+//        p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(),p->getPosX(),nivelTierra - personaje->boundingRect().height());
+//    }
     //Colision borde inferior
     if(p->getPosY() < personaje->boundingRect().height())
     {
@@ -248,15 +268,16 @@ void NivelUno::iniciarEscena()
 
 
     //Agregamos ladrillos
-    int posLadrillo[4][3] = {{550,500,1}, {650,500,1}, {750,500,1}, {650,300,1}};
-    int posLadrilloSorpresa[2][2] = {{600,500}, {700,500}};
-    for (int i = 0; i < 4; i++)
+    int posLadrillo[9][3] = {{550,500,1}, {650,500,1}, {750,500,1}, {650,300,1}, {1150,400,2}, {1350,500,2}, {1350,200,6}, {2150,450,1}
+                             , {2250,450,1}};
+    int posLadrilloSorpresa[3][2] = {{600,500}, {700,500}, {2200,450}};
+    for (int i = 0; i < 9; i++)
     {
         ladrillos.append(new Ladrillo(posLadrillo[i][2]));
         ladrillos.last()->setPos(posLadrillo[i][0],posLadrillo[i][1]);
         addItem(ladrillos.last());
     }
-    for (int j = 0; j < 2; j++)
+    for (int j = 0; j < 3; j++)
     {
         ladrillosSorpresa.append(new LadrilloSorpresa());
         ladrillosSorpresa.last()->setPos(posLadrilloSorpresa[j][0],posLadrilloSorpresa[j][1]);
@@ -264,8 +285,9 @@ void NivelUno::iniciarEscena()
     }
 
     //Agregamos monedas
-    int posMonedas[6][2] ={{550,450}, {600,450}, {650,450}, {700,450}, {750,450}, {650,250}};
-    for (int i= 0; i < 6;i++)
+    int posMonedas[15][2] ={{550,450}, {600,450}, {650,450}, {700,450}, {750,450}, {650,250}, {1150,350}, {1200,350}, {1350,150}, {1400,150}
+                            , {1450,150}, {1500,150}, {1550,150}, {1600,150}};
+    for (int i= 0; i < 15;i++)
     {
         monedas.append(new Moneda());
         monedas.last()->setPos(posMonedas[i][0], posMonedas[i][1]);
@@ -273,8 +295,8 @@ void NivelUno::iniciarEscena()
     }
 
     //Agregamos tubos
-    int posTubos[2] = {900, 1500};
-    for (int i = 0; i < 2; i++)
+    int posTubos[4] = {900, 1500, 2000, 2500};
+    for (int i = 0; i < 4; i++)
     {
         tubos.append(new Tubo());
         tubos.last()->setPos(posTubos[i], nivelTierra - tubos.last()->boundingRect().height());
@@ -282,7 +304,7 @@ void NivelUno::iniciarEscena()
     }
 
     //Agregamos flor carnobora
-    int posFloresCar[1] = {880};
+    int posFloresCar[1] = {1475};
     for (int i = 0; i < 1; i++)
     {
         floresCar.append(new Flor());
@@ -291,8 +313,8 @@ void NivelUno::iniciarEscena()
     }
 
     //Agregamos enemigo Goomba
-    int posGombas[2] = {800,1000};
-    for (int i = 0; i < 2; i++)
+    int posGombas[8] = {800, 1000, 1600, 1800, 2100, 2200, 2300, 2400};
+    for (int i = 0; i < 8; i++)
     {
         gombas.append(new Goomba());
         gombas.last()->setPos(posGombas[i], nivelTierra - gombas.last()->boundingRect().height());
@@ -314,8 +336,10 @@ void NivelUno::actualizar()
 {
     personaje->actualizar(nivelTierra);
     moverJugador();
+    verificarColisionEnemigos(personaje->getFisica());
     verificarColisionPlataforma(personaje->getFisica());
     verificarColisionBordes(personaje->getFisica());
+
     cambiarDireccionGomba();
 }
 

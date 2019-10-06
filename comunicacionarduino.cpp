@@ -1,17 +1,14 @@
 #include "comunicacionarduino.h"
-//#include "ui_comunicacionarduino.h"
 #include <QDebug>
 
-ComunicacionArduino::ComunicacionArduino()
-//ComunicacionArduino::ComunicacionArduino(QWidget *parent) :
-//    QWidget(parent),
-//    ui(new Ui::ComunicacionArduino)
+ComunicacionArduino::ComunicacionArduino(QObject *padre) : QObject(padre)
 {
-//    ui->setupUi(this);
     serial = new QSerialPort(); //Inicializar la variable serial
     arduino_available = false;
 
-    foreach (const QSerialPortInfo &serial_info, QSerialPortInfo::availablePorts()) { //Lee toda la información del serial
+    foreach (const QSerialPortInfo &serial_info, QSerialPortInfo::availablePorts())
+    {
+        //Lee toda la información del serial
 //        qDebug()<<"Puerto: "<<serial_info.portName();
         portName = serial_info.portName(); //Coloca el puerto serial disponible
 //        qDebug()<<"vendorId: "<<serial_info.vendorIdentifier();
@@ -28,7 +25,7 @@ ComunicacionArduino::ComunicacionArduino()
 
 ComunicacionArduino::~ComunicacionArduino()
 {
-//    delete ui;
+    delete serial;
 }
 
 void ComunicacionArduino::arduino_init()

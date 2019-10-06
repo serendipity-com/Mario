@@ -36,6 +36,7 @@ public:
     void iniciarEscena();
 
     void verificarColisionMoneda();
+    void verificarColisionEnemigos(PersonajeFisica *p);
     void verificarColisionPlataforma(PersonajeFisica *p);
     void verificarColisionBordes(PersonajeFisica *p);
     void cambiarDireccionGomba();

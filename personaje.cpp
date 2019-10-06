@@ -106,22 +106,22 @@ void Personaje::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 
 bool Personaje::estarTocandoCabeza(QGraphicsItem *item)
 {
-    QRectF rect(pos().x(), pos().y(), boundingRect().width(), 5);
-    QRectF otherRect(item->pos().x(), item->pos().y(), item->boundingRect().width(), item->boundingRect().height());
+    QRectF rect(pos().x(), pos().y(), boundingRect().width(), 10);
+    QRectF otherRect(item->pos().x(), (item->pos().y() +item->boundingRect().height() -10), item->boundingRect().width(), 10);
     return rect.intersects(otherRect);
 }
 
 bool Personaje::estarTocandoPies(QGraphicsItem *item)
 {
-    QRectF rect(pos().x(), (pos().y() + boundingRect().height()) -5, boundingRect().width(), 5);
-    QRectF otherRect(item->pos().x(), item->pos().y(), item->boundingRect().width(), item->boundingRect().height());
+    QRectF rect(pos().x(), (pos().y() + boundingRect().height()) -10, boundingRect().width(), 10);
+    QRectF otherRect(item->pos().x(), item->pos().y(), item->boundingRect().width(), 10);
     return rect.intersects(otherRect);
 }
 
 bool Personaje::estarTocandoPlataforma(QGraphicsItem *item)
 {
-    QRectF rect(pos().x(), (pos().y() + boundingRect().height()) - 5, boundingRect().width(), 10);
-    QRectF otherRect(item->pos().x(), item->pos().y(), item->boundingRect().width(), item->boundingRect().height());
+    QRectF rect(pos().x(), (pos().y() + boundingRect().height()) - 10, boundingRect().width(), 10);
+    QRectF otherRect(item->pos().x(), item->pos().y(), item->boundingRect().width(), 10);
     return rect.intersects(otherRect);
 }
 

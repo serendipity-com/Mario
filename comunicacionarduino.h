@@ -1,20 +1,17 @@
 #ifndef COMUNICACIONARDUINO_H
 #define COMUNICACIONARDUINO_H
 
-//#include <QWidget>
-#include <QSerialPort> //Antes de incluir la libreria colocar serialport en el .pro del proyecto
+
+#include <QSerialPort>
 #include <QSerialPortInfo>
+#include <QObject>
 
-//namespace Ui {
-//class ComunicacionArduino;
-//}
 
-class ComunicacionArduino /*public QWidget*/
+class ComunicacionArduino : public QObject
 {
-//    Q_OBJECT
+    Q_OBJECT
 
 private:
-//    Ui::ComunicacionArduino *ui;
     QSerialPort *serial;
     QString portName;
     quint16 vendorrId;
@@ -23,8 +20,7 @@ private:
     void arduino_init();
 
 public:
-    ComunicacionArduino();
-//    explicit ComunicacionArduino(QWidget *parent = 0);
+    explicit ComunicacionArduino(QObject *padre = nullptr);
     ~ComunicacionArduino();
 
 private slots:
