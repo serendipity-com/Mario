@@ -268,10 +268,11 @@ void NivelUno::iniciarEscena()
 
 
     //Agregamos ladrillos
-    int posLadrillo[9][3] = {{550,500,1}, {650,500,1}, {750,500,1}, {650,300,1}, {1150,400,2}, {1350,500,2}, {1350,200,6}, {2150,450,1}
-                             , {2250,450,1}};
+    int posLadrillo[17][3] = {{550,500,1}, {650,500,1}, {750,500,1}, {650,300,1}, {1150,400,2}, {1350,500,2}, {1350,200,6}, {2150,450,1}
+                             , {2250,450,1}, {3050,610,4}, {3100,560,3}, {3150,510,2}, {3200,460,1}, {3425,460,1}, {3425,510,2}, {3425,560,3}
+                             , {3425,610,4}};
     int posLadrilloSorpresa[3][2] = {{600,500}, {700,500}, {2200,450}};
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < 17; i++)
     {
         ladrillos.append(new Ladrillo(posLadrillo[i][2]));
         ladrillos.last()->setPos(posLadrillo[i][0],posLadrillo[i][1]);
@@ -285,9 +286,10 @@ void NivelUno::iniciarEscena()
     }
 
     //Agregamos monedas
-    int posMonedas[15][2] ={{550,450}, {600,450}, {650,450}, {700,450}, {750,450}, {650,250}, {1150,350}, {1200,350}, {1350,150}, {1400,150}
-                            , {1450,150}, {1500,150}, {1550,150}, {1600,150}};
-    for (int i= 0; i < 15;i++)
+    int posMonedas[24][2] ={{550,450}, {600,450}, {650,450}, {700,450}, {750,450}, {650,250}, {1150,350}, {1200,350}, {1350,150}, {1400,150}
+                         , {1450,150}, {1500,150}, {1550,150}, {1600,150}, {2750,500},{2800,500}, {2850,500}, {2900,500}, {2950,500}, {3000,500}, {2950,450}
+                         , {2950,550}, {2900,400}, {2900,600}};
+    for (int i= 0; i < 24;i++)
     {
         monedas.append(new Moneda());
         monedas.last()->setPos(posMonedas[i][0], posMonedas[i][1]);
@@ -295,8 +297,8 @@ void NivelUno::iniciarEscena()
     }
 
     //Agregamos tubos
-    int posTubos[4] = {900, 1500, 2000, 2500};
-    for (int i = 0; i < 4; i++)
+    int posTubos[5] = {900, 1500, 2000, 2500, 3275};
+    for (int i = 0; i < 5; i++)
     {
         tubos.append(new Tubo());
         tubos.last()->setPos(posTubos[i], nivelTierra - tubos.last()->boundingRect().height());
@@ -304,8 +306,8 @@ void NivelUno::iniciarEscena()
     }
 
     //Agregamos flor carnobora
-    int posFloresCar[1] = {1475};
-    for (int i = 0; i < 1; i++)
+    int posFloresCar[2] = {1475, 3250};
+    for (int i = 0; i < 2; i++)
     {
         floresCar.append(new Flor());
         floresCar.last()->setPos(posFloresCar[i], tubos.at(1)->pos().y() - floresCar.last()->boundingRect().height());

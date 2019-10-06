@@ -18,7 +18,7 @@ class MenuJugador : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MenuJugador(QWidget *parent = 0);
+    explicit MenuJugador(QWidget *parent = nullptr);
     ~MenuJugador();
     void construirInformacion();
 
