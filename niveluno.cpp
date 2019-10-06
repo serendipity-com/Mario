@@ -4,6 +4,8 @@ NivelUno::NivelUno(QObject *padre):
     QGraphicsScene(0,0,8000,720,padre)
   , anchoEscena(8000)
   , personaje(nullptr)
+  , personajeSmall(nullptr)
+  , estado(small)
   , cielo1(nullptr)
   , cielo2(nullptr)
   , cielo3(nullptr)
@@ -31,6 +33,7 @@ NivelUno::NivelUno(QObject *padre):
 NivelUno::~NivelUno()
 {
     delete personaje;
+    delete personajeSmall;
 
     delete cielo1;
     delete cielo2;
@@ -52,7 +55,8 @@ NivelUno::~NivelUno()
 void NivelUno::agregarEntradaHorizontal(int entrada)
 {
     entradaHorizontal += entrada;
-    personaje->setDireccion(qBound(-1, entradaHorizontal, 1));
+    if (estado == small){personajeSmall->setDireccion(qBound(-1, entradaHorizontal, 1));}
+    else if (estado == normal){personaje->setDireccion(qBound(-1, entradaHorizontal, 1));}
     checkTimer();
 }
 /*Esta función primero verifica si el jugador se mueve.
@@ -63,17 +67,35 @@ void NivelUno::agregarEntradaHorizontal(int entrada)
  *  isActive()al temporizador.*/
 void NivelUno::checkTimer()
 {
-    if(personaje->getDireccion() == 0)
+    if(estado == small)
     {
-        personaje->estarQuieto();
-        timerSprite->stop();
-        //qDebug() << "No";
+        if(personajeSmall->getDireccion() == 0)
+        {
+            personajeSmall->estarQuieto();
+            timerSprite->stop();
+            //qDebug() << "No";
+        }
+        else if(!timerSprite->isActive())
+        {
+            personajeSmall->caminar();
+            timerSprite->start(50);
+            //qDebug() << "Si";
+        }
     }
-    else if(!timerSprite->isActive())
+    else if(estado == normal)
     {
-        personaje->caminar();
-        timerSprite->start(50);
-        //qDebug() << "Si";
+        if(personaje->getDireccion() == 0)
+        {
+            personaje->estarQuieto();
+            timerSprite->stop();
+            //qDebug() << "No";
+        }
+        else if(!timerSprite->isActive())
+        {
+            personaje->caminar();
+            timerSprite->start(50);
+            //qDebug() << "Si";
+        }
     }
 }
 
@@ -85,31 +107,68 @@ void NivelUno::checkTimer()
  *  Por defecto, un elemento se considerará colisionando personaje si las formas de los dos elementos se cruzan*/
 void NivelUno::verificarColisionMoneda()
 {
-    for(QGraphicsItem *item : collidingItems(personaje))
+    if(estado == small)
     {
-        if(Moneda *m = qgraphicsitem_cast<Moneda*>(item))
+        for(QGraphicsItem *item : collidingItems(personajeSmall))
         {
-            removeItem(m);
-            sonidos->reproducirMoneda();
+            if(Moneda *m = qgraphicsitem_cast<Moneda*>(item))
+            {
+                removeItem(m);
+                sonidos->reproducirMoneda();
+            }
+        }
+    }
+    else if(estado == normal)
+    {
+        for(QGraphicsItem *item : collidingItems(personaje))
+        {
+            if(Moneda *m = qgraphicsitem_cast<Moneda*>(item))
+            {
+                removeItem(m);
+                sonidos->reproducirMoneda();
+            }
         }
     }
 }
 
 void NivelUno::verificarColisionEnemigos(PersonajeFisica *p)
 {
-    for(QGraphicsItem *item : collidingItems(personaje))
+    if(estado == small)
     {
-        if(Goomba *m = qgraphicsitem_cast<Goomba*>(item))
+        for(QGraphicsItem *item : collidingItems(personajeSmall))
         {
-            if(personaje->estarTocandoPies(m) )
+            if(Goomba *m = qgraphicsitem_cast<Goomba*>(item))
             {
-                qDebug() << "Mata";
-                removeItem(m);
-                p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personaje->boundingRect().height());
+                if(personajeSmall->estarTocandoPies(m) )
+                {
+                    qDebug() << "Mata";
+                    removeItem(m);
+                    p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personajeSmall->boundingRect().height());
+                }
+                else
+                {
+                    qDebug() << "Muere";
+                }
             }
-            else
+        }
+    }
+    else if(estado == normal)
+    {
+        for(QGraphicsItem *item : collidingItems(personaje))
+        {
+            if(Goomba *m = qgraphicsitem_cast<Goomba*>(item))
             {
-                qDebug() << "Muere";
+                if(personaje->estarTocandoPies(m) )
+                {
+                    qDebug() << "Mata";
+                    removeItem(m);
+                    p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personaje->boundingRect().height());
+                }
+                else
+                {
+                    estado = normal;
+                    qDebug() << "Muere";
+                }
             }
         }
     }
@@ -117,39 +176,81 @@ void NivelUno::verificarColisionEnemigos(PersonajeFisica *p)
 
 void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
 {
-    for(QGraphicsItem *item : collidingItems(personaje))
+    if(estado == small)
     {
-        if(LadrilloSorpresa *m = qgraphicsitem_cast<LadrilloSorpresa*>(item))
+        for(QGraphicsItem *item : collidingItems(personajeSmall))
         {
-            if(personaje->estarTocandoCabeza(m))
+            if(LadrilloSorpresa *m = qgraphicsitem_cast<LadrilloSorpresa*>(item))
             {
-                p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(),p->getPosX(), p->getPosY());
+                if(personajeSmall->estarTocandoCabeza(m))
+                {
+                    p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(),p->getPosX(), p->getPosY());
+                }
+                else if(personajeSmall->estarTocandoPlataforma(m))
+                {
+                    p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personajeSmall->boundingRect().height());
+                }
             }
-            else if(personaje->estarTocandoPlataforma(m))
+            if(Ladrillo *l = qgraphicsitem_cast<Ladrillo*>(item))
             {
-                p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personaje->boundingRect().height());
+                if(personajeSmall->estarTocandoCabeza(l))
+                {
+                    p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(),p->getPosX(), p->getPosY());
+                }
+                else if(personajeSmall->estarTocandoPlataforma(l))
+                {
+                    p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - l->pos().y() + personajeSmall->boundingRect().height());
+                }
+            }
+            else if(Tubo *t = qgraphicsitem_cast<Tubo*>(item))
+            {
+                if(personajeSmall->estarTocandoPlataforma(t))
+                {
+                    p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - t->pos().y() + personajeSmall->boundingRect().height());
+                }
+                else
+                {
+                    p->setVel(-1*(0.2)*p->getVelX(),p->getVelY(), p->getPosX(),p->getPosY());
+                }
             }
         }
-        if(Ladrillo *l = qgraphicsitem_cast<Ladrillo*>(item))
+    }
+    else if(estado == normal)
+    {
+        for(QGraphicsItem *item : collidingItems(personaje))
         {
-            if(personaje->estarTocandoCabeza(l))
+            if(LadrilloSorpresa *m = qgraphicsitem_cast<LadrilloSorpresa*>(item))
             {
-                p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(),p->getPosX(), p->getPosY());
+                if(personaje->estarTocandoCabeza(m))
+                {
+                    p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(),p->getPosX(), p->getPosY());
+                }
+                else if(personaje->estarTocandoPlataforma(m))
+                {
+                    p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personaje->boundingRect().height());
+                }
             }
-            else if(personaje->estarTocandoPlataforma(l))
+            if(Ladrillo *l = qgraphicsitem_cast<Ladrillo*>(item))
             {
-                p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - l->pos().y() + personaje->boundingRect().height());
+                if(personaje->estarTocandoCabeza(l))
+                {
+                    p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(),p->getPosX(), p->getPosY());
+                }
+                else if(personaje->estarTocandoPlataforma(l))
+                {
+                    p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - l->pos().y() + personaje->boundingRect().height());
+                }
             }
-        }
-        else if(Tubo *t = qgraphicsitem_cast<Tubo*>(item))
-        {
-            if(personaje->estarTocandoPlataforma(t))
+            else if(Tubo *t = qgraphicsitem_cast<Tubo*>(item))
             {
-                p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - t->pos().y() + personaje->boundingRect().height());
-            }
-            else
-            {
-                p->setVel(-1*(0.2)*p->getVelX(),p->getVelY(), p->getPosX(),p->getPosY());
+                if(personaje->estarTocandoPlataforma(t))
+                {
+                    p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - t->pos().y() + personaje->boundingRect().height());
+                }
+                else
+                {
+                    p->setVel(-1*(0.2)*p->getVelX(),p->getVelY(), p->getPosX(),p->getPosY());
+                }
             }
         }
     }
@@ -158,23 +259,17 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
 void NivelUno::verificarColisionBordes(PersonajeFisica *p)
 {
 
-    if(p->getPosX() < personaje->boundingRect().width())
+    if(p->getPosX() < p->getAncho())
     {
-        p->setVel(0,-1*(0.1)*p->getVelY(),personaje->boundingRect().width(),p->getPosY());
+        p->setVel(0,-1*(0.1)*p->getVelY(), p->getAlto(),p->getPosY());
     }
-    if(p->getPosX() > 1280 - personaje->boundingRect().width() - 200)
+    if(p->getPosX() > 1280 - p->getAncho() - 200)
     {
-        p->setVel(0,-1*(0.1)*p->getVelY(),1280 - personaje->boundingRect().width() - 200,p->getPosY());
+        p->setVel(0,-1*(0.1)*p->getVelY(),1280 - p->getAncho() - 200,p->getPosY());
     }
-
-//    if(p->getPosY() > 660 - personaje->boundingRect().height())
-//    {
-//        p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(),p->getPosX(),nivelTierra - personaje->boundingRect().height());
-//    }
-    //Colision borde inferior
-    if(p->getPosY() < personaje->boundingRect().height())
+    if(p->getPosY() < p->getAlto())
     {
-        p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), personaje->boundingRect().height() );
+        p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), p->getAlto());
     }
 }
 
@@ -331,31 +426,47 @@ void NivelUno::iniciarEscena()
     posicionX = minX;
     addItem(personaje);
 
+    personajeSmall = new PersonajeSmall();
+    minX = personajeSmall->boundingRect().width();
+    maxX = anchoEscena - personajeSmall->boundingRect().width() / 2;
+    personajeSmall->setPos(minX,nivelTierra - personajeSmall->boundingRect().height());
+    posicionX = minX;
+    addItem(personajeSmall);
+
     startTimer(100);
 }
 
 void NivelUno::actualizar()
 {
-    personaje->actualizar(nivelTierra);
-    moverJugador();
-    verificarColisionEnemigos(personaje->getFisica());
-    verificarColisionPlataforma(personaje->getFisica());
-    verificarColisionBordes(personaje->getFisica());
 
+    if(estado == small)
+    {
+        personajeSmall->actualizar(nivelTierra);
+        moverJugador();
+        verificarColisionEnemigos(personajeSmall->getFisica());
+        verificarColisionPlataforma(personajeSmall->getFisica());
+        verificarColisionBordes(personajeSmall->getFisica());}
+
+    else if(estado == normal){
+        personaje->actualizar(nivelTierra);
+        verificarColisionEnemigos(personajeSmall->getFisica());
+        verificarColisionPlataforma(personajeSmall->getFisica());
+        verificarColisionBordes(personajeSmall->getFisica());
+    }
+    verificarColisionMoneda();
     cambiarDireccionGomba();
 }
 
 void NivelUno::moverJugador()
 {
-
-    verificarColisionMoneda();
     /*A continuación, calculamos el turno que debe obtener el elemento del jugador y
      *  lo almacenamos dx. La distancia que el jugador debe moverse cada 30 milisegundos
      *  está definida por la velocidad variable miembro, expresada en píxeles. */
-    const int direccion = personaje->getDireccion();
+    int direccion = 0;
+    if(estado == small){ direccion = personajeSmall->getDireccion();}
+    else if (estado == normal){personaje->getDireccion();}
     if(direccion != 0)
     {
-        PersonajeFisica *p = personaje->getFisica();
         const int dx = 7*direccion;
         qreal newX = qBound(minX, posicionX + dx, maxX);
         if (newX == posicionX)
@@ -382,7 +493,7 @@ void NivelUno::moverJugador()
         const int maxDesplazamientoMundo = anchoEscena - qRound(width());
         desplazamientoMundo = qBound(0, desplazamientoMundo, maxDesplazamientoMundo);
 
-        if(personaje->pos().x() >= 1035 && personaje->getDireccion()  == 1)
+        if((personaje->pos().x() >= 1035 && personaje->getDireccion()  == 1) || (personajeSmall->pos().x() >= 1035 && personajeSmall->getDireccion()  == 1))
         {
             //mueve los ladrillos
             for (int i = 0;i < ladrillos.size(); i++)
@@ -433,12 +544,14 @@ void NivelUno::moverJugador()
 
 void NivelUno::siguienteSprite()
 {
-    personaje->siguienteSprite();
+    if (estado == small){personajeSmall->siguienteSprite();}
+    else if (estado == normal){personaje->siguienteSprite();}
 }
 
 void NivelUno::keyPressEvent(QKeyEvent *event)
 {
-    PersonajeFisica *p = personaje->getFisica();
+    PersonajeFisica *p = personajeSmall->getFisica();
+    if(estado == normal){p = personaje->getFisica();}
 
     switch (event->key())
     {

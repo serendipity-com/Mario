@@ -1,27 +1,25 @@
-#include "personaje.h"
+#include "personajesmall.h"
 
-//En el constructor, establecemos direccion  a 0, lo que significa que Jugador no se mueve en absoluto.
-//Si direccion es 1, Personje se mueve hacia la derecha, y si el valor es -1, se mueve hacia la izquierda.
-Personaje::Personaje(QGraphicsItem *padre) : QGraphicsItem(padre)
+PersonajeSmall::PersonajeSmall(QGraphicsItem *padre) : QGraphicsItem(padre)
   , estado(quieto)
   , direccion(0)
 {
     setFlag(ItemClipsToShape);
-    spriteCaminando = QPixmap(":Imagenes/mario.png");
-    spriteQuieto = QPixmap(":Imagenes/mariostop.png");
-    spriteSaltando = QPixmap(":Imagenes/mario_jump.png");
-    spriteAtacando = QPixmap(":Imagenes/mariostop.png");
+    spriteCaminando = QPixmap(":/Imagenes/mario_small.png");
+    spriteQuieto = QPixmap(":/Imagenes/smallMarioStop.png");
+    spriteSaltando = QPixmap(":/Imagenes/smallMarioStop.png");
+    spriteAtacando = QPixmap(":/Imagenes/smallMarioStop.png");
     sprite = spriteQuieto;
 
-    personaje = new PersonajeFisica(0,720,73,45);
+    personaje = new PersonajeFisica(0,720, 45,45);
 }
 
-Personaje::~Personaje()
+PersonajeSmall::~PersonajeSmall()
 {
     delete personaje;
 }
 
-void Personaje::caminar()
+void PersonajeSmall::caminar()
 {
     if (estado != caminando)
     {
@@ -31,19 +29,19 @@ void Personaje::caminar()
     }
 }
 
-void Personaje::saltar()
+void PersonajeSmall::saltar()
 {
     estado = saltando;
 }
 
-void Personaje::estarQuieto()
+void PersonajeSmall::estarQuieto()
 {
     sprite = spriteQuieto;
     estado = quieto;
     posSprite = 0;
 }
 
-void Personaje::atacar()
+void PersonajeSmall::atacar()
 {
     sprite = spriteAtacando;
     estado = atacando;
@@ -55,12 +53,12 @@ void Personaje::atacar()
 //Si se está moviendo hacia la izquierda, debemos voltear su imagen para que Benjamin mire
 //hacia la izquierda, la dirección en la que se está moviendo. Si se mueve hacia la derecha,
 //restauramos el estado normal al asignar un QTransformobjeto vacío , que es una matriz de identidad.
-int Personaje::getDireccion()
+int PersonajeSmall::getDireccion()
 {
     return direccion;
 }
 
-void Personaje::setDireccion(int inDireccion)
+void PersonajeSmall::setDireccion(int inDireccion)
 {
     if(direccion != inDireccion)
     {
@@ -77,7 +75,7 @@ void Personaje::setDireccion(int inDireccion)
     }
 }
 
-void Personaje::siguienteSprite()
+void PersonajeSmall::siguienteSprite()
 {
     //Manejo de Sprites
     //Distancia en caada sprite
@@ -89,50 +87,48 @@ void Personaje::siguienteSprite()
     }
 }
 
-//paint()función, que realiza la pintura del elemento actual, y la
-//boundingRect()función, que debe devolver el límite del área sobre la paint()que pinta la  función
-QRectF Personaje::boundingRect() const
+QRectF PersonajeSmall::boundingRect() const
 {
-    return QRectF(0,0,45,73);
+    return QRectF(0,0,45,45);
 }
 
-void Personaje::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void PersonajeSmall::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->drawPixmap(0,0, sprite, posSprite, 0,45, 73);
+    painter->drawPixmap(0,0, sprite, posSprite, 0,45, 45);
     setTransformOriginPoint(boundingRect().center());
     Q_UNUSED(widget)
     Q_UNUSED(option)
 }
 
-bool Personaje::estarTocandoCabeza(QGraphicsItem *item)
+bool PersonajeSmall::estarTocandoCabeza(QGraphicsItem *item)
 {
     QRectF rect(pos().x(), pos().y(), boundingRect().width(), 10);
     QRectF otherRect(item->pos().x(), (item->pos().y() +item->boundingRect().height() -10), item->boundingRect().width(), 10);
     return rect.intersects(otherRect);
 }
 
-bool Personaje::estarTocandoPies(QGraphicsItem *item)
+bool PersonajeSmall::estarTocandoPies(QGraphicsItem *item)
 {
     QRectF rect(pos().x(), (pos().y() + boundingRect().height()) -10, boundingRect().width(), 10);
     QRectF otherRect(item->pos().x(), item->pos().y(), item->boundingRect().width(), 10);
     return rect.intersects(otherRect);
 }
 
-bool Personaje::estarTocandoPlataforma(QGraphicsItem *item)
+bool PersonajeSmall::estarTocandoPlataforma(QGraphicsItem *item)
 {
     QRectF rect(pos().x(), (pos().y() + boundingRect().height()) - 10, boundingRect().width(), 10);
     QRectF otherRect(item->pos().x(), item->pos().y(), item->boundingRect().width(), 10);
     return rect.intersects(otherRect);
 }
 
-void Personaje::actualizar(int lim)
+void PersonajeSmall::actualizar(int lim)
 {
     personaje->actualizar();
     //qDebug() << lim - personaje->getPosY();
     setPos(personaje->getPosX(), lim - personaje->getPosY());
 }
 
-PersonajeFisica *Personaje::getFisica()
+PersonajeFisica *PersonajeSmall::getFisica()
 {
     return personaje;
 }

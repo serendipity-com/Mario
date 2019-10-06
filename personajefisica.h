@@ -7,10 +7,12 @@
 class PersonajeFisica
 {
 public:
-    PersonajeFisica(qreal x, qreal _posY);
+    PersonajeFisica(qreal x, qreal _posY, qreal _alto, qreal _ancho);
 
     void actualizar();
 
+    qreal getAlto();
+    qreal getAncho();
     qreal getPosX();
     qreal getPosY();
     qreal getVelX();
@@ -20,6 +22,8 @@ public:
     void setVel(qreal _velX, qreal _velY, qreal _posX, qreal _posY);
 
 private:
+    qreal alto;
+    qreal ancho;
     qreal posX;
     qreal posY;
     qreal velX;

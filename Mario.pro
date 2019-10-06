@@ -24,6 +24,7 @@ SOURCES += \
     main.cpp \
     personaje.cpp \
     personajefisica.cpp \
+    personajesmall.cpp \
     puntaje.cpp \
     tubo.cpp \
     widget.cpp \
@@ -45,6 +46,7 @@ HEADERS += \
     ladrillosorpresa.h \
     personaje.h \
     personajefisica.h \
+    personajesmall.h \
     puntaje.h \
     tubo.h \
     widget.h \

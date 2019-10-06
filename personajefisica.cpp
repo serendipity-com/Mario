@@ -1,11 +1,13 @@
 #include "personajefisica.h"
 
-PersonajeFisica::PersonajeFisica(qreal _posX, qreal _posY)
+PersonajeFisica::PersonajeFisica(qreal _posX, qreal _posY, qreal _alto, qreal _ancho)
 {
     posX = _posX;
     posY = _posY;
+    alto = _alto;
+    ancho = _ancho;
 
-    a = 45*73;
+    a = ancho*alto;
     cd = 5;
     vel = 0;
     velX = 0;
@@ -29,6 +31,16 @@ void PersonajeFisica::actualizar()
     velX = velX + aX*dt;
     velY = velY + aY*dt;
     //qDebug() << vel << " " << posX << "" << posY << " " << velX <<" " << velY;
+}
+
+qreal PersonajeFisica::getAlto()
+{
+    return alto;
+}
+
+qreal PersonajeFisica::getAncho()
+{
+    return ancho;
 }
 
 qreal PersonajeFisica::getPosX()
