@@ -9,12 +9,12 @@
 //class ComunicacionArduino;
 //}
 
-class ComunicacionArduino : /*public QWidget*/
+class ComunicacionArduino /*public QWidget*/
 {
 //    Q_OBJECT
 
 private:
-    Ui::ComunicacionArduino *ui;
+//    Ui::ComunicacionArduino *ui;
     QSerialPort *serial;
     QString portName;
     quint16 vendorrId;
