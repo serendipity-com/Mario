@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui serialport
 QT       += multimedia\
             core gui sql
 
@@ -36,7 +36,8 @@ SOURCES += \
     hongo.cpp \
     ladrillo.cpp \
     niveluno.cpp \
-    menujugador.cpp
+    menujugador.cpp \
+    comunicacionarduino.cpp
 
 HEADERS += \
     administradorsonidos.h \
@@ -56,7 +57,8 @@ HEADERS += \
     hongo.h \
     ladrillo.h \
     niveluno.h \
-    menujugador.h
+    menujugador.h \
+    comunicacionarduino.h
 
 FORMS += \
     widget.ui \
