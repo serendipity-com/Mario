@@ -38,6 +38,7 @@ public:
     void iniciarEscena();
 
     void verificarColisionMoneda();
+    void verificarColisionAyudas();
     void verificarColisionEnemigos(PersonajeFisica *p);
     void verificarColisionPlataforma(PersonajeFisica *p);
     void verificarColisionBordes(PersonajeFisica *p);

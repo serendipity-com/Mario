@@ -35,7 +35,7 @@ void Hongo::actualizar(qreal lim)
     posY = posY + (velY*dt) +((aY*dt*dt)/2);
     velX = velX + aX*dt;
     velY = velY + aY*dt;
-
+    qDebug() << posX << posY;
     setPos(posX, lim - posY);
 }
 

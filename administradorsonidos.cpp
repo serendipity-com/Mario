@@ -21,6 +21,16 @@ AdministradorSonidos::AdministradorSonidos()
     muerto->setLoopCount(0);
     muerto->setVolume(40);
 
+    hongo = new  QSoundEffect();
+    hongo->setSource(QUrl("qrc:/Sonidos/sprout.wav"));
+    hongo->setLoopCount(0);
+    hongo->setVolume(60);
+
+    golpe = new  QSoundEffect();
+    golpe->setSource(QUrl("qrc:/Sonidos/shrink.wav"));
+    golpe->setLoopCount(0);
+    golpe->setVolume(60);
+
     nivel->play();
 }
 
@@ -30,6 +40,7 @@ AdministradorSonidos::~AdministradorSonidos()
     delete salto;
     delete moneda;
     delete muerto;
+    delete hongo;
 }
 
 void AdministradorSonidos::reproducirSalto()
@@ -47,4 +58,14 @@ void AdministradorSonidos::reproducirMuerto()
 {
     muerto->play();
     nivel->stop();
+}
+
+void AdministradorSonidos::reproducirHongo()
+{
+    hongo->play();
+}
+
+void AdministradorSonidos::reproducirGolpe()
+{
+    golpe->play();
 }

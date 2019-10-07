@@ -58,8 +58,8 @@ NivelUno::~NivelUno()
 void NivelUno::agregarEntradaHorizontal(int entrada)
 {
     entradaHorizontal += entrada;
-    if (estado == small){personajeSmall->setDireccion(qBound(-1, entradaHorizontal, 1));}
-    else if (estado == normal){personaje->setDireccion(qBound(-1, entradaHorizontal, 1));}
+    personajeSmall->setDireccion(qBound(-1, entradaHorizontal, 1));
+    personaje->setDireccion(qBound(-1, entradaHorizontal, 1));
     checkTimer();
 }
 /*Esta función primero verifica si el jugador se mueve.
@@ -134,6 +134,32 @@ void NivelUno::verificarColisionMoneda()
     }
 }
 
+void NivelUno::verificarColisionAyudas()
+{
+    if(estado == small)
+    {
+        PersonajeFisica *p = personajeSmall->getFisica();
+        PersonajeFisica *m = personaje->getFisica();
+        if(personajeSmall->collidesWithItem(hongo))
+        {
+            removeItem(hongo);
+            hongo->setPos(-500,-500);
+            personajeSmall->setPos(-1000,-1000);
+            sonidos->reproducirHongo();
+            estado = normal;
+            m->setVel(p->getVelX(), p->getVelY(), p->getPosX(), p->getPosY() - personajeSmall->boundingRect().height() + personaje->boundingRect().height());
+        }
+    }
+    else if(estado == normal)
+    {
+        if(personaje->collidesWithItem(hongo))
+        {
+            removeItem(hongo);
+            sonidos->reproducirHongo();
+        }
+    }
+}
+
 void NivelUno::verificarColisionEnemigos(PersonajeFisica *p)
 {
     if(estado == small)
@@ -144,13 +170,12 @@ void NivelUno::verificarColisionEnemigos(PersonajeFisica *p)
             {
                 if(personajeSmall->estarTocandoPies(m) )
                 {
-                    qDebug() << "Mata";
                     removeItem(m);
                     p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personajeSmall->boundingRect().height());
                 }
                 else
                 {
-                    qDebug() << "Muere";
+                    sonidos->reproducirMuerto();
                 }
             }
         }
@@ -163,14 +188,18 @@ void NivelUno::verificarColisionEnemigos(PersonajeFisica *p)
             {
                 if(personaje->estarTocandoPies(m) )
                 {
-                    qDebug() << "Mata";
                     removeItem(m);
                     p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personaje->boundingRect().height());
                 }
                 else
                 {
-                    estado = normal;
-                    qDebug() << "Muere";
+                    //camiar de personaje
+                    estado = small;
+                    sonidos->reproducirGolpe();
+                    PersonajeFisica *p = personajeSmall->getFisica();
+                    PersonajeFisica *s = personaje->getFisica();
+                    p->setVel(s->getVelX(), s->getVelY(), s->getPosX(), s->getPosY());
+                    personaje->setPos(-1000,-1000);
                 }
             }
         }
@@ -191,6 +220,7 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                     if(m->getRegalo() == 3)
                     {
                         hongo->setPos(m->pos().x(), m->pos().y() - 40);
+                        m->setRegalo(2);
                         addItem(hongo);
                     }
                 }
@@ -262,17 +292,6 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
             }
         }
     }
-    for(QGraphicsItem *item : collidingItems(hongo))
-    {
-        if(LadrilloSorpresa *m = qgraphicsitem_cast<LadrilloSorpresa*>(item))
-        {
-            hongo->setVel(-10, hongo->getVelY(), hongo->getPosX(), nivelTierra - m->pos().y() + 40);
-        }
-        if(Ladrillo *m = qgraphicsitem_cast<Ladrillo*>(item))
-        {
-            hongo->setVel(-10, hongo->getVelY(), hongo->getPosX(), nivelTierra - m->pos().y() + 40);
-        }
-    }
 }
 
 void NivelUno::verificarColisionBordes(PersonajeFisica *p)
@@ -289,11 +308,6 @@ void NivelUno::verificarColisionBordes(PersonajeFisica *p)
     if(p->getPosY() < p->getAlto())
     {
         p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), p->getAlto());
-    }
-    //piso con hongo
-    if(hongo->getPosY() < 40)
-    {
-        hongo->setVel(-10, -1*(0.4)*hongo->getVelY(), hongo->getPosX(), 40);
     }
 }
 
@@ -404,7 +418,9 @@ void NivelUno::iniciarEscena()
         if(j == 0){ladrillosSorpresa.last()->setRegalo(3);}
         addItem(ladrillosSorpresa.last());
     }
+    //Agregamos hongos
     hongo = new Hongo();
+    hongo->setPos(-500, -500);
 
     //Agregamos monedas
     int posMonedas[24][2] ={{550,450}, {600,450}, {650,450}, {700,450}, {750,450}, {650,250}, {1150,350}, {1200,350}, {1350,150}, {1400,150}
@@ -446,10 +462,6 @@ void NivelUno::iniciarEscena()
 
     //Agregamos personaje
     personaje =  new Personaje();
-    minX = personaje->boundingRect().width();
-    maxX = anchoEscena - personaje->boundingRect().width() / 2;
-    personaje->setPos(minX,nivelTierra - personaje->boundingRect().height());
-    posicionX = minX;
     addItem(personaje);
 
     personajeSmall = new PersonajeSmall();
@@ -465,22 +477,25 @@ void NivelUno::iniciarEscena()
 //cambiar posicion actual del personaje
 void NivelUno::actualizar()
 {
-
+    verificarColisionAyudas();
     if(estado == small)
     {
         personajeSmall->actualizar(nivelTierra);
         moverJugador();
         verificarColisionEnemigos(personajeSmall->getFisica());
         verificarColisionPlataforma(personajeSmall->getFisica());
-        verificarColisionBordes(personajeSmall->getFisica());}
-
-    else if(estado == normal){
-        personaje->actualizar(nivelTierra);
-        verificarColisionEnemigos(personajeSmall->getFisica());
-        verificarColisionPlataforma(personajeSmall->getFisica());
         verificarColisionBordes(personajeSmall->getFisica());
     }
-    hongo->actualizar(nivelTierra);
+
+    else if(estado == normal)
+    {
+        personaje->actualizar(nivelTierra);
+        moverJugador();
+        verificarColisionEnemigos(personaje->getFisica());
+        verificarColisionPlataforma(personaje->getFisica());
+        verificarColisionBordes(personaje->getFisica());
+    }
+
     verificarColisionMoneda();
     cambiarDireccionGomba();
 }
@@ -492,7 +507,7 @@ void NivelUno::moverJugador()
      *  está definida por la velocidad variable miembro, expresada en píxeles. */
     int direccion = 0;
     if(estado == small){ direccion = personajeSmall->getDireccion();}
-    else if (estado == normal){personaje->getDireccion();}
+    else if (estado == normal){direccion = personaje->getDireccion();}
     if(direccion != 0)
     {
         const int dx = 7*direccion;
