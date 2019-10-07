@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
     splash->setPixmap(QPixmap(":/Imagenes/mario_splash.png"));
     splash->show();
 
+
     //Widget w;
     NivelUno escena;
     QGraphicsView view;

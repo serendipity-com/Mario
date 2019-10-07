@@ -6,19 +6,20 @@ MenuJugador::MenuJugador(QWidget *parent) :
     ui(new Ui::MenuJugador)
 {
     ui->setupUi(this);
-    connect(ui->Enter, &QPushButton::clicked, this, &MenuJugador::enter);
+    connect(ui->NuevaPartida, &QPushButton::clicked, this, &MenuJugador::nuevaPartida);
 }
 
 MenuJugador::~MenuJugador()
 {
     delete ui;
+//    actualizarBaseDatos();
 }
 
 void MenuJugador::construirInformacion()
 //Lee información de archivo que contiene nombre de usuario, nivel y puntaje en el que quedó
 
 {
-    QFile inputFile("BaseDatos.txt");
+    QFile inputFile("://BaseDatos.txt");
     if (inputFile.open(QIODevice::ReadOnly))
     {
        QTextStream in(&inputFile);
@@ -31,41 +32,56 @@ void MenuJugador::construirInformacion()
            int nivel = valores[0].digitValue();
            int puntaje = line.mid(ch+2).toInt();
            informacion.insert({nombre, {nivel,puntaje}});
-
+           //qDebug() << informacion[nombre];
        }
        inputFile.close();
     }
 }
 
-void MenuJugador::enter()
+void MenuJugador::correrJuego()
 {
-    QString data = ui->NombreUsuario->text(); //Nombre ingresado
-    auto iterador = informacion.find(data);
-    if(iterador == informacion.end()) //Si no está en el map de base de datos
+    switch(informacion[jugadorActual][0])
     {
-        //Se inicia nueva partida
-        //una vez finalice, se procede a hacer esto:
-//        QFile inputFile("BaseDatos.txt");
-//        if (inputFile.open(QIODevice::Append))
-//        {
-//           QTextStream in(&inputFile);
-//           in << data << ":" << "nivel" << "puntaje" <<endl;
-//           in.flush();
-//           inputFile.close();
-//        }
+    case 1:
+        break;
+    case 2:
+        break;
     }
-    else //Si está en el map de base de datos
-        //Se carga partida
-    ui->NombreUsuario->clear(); //Para borrar del lineEdit el nombre
-
-}
-
-void MenuJugador::cargarPartida()
-{
-
 }
 
 void MenuJugador::nuevaPartida()
 {
-    //Se encarga de verificar si el usuario ya existe
+    jugadorActual = ui->NombreUsuario->text(); //Nombre ingresado
+    auto iterador = informacion.find(jugadorActual);
+    if(iterador == informacion.end()) //Si no está en el map de base de datos
+    {
+        informacion.insert({jugadorActual, {1,0}});
+    }
+    else
+        informacion[jugadorActual] = {1,0};
+    //qDebug() << informacion[data];
+    ui->NombreUsuario->clear(); //Para borrar del lineEdit el nombre
+
 }
+
+void MenuJugador::cargarPartida()//***
+{
+    jugadorActual = ui->NombreUsuario->text(); //Nombre ingresado
+}
+
+//void MenuJugador::actualizarBaseDatos()//***
+//{
+////  una vez finalice la partida del jugador, se procede a hacer esto:
+//    QFile inputFile("://BaseDatos.txt");
+//    if (inputFile.open(QIODevice::Append)qDebug() << informacion[data];)
+//    {
+//       QTextStream in(&inputFile);
+//       in << data << ":" << "nivel" << "puntaje" <<endl;
+//       in.flush();
+//       inputFile.close();
+//    }
+//}
+
+
+
+

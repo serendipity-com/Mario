@@ -59,5 +59,6 @@
         <file>Imagenes/1-6.png</file>
         <file>Imagenes/1-7.png</file>
         <file>Imagenes/1-8.png</file>
+        <file>BaseDatos.txt</file>
     </qresource>
 </RCC>

@@ -19,7 +19,6 @@ Widget::~Widget()
 
 void Widget::unJugador()
 {
-    QMessageBox::information(this, "¡Saludos!", "Ingrese nombre de usuario");
     menuJugador->show();
     menuJugador->construirInformacion(); //Se llena el map con base de datos
     this->close();

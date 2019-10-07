@@ -3,7 +3,6 @@
 
 #include "menujugador.h"
 #include <QWidget>
-#include <QMessageBox>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }

@@ -8,6 +8,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDataStream>
+#include <QDebug>
 
 using namespace std;
 namespace Ui {
@@ -21,15 +22,19 @@ public:
     explicit MenuJugador(QWidget *parent = nullptr);
     ~MenuJugador();
     void construirInformacion();
+private:
+    //    void actualizarBaseDatos();
+    void correrJuego();
 
 private slots:
-    void enter();
     void cargarPartida();
     void nuevaPartida();
 
 private:
     Ui::MenuJugador *ui;
+    QString jugadorActual;
     map <QString, QList<int>> informacion;
+
 
 };
 
