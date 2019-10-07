@@ -12,6 +12,7 @@
 
 #include "personaje.h"
 #include "personajesmall.h"
+#include "personajefire.h"
 #include "personajefisica.h"
 #include "backgrounditem.h"
 #include "moneda.h"
@@ -58,12 +59,13 @@ private:
 
     Personaje *personaje;
     PersonajeSmall *personajeSmall;
+    PersonajeFire *personajeFire;
 
     enum Estado
     {
         small,
         normal,
-        fuego
+        fire
     };
     Estado estado;
 

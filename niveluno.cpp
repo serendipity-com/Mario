@@ -5,6 +5,7 @@ NivelUno::NivelUno(QObject *padre):
   , anchoEscena(8000)
   , personaje(nullptr)
   , personajeSmall(nullptr)
+  , personajeFire(nullptr)
   , estado(small)
   , cielo1(nullptr)
   , cielo2(nullptr)
@@ -35,6 +36,7 @@ NivelUno::~NivelUno()
 {
     delete personaje;
     delete personajeSmall;
+    delete personajeFire;
 
     delete cielo1;
     delete cielo2;
@@ -60,6 +62,7 @@ void NivelUno::agregarEntradaHorizontal(int entrada)
     entradaHorizontal += entrada;
     personajeSmall->setDireccion(qBound(-1, entradaHorizontal, 1));
     personaje->setDireccion(qBound(-1, entradaHorizontal, 1));
+    personajeFire->setDireccion(qBound(-1, entradaHorizontal, 1));
     checkTimer();
 }
 /*Esta función primero verifica si el jugador se mueve.
@@ -100,6 +103,21 @@ void NivelUno::checkTimer()
             //qDebug() << "Si";
         }
     }
+    else if(estado == fire)
+    {
+        if(personaje->getDireccion() == 0)
+        {
+            personajeFire->estarQuieto();
+            timerSprite->stop();
+            //qDebug() << "No";
+        }
+        else if(!timerSprite->isActive())
+        {
+            personajeFire->caminar();
+            timerSprite->start(50);
+            //qDebug() << "Si";
+        }
+    }
 }
 
 /*Primero, llamamos a la QGraphicsScene::collidingItems()
@@ -132,6 +150,17 @@ void NivelUno::verificarColisionMoneda()
             }
         }
     }
+    else if(estado == fire)
+    {
+        for(QGraphicsItem *item : collidingItems(personajeFire))
+        {
+            if(Moneda *m = qgraphicsitem_cast<Moneda*>(item))
+            {
+                removeItem(m);
+                sonidos->reproducirMoneda();
+            }
+        }
+    }
 }
 
 void NivelUno::verificarColisionAyudas()
@@ -153,6 +182,14 @@ void NivelUno::verificarColisionAyudas()
     else if(estado == normal)
     {
         if(personaje->collidesWithItem(hongo))
+        {
+            removeItem(hongo);
+            sonidos->reproducirHongo();
+        }
+    }
+    else if(estado == fire)
+    {
+        if(personajeFire->collidesWithItem(hongo))
         {
             removeItem(hongo);
             sonidos->reproducirHongo();
@@ -200,6 +237,30 @@ void NivelUno::verificarColisionEnemigos(PersonajeFisica *p)
                     PersonajeFisica *s = personaje->getFisica();
                     p->setVel(s->getVelX(), s->getVelY(), s->getPosX(), s->getPosY());
                     personaje->setPos(-1000,-1000);
+                }
+            }
+        }
+    }
+    else if(estado == fire)
+    {
+        for(QGraphicsItem *item : collidingItems(personajeFire))
+        {
+            if(Goomba *m = qgraphicsitem_cast<Goomba*>(item))
+            {
+                if(personajeFire->estarTocandoPies(m) )
+                {
+                    removeItem(m);
+                    p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personajeFire->boundingRect().height());
+                }
+                else
+                {
+                    //camiar de personaje
+                    estado = normal;
+                    sonidos->reproducirGolpe();
+                    PersonajeFisica *p = personaje->getFisica();
+                    PersonajeFisica *s = personajeFire->getFisica();
+                    p->setVel(s->getVelX(), s->getVelY(), s->getPosX(), s->getPosY());
+                    personajeFire->setPos(-1000,-1000);
                 }
             }
         }
@@ -284,6 +345,45 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                 if(personaje->estarTocandoPlataforma(t))
                 {
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - t->pos().y() + personaje->boundingRect().height());
+                }
+                else
+                {
+                    p->setVel(-1*(0.2)*p->getVelX(),p->getVelY(), p->getPosX(),p->getPosY());
+                }
+            }
+        }
+    }
+    else if(estado == fire)
+    {
+        for(QGraphicsItem *item : collidingItems(personajeFire))
+        {
+            if(LadrilloSorpresa *m = qgraphicsitem_cast<LadrilloSorpresa*>(item))
+            {
+                if(personajeFire->estarTocandoCabeza(m))
+                {
+                    p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(),p->getPosX(), p->getPosY());
+                }
+                else if(personajeFire->estarTocandoPlataforma(m))
+                {
+                    p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personajeFire->boundingRect().height());
+                }
+            }
+            if(Ladrillo *l = qgraphicsitem_cast<Ladrillo*>(item))
+            {
+                if(personajeFire->estarTocandoCabeza(l))
+                {
+                    p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(),p->getPosX(), p->getPosY());
+                }
+                else if(personajeFire->estarTocandoPlataforma(l))
+                {
+                    p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - l->pos().y() + personajeFire->boundingRect().height());
+                }
+            }
+            else if(Tubo *t = qgraphicsitem_cast<Tubo*>(item))
+            {
+                if(personajeFire->estarTocandoPlataforma(t))
+                {
+                    p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - t->pos().y() + personajeFire->boundingRect().height());
                 }
                 else
                 {
@@ -464,6 +564,9 @@ void NivelUno::iniciarEscena()
     personaje =  new Personaje();
     addItem(personaje);
 
+    personajeFire = new PersonajeFire();
+    addItem(personajeFire);
+
     personajeSmall = new PersonajeSmall();
     minX = personajeSmall->boundingRect().width();
     maxX = anchoEscena - personajeSmall->boundingRect().width() / 2;
@@ -496,6 +599,15 @@ void NivelUno::actualizar()
         verificarColisionBordes(personaje->getFisica());
     }
 
+    else if(estado == fire)
+    {
+        personajeFire->actualizar(nivelTierra);
+        moverJugador();
+        verificarColisionEnemigos(personajeFire->getFisica());
+        verificarColisionPlataforma(personajeFire->getFisica());
+        verificarColisionBordes(personajeFire->getFisica());
+    }
+
     verificarColisionMoneda();
     cambiarDireccionGomba();
 }
@@ -508,6 +620,7 @@ void NivelUno::moverJugador()
     int direccion = 0;
     if(estado == small){ direccion = personajeSmall->getDireccion();}
     else if (estado == normal){direccion = personaje->getDireccion();}
+    else if (estado == fire){direccion = personajeFire->getDireccion();}
     if(direccion != 0)
     {
         const int dx = 7*direccion;
@@ -536,7 +649,9 @@ void NivelUno::moverJugador()
         const int maxDesplazamientoMundo = anchoEscena - qRound(width());
         desplazamientoMundo = qBound(0, desplazamientoMundo, maxDesplazamientoMundo);
 
-        if((personaje->pos().x() >= 1035 && personaje->getDireccion()  == 1) || (personajeSmall->pos().x() >= 1035 && personajeSmall->getDireccion()  == 1))
+        if((personaje->pos().x() >= 1035 && personaje->getDireccion()  == 1) ||
+           (personajeSmall->pos().x() >= 1035 && personajeSmall->getDireccion()  == 1) ||
+           (personajeFire->pos().x() >= 1035 && personajeFire->getDireccion()  == 1))
         {
             //mueve los ladrillos
             for (int i = 0;i < ladrillos.size(); i++)
@@ -572,6 +687,9 @@ void NivelUno::moverJugador()
                 floresCar.at(i)->setX(-dx + floresCar.at(i)->pos().x());
             }
 
+            //mover hongo
+            hongo->setX(-dx + hongo->pos().x());
+
             const qreal proporcion = qreal(desplazamientoMundo) / maxDesplazamientoMundo;
             aplicarParalelismo(proporcion, cielo1);
             aplicarParalelismo(proporcion, cielo2);
@@ -589,12 +707,14 @@ void NivelUno::siguienteSprite()
 {
     if (estado == small){personajeSmall->siguienteSprite();}
     else if (estado == normal){personaje->siguienteSprite();}
+    else if (estado == fire){personajeFire->siguienteSprite();}
 }
 
 void NivelUno::keyPressEvent(QKeyEvent *event)
 {
     PersonajeFisica *p = personajeSmall->getFisica();
     if(estado == normal){p = personaje->getFisica();}
+    else if(estado == fire){p = personajeFire->getFisica();}
 
     switch (event->key())
     {
@@ -609,8 +729,8 @@ void NivelUno::keyPressEvent(QKeyEvent *event)
         agregarEntradaHorizontal(-1);
         break;
     case Qt::Key_Space:
-            p->setVel(p->getVelX(), 250, p->getPosX(), p->getPosY());
-            sonidos->reproducirSalto();
+        p->setVel(p->getVelX(), 250, p->getPosX(), p->getPosY());
+        sonidos->reproducirSalto();
         break;
     }
 }
