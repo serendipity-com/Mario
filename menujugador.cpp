@@ -7,6 +7,7 @@ MenuJugador::MenuJugador(QWidget *parent) :
 {
     ui->setupUi(this);
     connect(ui->NuevaPartida, &QPushButton::clicked, this, &MenuJugador::nuevaPartida);
+    connect(ui->CargarPartida, &QPushButton::clicked, this, &MenuJugador::cargarPartida);
 }
 
 MenuJugador::~MenuJugador()
