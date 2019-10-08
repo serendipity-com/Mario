@@ -11,7 +11,7 @@ class Personaje :public QObject, public QGraphicsItem
 {
     Q_OBJECT
 public:
-    Personaje(QGraphicsItem *padre = nullptr);
+    Personaje(int tipo, QGraphicsItem *padre = nullptr);
     ~Personaje();
 
     void caminar();
@@ -41,6 +41,9 @@ private:
         quieto,
         atacando,
     };
+
+    int alto;
+    int ancho;
 
     Estado estado;
 

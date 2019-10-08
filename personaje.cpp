@@ -2,18 +2,41 @@
 
 //En el constructor, establecemos direccion  a 0, lo que significa que Jugador no se mueve en absoluto.
 //Si direccion es 1, Personje se mueve hacia la derecha, y si el valor es -1, se mueve hacia la izquierda.
-Personaje::Personaje(QGraphicsItem *padre) : QGraphicsItem(padre)
+Personaje::Personaje(int tipo, QGraphicsItem *padre) : QGraphicsItem(padre)
   , estado(quieto)
   , direccion(0)
 {
     setFlag(ItemClipsToShape);
-    spriteCaminando = QPixmap(":Imagenes/mario.png");
-    spriteQuieto = QPixmap(":Imagenes/mariostop.png");
-    spriteSaltando = QPixmap(":Imagenes/mario_jump.png");
-    spriteAtacando = QPixmap(":Imagenes/mariostop.png");
-    sprite = spriteQuieto;
+    if(tipo == 1)
+    {
+        spriteCaminando = QPixmap(":Imagenes/mario.png");
+        spriteQuieto = QPixmap(":Imagenes/mariostop.png");
+        spriteSaltando = QPixmap(":Imagenes/mario_jump.png");
+        spriteAtacando = QPixmap(":Imagenes/mariostop.png");
+        ancho = 45;
+        alto = 73;
+    }
+    else if(tipo == 2)
+    {
+        spriteCaminando = QPixmap(":/Imagenes/mario_small.png");
+        spriteQuieto = QPixmap(":/Imagenes/smallMarioStop.png");
+        spriteSaltando = QPixmap(":/Imagenes/smallMarioStop.png");
+        spriteAtacando = QPixmap(":/Imagenes/smallMarioStop.png");
+        ancho = 45;
+        alto = 45;
+    }
+    else if(tipo == 3)
+    {
+        spriteCaminando = QPixmap(":/Imagenes/firemario.png");
+        spriteQuieto = QPixmap("::/Imagenes/firemariostop.png");
+        spriteSaltando = QPixmap(":/Imagenes/firemariostop.png");
+        spriteAtacando = QPixmap(":/Imagenes/firemariostop.png");
+        ancho = 45;
+        alto = 73;
+    }
 
-    personaje = new PersonajeFisica(0,720,73,45);
+    sprite = spriteQuieto;
+    personaje = new PersonajeFisica(0,720,alto,ancho);
 }
 
 Personaje::~Personaje()
@@ -93,12 +116,12 @@ void Personaje::siguienteSprite()
 //boundingRect()función, que debe devolver el límite del área sobre la paint()que pinta la  función
 QRectF Personaje::boundingRect() const
 {
-    return QRectF(0,0,45,73);
+    return QRectF(0,0,ancho,alto);
 }
 
 void Personaje::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->drawPixmap(0,0, sprite, posSprite, 0,45, 73);
+    painter->drawPixmap(0,0, sprite, posSprite, 0,ancho, alto);
     setTransformOriginPoint(boundingRect().center());
     Q_UNUSED(widget)
     Q_UNUSED(option)

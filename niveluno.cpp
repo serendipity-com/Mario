@@ -561,13 +561,13 @@ void NivelUno::iniciarEscena()
     }
 
     //Agregamos personaje
-    personaje =  new Personaje();
+    personaje =  new Personaje(1);
     addItem(personaje);
 
-    personajeFire = new PersonajeFire();
+    personajeFire = new Personaje(3);
     addItem(personajeFire);
 
-    personajeSmall = new PersonajeSmall();
+    personajeSmall = new Personaje(2);
     minX = personajeSmall->boundingRect().width();
     maxX = anchoEscena - personajeSmall->boundingRect().width() / 2;
     personajeSmall->setPos(minX,nivelTierra - personajeSmall->boundingRect().height());

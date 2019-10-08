@@ -11,8 +11,6 @@
 #include <QList>
 
 #include "personaje.h"
-#include "personajesmall.h"
-#include "personajefire.h"
 #include "personajefisica.h"
 #include "backgrounditem.h"
 #include "moneda.h"
@@ -58,8 +56,8 @@ private:
     int anchoEscena;
 
     Personaje *personaje;
-    PersonajeSmall *personajeSmall;
-    PersonajeFire *personajeFire;
+    Personaje *personajeSmall;
+    Personaje *personajeFire;
 
     enum Estado
     {
