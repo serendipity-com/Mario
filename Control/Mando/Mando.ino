@@ -64,7 +64,7 @@ void setup() {
     // initialize serial communication
     // (38400 chosen because it works as well at 8MHz as it does at 16MHz, but
     // it's really up to you depending on your project)
-    Serial.begin(38400);
+    Serial.begin(9600);
 
     // initialize device
     Serial.println("Initializing I2C devices...");
@@ -86,22 +86,26 @@ void loop() {
    {
      case btnRIGHT:
        {
-       Serial.println("Derecha");
+       Serial.println("A");
+       delay(500);
        break;
        }
      case btnLEFT:
        {
-       Serial.println("Izquierda");
+       Serial.println("D");
+       delay(500);
        break;
        }
      case btnUP:
        {
-       Serial.println("Saltar");
+       Serial.println("W");
+       delay(500);
        break;
        }
      case btnDOWN:
        {
-       Serial.println("Disparar");
+       Serial.println("Z");
+       delay(500);
        break;
        }
      case btnSELECT:
@@ -140,9 +144,9 @@ void loop() {
           Serial.print(gx); Serial.print("\t");
           Serial.print(gy); Serial.print("\t");
           Serial.println(gz);*/
-          if (ax > 8){Serial.println("Izquierda");}
-          if (ax < -8){Serial.println("Derecha");}
-          if (ay > 8){Serial.println("Saltar");}
+          if (ax > 8){Serial.println("A");delay(500);}
+          if (ax < -8){Serial.println("D");delay(500);}
+          if (ay > 8){Serial.println("W");delay(500);}
       #endif
     }
 }

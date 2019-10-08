@@ -6,6 +6,7 @@ NivelUno::NivelUno(QObject *padre):
   , personaje(nullptr)
   , personajeSmall(nullptr)
   , personajeFire(nullptr)
+  , salto(true)
   , estado(small)
   , cielo1(nullptr)
   , cielo2(nullptr)
@@ -16,8 +17,8 @@ NivelUno::NivelUno(QObject *padre):
   , cielo7(nullptr)
   , tierra(nullptr)
   , nivelTierra(660)
-  , velocidad(50)
   , entradaHorizontal(0)
+  , velocidad(50)
   , hongo(nullptr)
 {
     iniciarEscena();
@@ -26,6 +27,9 @@ NivelUno::NivelUno(QObject *padre):
 
     timerSprite = new QTimer(this);
     connect(timerSprite, SIGNAL(timeout()), this, SLOT(siguienteSprite()));
+
+    timerMando = new QTimer(this);
+    connect(timerMando, SIGNAL(timeout()), this, SLOT(moverConMando()));
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(actualizar()));
@@ -288,6 +292,7 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                 else if(personajeSmall->estarTocandoPlataforma(m))
                 {
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personajeSmall->boundingRect().height());
+                    salto = true;
                 }
             }
             if(Ladrillo *l = qgraphicsitem_cast<Ladrillo*>(item))
@@ -299,6 +304,7 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                 else if(personajeSmall->estarTocandoPlataforma(l))
                 {
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - l->pos().y() + personajeSmall->boundingRect().height());
+                    salto = true;
                 }
             }
             else if(Tubo *t = qgraphicsitem_cast<Tubo*>(item))
@@ -306,6 +312,7 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                 if(personajeSmall->estarTocandoPlataforma(t))
                 {
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - t->pos().y() + personajeSmall->boundingRect().height());
+                    salto = true;
                 }
                 else
                 {
@@ -327,6 +334,7 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                 else if(personaje->estarTocandoPlataforma(m))
                 {
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personaje->boundingRect().height());
+                    salto = true;
                 }
             }
             if(Ladrillo *l = qgraphicsitem_cast<Ladrillo*>(item))
@@ -338,6 +346,7 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                 else if(personaje->estarTocandoPlataforma(l))
                 {
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - l->pos().y() + personaje->boundingRect().height());
+                    salto = true;
                 }
             }
             else if(Tubo *t = qgraphicsitem_cast<Tubo*>(item))
@@ -345,6 +354,7 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                 if(personaje->estarTocandoPlataforma(t))
                 {
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - t->pos().y() + personaje->boundingRect().height());
+                    salto = true;
                 }
                 else
                 {
@@ -366,6 +376,7 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                 else if(personajeFire->estarTocandoPlataforma(m))
                 {
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personajeFire->boundingRect().height());
+                    salto = true;
                 }
             }
             if(Ladrillo *l = qgraphicsitem_cast<Ladrillo*>(item))
@@ -377,6 +388,7 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                 else if(personajeFire->estarTocandoPlataforma(l))
                 {
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - l->pos().y() + personajeFire->boundingRect().height());
+                    salto = true;
                 }
             }
             else if(Tubo *t = qgraphicsitem_cast<Tubo*>(item))
@@ -384,6 +396,7 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                 if(personajeFire->estarTocandoPlataforma(t))
                 {
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - t->pos().y() + personajeFire->boundingRect().height());
+                    salto = true;
                 }
                 else
                 {
@@ -408,6 +421,7 @@ void NivelUno::verificarColisionBordes(PersonajeFisica *p)
     if(p->getPosY() < p->getAlto())
     {
         p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), p->getAlto());
+        salto = true;
     }
 }
 
@@ -710,6 +724,27 @@ void NivelUno::siguienteSprite()
     else if (estado == fire){personajeFire->siguienteSprite();}
 }
 
+void NivelUno::moverConMando()
+{
+    PersonajeFisica *p = personajeSmall->getFisica();
+    if(estado == normal){p = personaje->getFisica();}
+    else if(estado == fire){p = personajeFire->getFisica();}
+
+    switch (mando->leerArduino()[0])
+    {
+    case 'W':
+        if(salto)
+        {
+            p->setVel(p->getVelX(), 250, p->getPosX(), p->getPosY());
+            sonidos->reproducirSalto();
+            salto = false;
+        }
+        break;
+    default:
+        break;
+    }
+}
+
 void NivelUno::keyPressEvent(QKeyEvent *event)
 {
     PersonajeFisica *p = personajeSmall->getFisica();
@@ -729,8 +764,19 @@ void NivelUno::keyPressEvent(QKeyEvent *event)
         agregarEntradaHorizontal(-1);
         break;
     case Qt::Key_Space:
-        p->setVel(p->getVelX(), 250, p->getPosX(), p->getPosY());
-        sonidos->reproducirSalto();
+        if(salto)
+        {
+            p->setVel(p->getVelX(), 250, p->getPosX(), p->getPosY());
+            sonidos->reproducirSalto();
+            salto = false;
+        }
+        break;
+    case Qt::Key_M:
+        mando = new AdministradorArduino();
+        if(mando->getEstado())
+        {
+            timerMando->start(200);
+        }
         break;
     }
 }

@@ -18,6 +18,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    administradorarduino.cpp \
     administradorsonidos.cpp \
     backgrounditem.cpp \
     ladrillosorpresa.cpp \
@@ -36,10 +37,10 @@ SOURCES += \
     hongo.cpp \
     ladrillo.cpp \
     niveluno.cpp \
-    menujugador.cpp \
-    comunicacionarduino.cpp
+    menujugador.cpp
 
 HEADERS += \
+    administradorarduino.h \
     administradorsonidos.h \
     backgrounditem.h \
     ladrillosorpresa.h \
@@ -57,8 +58,7 @@ HEADERS += \
     hongo.h \
     ladrillo.h \
     niveluno.h \
-    menujugador.h \
-    comunicacionarduino.h
+    menujugador.h
 
 FORMS += \
     widget.ui \

@@ -21,6 +21,7 @@
 #include "flor.h"
 #include "goomba.h"
 #include "administradorsonidos.h"
+#include "administradorarduino.h"
 
 class NivelUno: public QGraphicsScene
 {
@@ -29,12 +30,15 @@ public:
     explicit NivelUno(QObject *padre = nullptr);
     ~NivelUno();
 
+private:
     void timerEvent(QTimerEvent *);
 
     void agregarEntradaHorizontal(int entrada);
     void aplicarParalelismo(qreal propocion, QGraphicsItem *item);
 
     void iniciarEscena();
+    void moverJugador();
+    void checkTimer();
 
     void verificarColisionMoneda();
     void verificarColisionAyudas();
@@ -44,9 +48,8 @@ public:
     void cambiarDireccionGomba();
 public slots:
     void actualizar();
-    void moverJugador();
     void siguienteSprite();
-    void checkTimer();
+    void moverConMando();
 
 protected:
     void keyPressEvent(QKeyEvent *event);
@@ -59,6 +62,7 @@ private:
     Personaje *personajeSmall;
     Personaje *personajeFire;
 
+    bool salto;
     enum Estado
     {
         small,
@@ -81,14 +85,15 @@ private:
     qreal nivelTierra;
     qreal posicionX;
     int desplazamientoMundo;
-
+    int entradaHorizontal;
     int velocidad;
+
     QTimer *timer;
     QTimer *timerSprite;
-
-    int entradaHorizontal;
+    QTimer *timerMando;
 
     AdministradorSonidos *sonidos;
+    AdministradorArduino *mando;
 
     //complementos de la escena
     QList <Moneda *> monedas;
