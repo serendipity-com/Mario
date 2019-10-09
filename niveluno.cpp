@@ -730,6 +730,7 @@ void NivelUno::moverConMando()
     if(estado == normal){p = personaje->getFisica();}
     else if(estado == fire){p = personajeFire->getFisica();}
 
+    int direccion = 0;
     switch (mando->leerArduino()[0])
     {
     case 'W':
@@ -740,7 +741,28 @@ void NivelUno::moverConMando()
             salto = false;
         }
         break;
-    default:
+    case 'D':
+        p->setVel(velocidad,p->getVelY(), p->getPosX(), p->getPosY());
+        direccion = 1;
+        personajeSmall->setDireccion(qBound(-1, direccion, 1));
+        personaje->setDireccion(qBound(-1, direccion, 1));
+        personajeFire->setDireccion(qBound(-1, direccion, 1));
+        checkTimer();
+        break;
+    case 'A':
+        p->setVel(-velocidad,p->getVelY(), p->getPosX(), p->getPosY());
+        direccion = -1;
+        personajeSmall->setDireccion(qBound(-1, direccion, 1));
+        personaje->setDireccion(qBound(-1, direccion, 1));
+        personajeFire->setDireccion(qBound(-1, direccion, 1));
+        checkTimer();
+        break;
+    default :
+        direccion = 0;
+        personajeSmall->setDireccion(qBound(-1, direccion, 1));
+        personaje->setDireccion(qBound(-1, direccion, 1));
+        personajeFire->setDireccion(qBound(-1, direccion, 1));
+        checkTimer();
         break;
     }
 }
