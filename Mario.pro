@@ -27,7 +27,6 @@ SOURCES += \
     personajefisica.cpp \
     puntaje.cpp \
     tubo.cpp \
-    widget.cpp \
     menu.cpp \
     plataforma.cpp \
     flor.cpp \
@@ -37,7 +36,8 @@ SOURCES += \
     hongo.cpp \
     ladrillo.cpp \
     niveluno.cpp \
-    menujugador.cpp
+    menujugador.cpp \
+    widget.cpp
 
 HEADERS += \
     administradorarduino.h \
@@ -48,7 +48,6 @@ HEADERS += \
     personajefisica.h \
     puntaje.h \
     tubo.h \
-    widget.h \
     menu.h \
     plataforma.h \
     flor.h \
@@ -58,11 +57,12 @@ HEADERS += \
     hongo.h \
     ladrillo.h \
     niveluno.h \
-    menujugador.h
+    menujugador.h \
+    widget.h
 
 FORMS += \
-    widget.ui \
-    menujugador.ui
+    menujugador.ui \
+    widget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
