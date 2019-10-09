@@ -61,5 +61,6 @@
         <file>Imagenes/1-8.png</file>
         <file>BaseDatos.txt</file>
         <file>Imagenes/fondoMenu1.jpg</file>
+        <file>Imagenes/fondoMenu2.jpg</file>
     </qresource>
 </RCC>
