@@ -31,6 +31,11 @@ AdministradorSonidos::AdministradorSonidos()
     golpe->setLoopCount(0);
     golpe->setVolume(60);
 
+    flor = new  QSoundEffect();
+    flor->setSource(QUrl("qrc:/Sonidos/powerup.wav"));
+    flor->setLoopCount(0);
+    flor->setVolume(60);
+
     nivel->play();
 }
 
@@ -41,6 +46,7 @@ AdministradorSonidos::~AdministradorSonidos()
     delete moneda;
     delete muerto;
     delete hongo;
+    delete flor;
 }
 
 void AdministradorSonidos::reproducirSalto()
@@ -68,4 +74,9 @@ void AdministradorSonidos::reproducirHongo()
 void AdministradorSonidos::reproducirGolpe()
 {
     golpe->play();
+}
+
+void AdministradorSonidos::reproducirFlor()
+{
+    flor->play();
 }

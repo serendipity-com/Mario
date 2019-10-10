@@ -28,7 +28,7 @@ Personaje::Personaje(int tipo, QGraphicsItem *padre) : QGraphicsItem(padre)
     else if(tipo == 3)
     {
         spriteCaminando = QPixmap(":/Imagenes/firemario.png");
-        spriteQuieto = QPixmap("::/Imagenes/firemariostop.png");
+        spriteQuieto = QPixmap(":/Imagenes/firemariostop.png");
         spriteSaltando = QPixmap(":/Imagenes/firemariostop.png");
         spriteAtacando = QPixmap(":/Imagenes/firemariostop.png");
         ancho = 45;

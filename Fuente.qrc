@@ -1,2 +1,6 @@
-<!DOCTYPE RCC>
-<RCC version="1.0"/>
+<RCC>
+    <qresource prefix="/">
+        <file>Fuente/CoinCount2.ttf</file>
+        <file>Fuente/SuperMario256.ttf</file>
+    </qresource>
+</RCC>

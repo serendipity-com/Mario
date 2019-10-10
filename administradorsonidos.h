@@ -18,6 +18,7 @@ public:
     void reproducirMuerto();
     void reproducirHongo();
     void reproducirGolpe();
+    void reproducirFlor();
 
 private:
     QMediaPlayer *nivel;
@@ -26,6 +27,7 @@ private:
     QSoundEffect *muerto;
     QSoundEffect *hongo;
     QSoundEffect *golpe;
+    QSoundEffect *flor;
 
 };
 

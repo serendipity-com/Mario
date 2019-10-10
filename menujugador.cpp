@@ -6,6 +6,9 @@ MenuJugador::MenuJugador(QWidget *parent) :
     ui(new Ui::MenuJugador)
 {
     ui->setupUi(this);
+    incializarEscena();
+    construirInformacion();
+
     connect(ui->NuevaPartida, &QPushButton::clicked, this, &MenuJugador::nuevaPartida);
     connect(ui->CargarPartida, &QPushButton::clicked, this, &MenuJugador::cargarPartida);
 }
@@ -13,7 +16,21 @@ MenuJugador::MenuJugador(QWidget *parent) :
 MenuJugador::~MenuJugador()
 {
     delete ui;
-//    actualizarBaseDatos();
+    //    actualizarBaseDatos();
+}
+
+void MenuJugador::incializarEscena()
+{
+    escena = new QGraphicsScene();
+
+    view = new QGraphicsView();
+    view->setRenderHint(QPainter::Antialiasing);
+    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    view->setScene(escena);
+    view->setFixedSize(1280,720);
+
+    view->setScene(escena);
 }
 
 void MenuJugador::construirInformacion()
@@ -44,8 +61,10 @@ void MenuJugador::correrJuego()
     switch(informacion[jugadorActual][0])
     {
     case 1:
+        comenzarNivelUno();
         break;
     case 2:
+//        comenzarNivelDos();
         break;
     }
 }
@@ -62,6 +81,42 @@ void MenuJugador::nuevaPartida()
         informacion[jugadorActual] = {1,0};
     //qDebug() << informacion[data];
     ui->NombreUsuario->clear(); //Para borrar del lineEdit el nombre
+
+    correrJuego();
+
+}
+
+void MenuJugador::comenzarNivelUno()
+{
+    nivelUno = new NivelUno(this);
+    view->setScene(nivelUno);
+    view->show();
+    connect(this->nivelUno, SIGNAL(finalizarNivelUno()), this,SLOT(finalizarNivelUno()));
+}
+
+void MenuJugador::comenzarNivelDos()
+{
+
+}
+
+void MenuJugador::comenzarNivelTres()
+{
+
+}
+
+void MenuJugador::finalizarNivelUno()
+{
+    delete nivelUno;
+
+}
+
+void MenuJugador::finalizarNivelDos()
+{
+
+}
+
+void MenuJugador::finalizarNivelTres()
+{
 
 }
 

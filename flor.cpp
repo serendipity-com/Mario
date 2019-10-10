@@ -5,6 +5,7 @@ Flor::Flor(QGraphicsItem *padre)
 {
     setFlag(ItemClipsToShape);
     sprite = QPixmap(":/Imagenes/florCar.png");
+    posSprite = 0;
 }
 
 Flor::~Flor()

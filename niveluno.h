@@ -19,9 +19,11 @@
 #include "ladrillo.h"
 #include "tubo.h"
 #include "flor.h"
+#include "florfuego.h"
 #include "goomba.h"
 #include "administradorsonidos.h"
 #include "administradorarduino.h"
+#include "puntaje.h"
 
 class NivelUno: public QGraphicsScene
 {
@@ -54,6 +56,9 @@ public slots:
 protected:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
+
+signals:
+    void finalizarNivelUno();
 
 private:
     int anchoEscena;
@@ -99,10 +104,14 @@ private:
     QList <Moneda *> monedas;
     QList <Ladrillo*> ladrillos;
     Hongo *hongo;
+    FlorFuego *florFuego;
     QList <LadrilloSorpresa*> ladrillosSorpresa;
     QList <Tubo *> tubos;
     QList <Flor *> floresCar;
     QList <Goomba*> gombas;
+
+    Puntaje *puntaje;
+    BackgroundItem *puntajeLogo;
 };
 
 #endif // NIVELUNO_H

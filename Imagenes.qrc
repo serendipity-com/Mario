@@ -4,7 +4,7 @@
         <file>Imagenes/bomb.png</file>
         <file>Imagenes/bouncefireball.png</file>
         <file>Imagenes/ladrillo.png</file>
-        <file>Imagenes/castle.png</file>
+        <file>Imagenes/castillo.png</file>
         <file>Imagenes/clock.png</file>
         <file>Imagenes/moneda.png</file>
         <file>Imagenes/conveyorR.png</file>
@@ -14,7 +14,7 @@
         <file>Imagenes/firemario.png</file>
         <file>Imagenes/firemariostop.png</file>
         <file>Imagenes/flag.png</file>
-        <file>Imagenes/flower.png</file>
+        <file>Imagenes/flor.png</file>
         <file>Imagenes/fredo.png</file>
         <file>Imagenes/gameover.png</file>
         <file>Imagenes/go2.png</file>
@@ -31,13 +31,13 @@
         <file>Imagenes/mario_walk_sprites.png</file>
         <file>Imagenes/mario_walk_sprites_left.png</file>
         <file>Imagenes/mariostop.png</file>
-        <file>Imagenes/mflag.png</file>
+        <file>Imagenes/bandera.png</file>
         <file>Imagenes/mushroom.png</file>
         <file>Imagenes/notebox.png</file>
         <file>Imagenes/florCar.png</file>
         <file>Imagenes/sorpresa.png</file>
         <file>Imagenes/redt.png</file>
-        <file>Imagenes/scoretext.png</file>
+        <file>Imagenes/puntaje.png</file>
         <file>Imagenes/mario_small.png</file>
         <file>Imagenes/sign.png</file>
         <file>Imagenes/smallMarioStop.png</file>

@@ -20,6 +20,5 @@ Widget::~Widget()
 void Widget::unJugador()
 {
     menuJugador->show();
-    menuJugador->construirInformacion(); //Se llena el map con base de datos
     this->close();
 }

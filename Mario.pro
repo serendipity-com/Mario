@@ -21,14 +21,15 @@ SOURCES += \
     administradorarduino.cpp \
     administradorsonidos.cpp \
     backgrounditem.cpp \
+    bandera.cpp \
+    castillo.cpp \
+    florfuego.cpp \
     ladrillosorpresa.cpp \
     main.cpp \
     personaje.cpp \
     personajefisica.cpp \
     puntaje.cpp \
     tubo.cpp \
-    menu.cpp \
-    plataforma.cpp \
     flor.cpp \
     goomba.cpp \
     resultados.cpp \
@@ -43,13 +44,14 @@ HEADERS += \
     administradorarduino.h \
     administradorsonidos.h \
     backgrounditem.h \
+    bandera.h \
+    castillo.h \
+    florfuego.h \
     ladrillosorpresa.h \
     personaje.h \
     personajefisica.h \
     puntaje.h \
     tubo.h \
-    menu.h \
-    plataforma.h \
     flor.h \
     goomba.h \
     resultados.h \

@@ -1,25 +1,24 @@
-#ifndef LADRILLO_H
-#define LADRILLO_H
+#ifndef BANDERA_H
+#define BANDERA_H
 
 #include <QGraphicsItem>
-#include <QPainter>
 #include <QPixmap>
+#include <QPainter>
 
-class Ladrillo : public QGraphicsItem
+class Bandera : public QGraphicsItem
 {
 public:
-    enum{ Type = UserType + 5};
-    Ladrillo(int _longitud, QGraphicsItem *padre = nullptr);
-    ~Ladrillo();
+    enum{ Type = UserType + 10};
+    Bandera(QGraphicsItem *padre = nullptr);
+    ~Bandera();
 
+    void siguienteSprite();
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     int type() const;
-
 private:
     QPixmap sprite;
     int posSprite;
-    int longitud;
 };
 
-#endif // LADRILLO_H
+#endif // BANDERA_H

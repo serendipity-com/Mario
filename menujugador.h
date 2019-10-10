@@ -9,6 +9,10 @@
 #include <QTextStream>
 #include <QDataStream>
 #include <QDebug>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+
+#include "niveluno.h"
 
 using namespace std;
 namespace Ui {
@@ -21,21 +25,36 @@ class MenuJugador : public QWidget
 public:
     explicit MenuJugador(QWidget *parent = nullptr);
     ~MenuJugador();
-    void construirInformacion();
+
 private:
+    void incializarEscena();
     //    void actualizarBaseDatos();
     void correrJuego();
+    void construirInformacion();
 
 private slots:
     void cargarPartida();
     void nuevaPartida();
 
+    void comenzarNivelUno();
+    void comenzarNivelDos();
+    void comenzarNivelTres();
+
+    void finalizarNivelUno();
+    void finalizarNivelDos();
+    void finalizarNivelTres();
+
 private:
     Ui::MenuJugador *ui;
+    QGraphicsScene *escena;
+    QGraphicsView *view;
+
+    //informacion
     QString jugadorActual;
     map <QString, QList<int>> informacion;
 
-
+    //Niveles
+    NivelUno *nivelUno;
 };
 
 #endif // MENUJUGADOR_H

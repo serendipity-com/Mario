@@ -4,6 +4,7 @@ LadrilloSorpresa::LadrilloSorpresa(QGraphicsItem *padre) : QGraphicsItem(padre)
 {
     setFlag(ItemClipsToShape);
     sprite = QPixmap(":/Imagenes/sorpresa.png");
+    posSprite = 0;
 }
 
 void LadrilloSorpresa::setRegalo(int in)

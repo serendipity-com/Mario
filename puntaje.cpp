@@ -6,7 +6,7 @@ Puntaje::Puntaje(QGraphicsItem *padre) : QGraphicsTextItem(padre)
     puntaje = 0;
 
     //dibuja el texto
-    int id = QFontDatabase::addApplicationFont("://Fuente/CoinCount.ttf");
+    int id = QFontDatabase::addApplicationFont(":/Fuente/CoinCount2.ttf");
     QFontDatabase::applicationFontFamilies(id);
     setPlainText(QString("") + QString::number(puntaje));
     setDefaultTextColor(Qt::blue);

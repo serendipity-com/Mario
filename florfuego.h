@@ -1,16 +1,16 @@
-#ifndef LADRILLO_H
-#define LADRILLO_H
+#ifndef FLORFUEGO_H
+#define FLORFUEGO_H
 
 #include <QGraphicsItem>
 #include <QPainter>
 #include <QPixmap>
 
-class Ladrillo : public QGraphicsItem
+class FlorFuego : public QGraphicsItem
 {
 public:
-    enum{ Type = UserType + 5};
-    Ladrillo(int _longitud, QGraphicsItem *padre = nullptr);
-    ~Ladrillo();
+    enum{ Type = UserType + 9};
+    FlorFuego(QGraphicsItem *padre = nullptr);
+    ~FlorFuego();
 
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
@@ -22,4 +22,4 @@ private:
     int longitud;
 };
 
-#endif // LADRILLO_H
+#endif // FLORFUEGO_H

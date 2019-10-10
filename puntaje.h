@@ -6,7 +6,7 @@
 #include <QFont>
 #include <QFontDatabase>
 
-class Puntaje : QGraphicsTextItem
+class Puntaje : public QGraphicsTextItem
 {
 public:
     Puntaje(QGraphicsItem *padre = nullptr);
