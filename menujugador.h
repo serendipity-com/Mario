@@ -59,6 +59,8 @@ private:
 
     //Niveles
     NivelUno *nivelUno;
+//    NivelDos *nivelDos;
+//    NivelTres *nivelTres;
 
 };
 

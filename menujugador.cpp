@@ -60,15 +60,25 @@ void MenuJugador::construirInformacion()
 
 void MenuJugador::correrJuego()
 {
-    switch(informacion[jugadorActual][0])
+    if(vidas >= 0)
     {
-    case 1:
-        comenzarNivelUno();
-        break;
-    case 2:
-//        comenzarNivelDos();
-        break;
+        switch(informacion[jugadorActual][0])
+        {
+        case 1:
+            comenzarNivelUno();
+            break;
+        case 2:
+    //      comenzarNivelDos();
+            break;
+        case 3:
+    //      comenzarNivelTres();
+        }
     }
+//    else
+//    {
+//        //Si el número de vidas es menor a cero, GAME OVER
+//    }
+
 }
 
 void MenuJugador::nuevaPartida()
@@ -100,16 +110,27 @@ void MenuJugador::comenzarNivelUno()
     view->setScene(nivelUno);
     view->show();
     connect(this->nivelUno, SIGNAL(finalizarNivelUno()), this,SLOT(finalizarNivelUno()));
+    //connect(this->nivelUno, SIGNAL(finalizarNivelUno()), this,SLOT(repetirNivel());
 }
 
 void MenuJugador::comenzarNivelDos()
 {
-    informacion[jugadorActual][0] = 2;
+    //instanciar nivel dos
+    //poner en la escena el nivel dos
+    //mostrar escena
+    informacion[jugadorActual][0] = 2; //actualizar base de datos local en map para al final escribir estos en el archivo dataBase
+    //connect(this->nivelDos, SIGNAL(finalizarNivelDos()), this,SLOT(finalizarNivelDos())); conecta señal de clase nivelDos con slot de esta clase que tiene el mismo nombre
+    //connect(this->nivelDos, SIGNAL(finalizarNivelDos()), this,SLOT(repetirNivel()));
 }
 
 void MenuJugador::comenzarNivelTres()
 {
+    //instanciar nivel tres
+    //poner en la escena el nivel tres
+    //mostrar escena
     informacion[jugadorActual][0] = 3;
+    //connect(this->nivelTres, SIGNAL(finalizarNivelTres()), this,SLOT(finalizarNivelTres())); conecta señal de clase nivelTres con slot de esta clase que tiene el mismo nombre
+    //connect(this->nivelTres, SIGNAL(finalizarNivelTres()), this,SLOT(repetirNivel()));
 }
 
 void MenuJugador::finalizarNivelUno()
@@ -120,12 +141,14 @@ void MenuJugador::finalizarNivelUno()
 
 void MenuJugador::finalizarNivelDos()
 {
-
+    delete nivelDos;
+    comenzarNivelTres();
 }
 
 void MenuJugador::finalizarNivelTres()
 {
-
+    delete nivelTres;
+    //mostrar widget con puntaje y vidas CONGRATULATIONS!
 }
 
 void MenuJugador::cargarPartida()//***
@@ -135,11 +158,11 @@ void MenuJugador::cargarPartida()//***
 
 //void MenuJugador::actualizarBaseDatos()//***
 //{
-////  una vez finalice la partida del jugador, se procede a hacer esto:
+////  una vez finalice la partida del jugador en cualquiera de los tres niveles, si desea guardarla se procede a hacer esto:
 //    QFile inputFile("://BaseDatos.txt");
 //    if (inputFile.open(QIODevice::Append)qDebug() << informacion[data];)
 //    {
-//       QTextStream in(&inputFile);
+//       QTextStream in(&inputFile); hay que indexar en el map de base de datos y todos esos datos escribirlos en el archivo dataBase.txt
 //       in << data << ":" << "nivel" << "puntaje" <<endl;
 //       in.flush();
 //       inputFile.close();

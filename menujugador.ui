@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>-20</x>
-     <y>-10</y>
+     <y>0</y>
      <width>1229</width>
      <height>768</height>
     </rect>
@@ -42,8 +42,8 @@
    <widget class="QLineEdit" name="NombreUsuario">
     <property name="geometry">
      <rect>
-      <x>540</x>
-      <y>100</y>
+      <x>780</x>
+      <y>220</y>
       <width>361</width>
       <height>41</height>
      </rect>
@@ -63,10 +63,10 @@
    <widget class="QLabel" name="NombreDeUsuario">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>70</y>
-      <width>341</width>
-      <height>111</height>
+      <x>780</x>
+      <y>40</y>
+      <width>311</width>
+      <height>151</height>
      </rect>
     </property>
     <property name="font">
@@ -78,7 +78,7 @@
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: transparent;</string>
+     <string notr="true">border-image: url(:/Imagenes/fondoMenu2.jpg);</string>
     </property>
     <property name="text">
      <string>Nombre de usuario</string>
@@ -87,10 +87,10 @@
    <widget class="QPushButton" name="NuevaPartida">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>180</y>
-      <width>341</width>
-      <height>121</height>
+      <x>780</x>
+      <y>290</y>
+      <width>311</width>
+      <height>151</height>
      </rect>
     </property>
     <property name="font">
@@ -102,7 +102,7 @@
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: transparent;</string>
+     <string notr="true">border-image: url(:/Imagenes/fondoMenu2.jpg);</string>
     </property>
     <property name="text">
      <string>Nueva partida</string>
@@ -111,10 +111,10 @@
    <widget class="QPushButton" name="CargarPartida">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>290</y>
-      <width>341</width>
-      <height>121</height>
+      <x>780</x>
+      <y>470</y>
+      <width>311</width>
+      <height>151</height>
      </rect>
     </property>
     <property name="font">
@@ -126,7 +126,7 @@
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: transparent;</string>
+     <string notr="true">border-image: url(:/Imagenes/fondoMenu2.jpg);</string>
     </property>
     <property name="text">
      <string>Cargar partida</string>

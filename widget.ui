@@ -22,10 +22,10 @@
   <widget class="QWidget" name="Welcome" native="true">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>0</y>
+     <x>-170</x>
+     <y>-10</y>
      <width>1214</width>
-     <height>768</height>
+     <height>761</height>
     </rect>
    </property>
    <property name="maximumSize">
@@ -47,8 +47,8 @@
    <widget class="QPushButton" name="UnJugador">
     <property name="geometry">
      <rect>
-      <x>280</x>
-      <y>300</y>
+      <x>400</x>
+      <y>90</y>
       <width>221</width>
       <height>121</height>
      </rect>
@@ -66,7 +66,7 @@
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: transparent;
-border-color: qlineargradient(spread:pad, x1:280, y1:300, x2:280, y2:300, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));</string>
+</string>
     </property>
     <property name="text">
      <string>UN JUGADOR</string>
@@ -81,8 +81,8 @@ border-color: qlineargradient(spread:pad, x1:280, y1:300, x2:280, y2:300, stop:0
    <widget class="QPushButton" name="Multijugador">
     <property name="geometry">
      <rect>
-      <x>280</x>
-      <y>440</y>
+      <x>620</x>
+      <y>90</y>
       <width>221</width>
       <height>121</height>
      </rect>
