@@ -2,13 +2,15 @@
 #include "ui_menujugador.h"
 
 MenuJugador::MenuJugador(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::MenuJugador)
+    QWidget(parent)
+  , ui(new Ui::MenuJugador)
+  , vidas(5)
 {
     ui->setupUi(this);
     incializarEscena();
     construirInformacion();
 
+    connect(this->nivelUno, SIGNAL(repetirNivel()), this, SLOT(repetirNivel()));
     connect(ui->NuevaPartida, &QPushButton::clicked, this, &MenuJugador::nuevaPartida);
     connect(ui->CargarPartida, &QPushButton::clicked, this, &MenuJugador::cargarPartida);
 }
@@ -86,6 +88,12 @@ void MenuJugador::nuevaPartida()
 
 }
 
+void MenuJugador::repetirNivel()
+{
+    vidas -= 1;
+    correrJuego();
+}
+
 void MenuJugador::comenzarNivelUno()
 {
     nivelUno = new NivelUno(this);
@@ -96,18 +104,18 @@ void MenuJugador::comenzarNivelUno()
 
 void MenuJugador::comenzarNivelDos()
 {
-
+    informacion[jugadorActual][0] = 2;
 }
 
 void MenuJugador::comenzarNivelTres()
 {
-
+    informacion[jugadorActual][0] = 3;
 }
 
 void MenuJugador::finalizarNivelUno()
 {
     delete nivelUno;
-
+    comenzarNivelDos();
 }
 
 void MenuJugador::finalizarNivelDos()

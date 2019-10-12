@@ -1,5 +1,5 @@
-#ifndef NIVELUNO_H
-#define NIVELUNO_H
+#ifndef NIVELDOS_H
+#define NIVELDOS_H
 
 #include <QGraphicsScene>
 #include <QTimer>
@@ -9,6 +9,8 @@
 #include <QDebug>
 #include <QGraphicsView>
 #include <QList>
+
+#include "niveluno.h"
 
 #include "personaje.h"
 #include "personajefisica.h"
@@ -25,41 +27,19 @@
 #include "administradorarduino.h"
 #include "puntaje.h"
 
-class NivelUno: public QGraphicsScene
+class NivelDos : public NivelUno
 {
     Q_OBJECT
+
 public:
-    explicit NivelUno(QObject *padre = nullptr);
-    ~NivelUno();
+    explicit NivelDos(NivelUno *padre = nullptr);
+    ~NivelDos();
 
 private:
-    void timerEvent(QTimerEvent *);
-
-    void agregarEntradaHorizontal(int entrada);
-    void aplicarParalelismo(qreal propocion, QGraphicsItem *item);
-
     void iniciarEscena();
-    void moverJugador();
-    void checkTimer();
-
-    void verificarColisionMoneda();
-    void verificarColisionAyudas();
-    void verificarColisionEnemigos(PersonajeFisica *p);
-    void verificarColisionPlataforma(PersonajeFisica *p);
-    void verificarColisionBordes(PersonajeFisica *p);
-    void cambiarDireccionGomba();
-public slots:
-    void actualizar();
-    void siguienteSprite();
-    void moverConMando();
-
-protected:
-    void keyPressEvent(QKeyEvent *event);
-    void keyReleaseEvent(QKeyEvent *event);
 
 signals:
-    void finalizarNivelUno();
-    void repetirNivel();
+    void finalizarNivelDos();
 
 private:
     int anchoEscena;
@@ -115,4 +95,4 @@ private:
     BackgroundItem *puntajeLogo;
 };
 
-#endif // NIVELUNO_H
+#endif // NIVELDOS_H

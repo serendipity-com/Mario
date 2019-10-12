@@ -36,6 +36,8 @@ private slots:
     void cargarPartida();
     void nuevaPartida();
 
+    void repetirNivel();
+
     void comenzarNivelUno();
     void comenzarNivelDos();
     void comenzarNivelTres();
@@ -53,8 +55,11 @@ private:
     QString jugadorActual;
     map <QString, QList<int>> informacion;
 
+    int vidas;
+
     //Niveles
     NivelUno *nivelUno;
+
 };
 
 #endif // MENUJUGADOR_H

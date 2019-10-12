@@ -26,6 +26,7 @@ SOURCES += \
     florfuego.cpp \
     ladrillosorpresa.cpp \
     main.cpp \
+    niveldos.cpp \
     personaje.cpp \
     personajefisica.cpp \
     puntaje.cpp \
@@ -48,6 +49,7 @@ HEADERS += \
     castillo.h \
     florfuego.h \
     ladrillosorpresa.h \
+    niveldos.h \
     personaje.h \
     personajefisica.h \
     puntaje.h \
