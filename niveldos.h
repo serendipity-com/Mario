@@ -37,9 +37,33 @@ public:
 
 private:
     void iniciarEscena();
+    void timerEvent(QTimerEvent *);
+
+    void agregarEntradaHorizontal(int entrada);
+    void aplicarParalelismo(qreal propocion, QGraphicsItem *item);
+
+    void moverJugador();
+    void checkTimer();
+
+    void verificarColisionMoneda();
+    void verificarColisionAyudas();
+    void verificarColisionEnemigos(PersonajeFisica *p);
+    void verificarColisionPlataforma(PersonajeFisica *p);
+    void verificarColisionBordes(PersonajeFisica *p);
+    void cambiarDireccionGomba();
+
+public slots:
+    void actualizar();
+    void siguienteSprite();
+    void moverConMando();
+
+protected:
+    void keyPressEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
 
 signals:
     void finalizarNivelDos();
+    void repetirNivel();
 
 private:
     int anchoEscena;

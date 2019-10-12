@@ -17,7 +17,6 @@ NivelUno::NivelUno(QObject *padre):
   , cielo7(nullptr)
   , tierra(nullptr)
   , nivelTierra(660)
-  , entradaHorizontal(0)
   , velocidad(50)
   , hongo(nullptr)
   , florFuego(nullptr)
@@ -68,10 +67,9 @@ NivelUno::~NivelUno()
 
 void NivelUno::agregarEntradaHorizontal(int entrada)
 {
-    entradaHorizontal += entrada;
-    personajeSmall->setDireccion(qBound(-1, entradaHorizontal, 1));
-    personaje->setDireccion(qBound(-1, entradaHorizontal, 1));
-    personajeFire->setDireccion(qBound(-1, entradaHorizontal, 1));
+    personajeSmall->setDireccion(qBound(-1, entrada, 1));
+    personaje->setDireccion(qBound(-1, entrada, 1));
+    personajeFire->setDireccion(qBound(-1, entrada, 1));
     checkTimer();
 }
 /*Esta función primero verifica si el jugador se mueve.
@@ -235,6 +233,12 @@ void NivelUno::verificarColisionEnemigos(PersonajeFisica *p)
                 {
                     sonidos->reproducirMuerto();
                     repetirNivel();
+                    timerMando->stop();
+                    timerSprite->stop();
+                    timer->stop();
+                    personaje->setDireccion(0);
+                    personajeSmall->setDireccion(0);
+                    personajeFire->setDireccion(0);
                 }
             }
         }
@@ -466,7 +470,6 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
 
 void NivelUno::verificarColisionBordes(PersonajeFisica *p)
 {
-
     if(p->getPosX() < p->getAncho())
     {
         p->setVel(0,-1*(0.1)*p->getVelY(), p->getAlto(),p->getPosY());
@@ -549,19 +552,6 @@ void NivelUno::timerEvent(QTimerEvent *)
     for (int i = 0;i < gombas.size(); i++)
     {
         gombas.at(i)->setX(gombas.at(i)->pos().x() + gombas.at(i)->getDireccion() * (-7));
-    }
-
-    if(estado == small)
-    {
-        verificarColisionEnemigos(personajeSmall->getFisica());
-    }
-    else if(estado == normal)
-    {
-        verificarColisionEnemigos(personaje->getFisica());
-    }
-    else if(estado == fire)
-    {
-        verificarColisionEnemigos(personajeFire->getFisica());
     }
 }
 
@@ -707,6 +697,7 @@ void NivelUno::actualizar()
     {
         personajeSmall->actualizar(nivelTierra);
         moverJugador();
+        verificarColisionEnemigos(personajeSmall->getFisica());
         verificarColisionPlataforma(personajeSmall->getFisica());
         verificarColisionBordes(personajeSmall->getFisica());
     }
@@ -715,6 +706,7 @@ void NivelUno::actualizar()
     {
         personaje->actualizar(nivelTierra);
         moverJugador();
+        verificarColisionEnemigos(personajeSmall->getFisica());
         verificarColisionPlataforma(personaje->getFisica());
         verificarColisionBordes(personaje->getFisica());
     }
@@ -723,6 +715,7 @@ void NivelUno::actualizar()
     {
         personajeFire->actualizar(nivelTierra);
         moverJugador();
+        verificarColisionEnemigos(personajeSmall->getFisica());
         verificarColisionPlataforma(personajeFire->getFisica());
         verificarColisionBordes(personajeFire->getFisica());
     }
@@ -914,11 +907,11 @@ void NivelUno::keyReleaseEvent(QKeyEvent *event)
     {
     case Qt::Key_Right:
         if (event->isAutoRepeat()) {return;}
-        agregarEntradaHorizontal(-1);
+        agregarEntradaHorizontal(0);
         break;
     case Qt::Key_Left:
         if (event->isAutoRepeat()) {return;}
-        agregarEntradaHorizontal(1);
+        agregarEntradaHorizontal(0);
         break;
 
     default:

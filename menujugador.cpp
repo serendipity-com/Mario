@@ -19,7 +19,6 @@ MenuJugador::~MenuJugador()
     delete ui;
     delete escena;
     delete view;
-    delete nivelUno;
     //    actualizarBaseDatos();
 }
 
@@ -80,6 +79,7 @@ void MenuJugador::correrJuego()
     else
     {
         //Si el número de vidas es menor a cero, GAME OVER
+        view->close();
     }
 }
 
@@ -96,6 +96,7 @@ void MenuJugador::nuevaPartida()
     //qDebug() << informacion[data];
     ui->NombreUsuario->clear(); //Para borrar del lineEdit el nombre
 
+    vidas = 5;
     correrJuego();
 
 }
@@ -103,12 +104,13 @@ void MenuJugador::nuevaPartida()
 void MenuJugador::repetirNivel()
 {
     vidas -= 1;
+    escena->clear();
     correrJuego();
 }
 
 void MenuJugador::comenzarNivelUno()
 {
-    nivelUno = new NivelUno(this);
+    nivelUno = new NivelUno();
     view->setScene(nivelUno);
     view->show();
     connect(this->nivelUno, SIGNAL(repetirNivel()), this, SLOT(repetirNivel()));
@@ -156,6 +158,17 @@ void MenuJugador::finalizarNivelTres()
 void MenuJugador::cargarPartida()//***
 {
     jugadorActual = ui->NombreUsuario->text(); //Nombre ingresado
+    auto iterador = informacion.find(jugadorActual);
+    if(iterador == informacion.end()) //Si no está en el map de base de datos
+    {
+        QMessageBox::warning(this, tr("Información"), tr("No tienes partida guardada"));
+    }
+    else
+    {
+        ui->NombreUsuario->clear(); //Para borrar del lineEdit el nombre
+        vidas = 5;
+        correrJuego();
+    }
 }
 
 //void MenuJugador::actualizarBaseDatos()//***

@@ -11,6 +11,7 @@
 #include <QDebug>
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <QMessageBox>
 
 #include "niveluno.h"
 

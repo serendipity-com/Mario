@@ -92,7 +92,6 @@ private:
     qreal nivelTierra;
     qreal posicionX;
     int desplazamientoMundo;
-    int entradaHorizontal;
     int velocidad;
 
     QTimer *timer;

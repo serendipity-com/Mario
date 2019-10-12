@@ -22,6 +22,17 @@ NivelDos::NivelDos(NivelUno *padre) : NivelUno(padre)
 , florFuego(nullptr)
 {
     iniciarEscena();
+    sonidos = new AdministradorSonidos();
+
+    timerSprite = new QTimer(this);
+    connect(timerSprite, SIGNAL(timeout()), this, SLOT(siguienteSprite()));
+
+    timerMando = new QTimer(this);
+    connect(timerMando, SIGNAL(timeout()), this, SLOT(moverConMando()));
+
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(actualizar()));
+    timer->start(10);
 }
 
 NivelDos::~NivelDos()
@@ -175,4 +186,720 @@ void NivelDos::iniciarEscena()
     addItem(personajeSmall);
 
     startTimer(100);
+}
+
+void NivelDos::timerEvent(QTimerEvent *)
+{
+    for (int i = 0;i < monedas.size(); i++)
+    {
+        monedas.at(i)->siguienteSprite();
+    }
+    for (int i = 0;i < ladrillosSorpresa.size(); i++)
+    {
+        ladrillosSorpresa.at(i)->siguienteSprite();
+    }
+    for (int i = 0;i < gombas.size(); i++)
+    {
+        gombas.at(i)->siguienteSprite();
+    }
+    for (int i = 0;i < floresCar.size(); i++)
+    {
+        floresCar.at(i)->siguienteSprite();
+    }
+
+    //mueve los goomba
+    for (int i = 0;i < gombas.size(); i++)
+    {
+        gombas.at(i)->setX(gombas.at(i)->pos().x() + gombas.at(i)->getDireccion() * (-7));
+    }
+
+    if(estado == small)
+    {
+        verificarColisionEnemigos(personajeSmall->getFisica());
+    }
+    else if(estado == normal)
+    {
+        verificarColisionEnemigos(personaje->getFisica());
+    }
+    else if(estado == fire)
+    {
+        verificarColisionEnemigos(personajeFire->getFisica());
+    }
+}
+
+void NivelDos::agregarEntradaHorizontal(int entrada)
+{
+    entradaHorizontal += entrada;
+    personajeSmall->setDireccion(qBound(-1, entradaHorizontal, 1));
+    personaje->setDireccion(qBound(-1, entradaHorizontal, 1));
+    personajeFire->setDireccion(qBound(-1, entradaHorizontal, 1));
+    checkTimer();
+}
+
+void NivelDos::aplicarParalelismo(qreal propocion, QGraphicsItem *item)
+{
+    item->setX(-propocion * (item->boundingRect().width() - width()));
+}
+
+void NivelDos::moverJugador()
+{
+    /*A continuación, calculamos el turno que debe obtener el elemento del jugador y
+     *  lo almacenamos dx. La distancia que el jugador debe moverse cada 30 milisegundos
+     *  está definida por la velocidad variable miembro, expresada en píxeles. */
+    int direccion = 0;
+    if(estado == small){ direccion = personajeSmall->getDireccion();}
+    else if (estado == normal){direccion = personaje->getDireccion();}
+    else if (estado == fire){direccion = personajeFire->getDireccion();}
+    if(direccion != 0)
+    {
+        const int dx = 7*direccion;
+        qreal newX = qBound(minX, posicionX + dx, maxX);
+        if (newX == posicionX)
+        {
+            return;
+        }
+        posicionX = newX;
+
+        const int longituCambio = 300;
+        int derechaLongitudCambio = width() - longituCambio;
+
+        const int posicionVisibleJugador = posicionX - desplazamientoMundo;
+        const int newMundoDerecha = posicionVisibleJugador - derechaLongitudCambio;
+        if (newMundoDerecha > 0)
+        {
+            desplazamientoMundo += newMundoDerecha;
+        }
+        const int newMundoIzquierda = longituCambio - posicionVisibleJugador;
+        if (newMundoIzquierda > 0)
+        {
+            desplazamientoMundo -= newMundoIzquierda;
+        }
+
+        const int maxDesplazamientoMundo = anchoEscena - qRound(width());
+        desplazamientoMundo = qBound(0, desplazamientoMundo, maxDesplazamientoMundo);
+
+        if((personaje->pos().x() >= 1035 && personaje->getDireccion()  == 1) ||
+           (personajeSmall->pos().x() >= 1035 && personajeSmall->getDireccion()  == 1) ||
+           (personajeFire->pos().x() >= 1035 && personajeFire->getDireccion()  == 1))
+        {
+            //mueve los ladrillos
+            for (int i = 0;i < ladrillos.size(); i++)
+            {
+                ladrillos.at(i)->setX(-dx + ladrillos.at(i)->pos().x());
+            }
+            for (int i = 0;i < ladrillosSorpresa.size(); i++)
+            {
+                ladrillosSorpresa.at(i)->setX(-dx + ladrillosSorpresa.at(i)->pos().x());
+            }
+
+            //mueve las monedas
+            for (int i = 0;i < monedas.size(); i++)
+            {
+                monedas.at(i)->setX(-dx + monedas.at(i)->pos().x());
+            }
+
+            //mover goombas
+            for (int i = 0;i < gombas.size(); i++)
+            {
+                gombas.at(i)->setX(-dx + gombas.at(i)->pos().x());
+            }
+
+            //mover tubos
+            for (int i = 0;i < tubos.size(); i++)
+            {
+                tubos.at(i)->setX(-dx + tubos.at(i)->pos().x());
+            }
+
+            //mover flores
+            for (int i = 0;i < floresCar.size(); i++)
+            {
+                floresCar.at(i)->setX(-dx + floresCar.at(i)->pos().x());
+            }
+
+            //mover hongo
+            hongo->setX(-dx + hongo->pos().x());
+
+            const qreal proporcion = qreal(desplazamientoMundo) / maxDesplazamientoMundo;
+            aplicarParalelismo(proporcion, cielo1);
+            aplicarParalelismo(proporcion, cielo2);
+            aplicarParalelismo(proporcion, cielo3);
+            aplicarParalelismo(proporcion, cielo4);
+            aplicarParalelismo(proporcion, cielo5);
+            aplicarParalelismo(proporcion, cielo6);
+            aplicarParalelismo(proporcion, tierra);
+        }
+    }
+}
+
+void NivelDos::checkTimer()
+{
+    if(estado == small)
+    {
+        if(personajeSmall->getDireccion() == 0)
+        {
+            personajeSmall->estarQuieto();
+            timerSprite->stop();
+            //qDebug() << "No";
+        }
+        else if(!timerSprite->isActive())
+        {
+            personajeSmall->caminar();
+            timerSprite->start(50);
+            //qDebug() << "Si";
+        }
+    }
+    else if(estado == normal)
+    {
+        if(personaje->getDireccion() == 0)
+        {
+            personaje->estarQuieto();
+            timerSprite->stop();
+            //qDebug() << "No";
+        }
+        else if(!timerSprite->isActive())
+        {
+            personaje->caminar();
+            timerSprite->start(50);
+            //qDebug() << "Si";
+        }
+    }
+    else if(estado == fire)
+    {
+        if(personaje->getDireccion() == 0)
+        {
+            personajeFire->estarQuieto();
+            timerSprite->stop();
+            //qDebug() << "No";
+        }
+        else if(!timerSprite->isActive())
+        {
+            personajeFire->caminar();
+            timerSprite->start(50);
+            //qDebug() << "Si";
+        }
+    }
+}
+
+void NivelDos::verificarColisionMoneda()
+{
+    if(estado == small)
+    {
+        for(QGraphicsItem *item : collidingItems(personajeSmall))
+        {
+            if(Moneda *m = qgraphicsitem_cast<Moneda*>(item))
+            {
+                removeItem(m);
+                sonidos->reproducirMoneda();
+                puntaje->incrementar();
+            }
+        }
+    }
+    else if(estado == normal)
+    {
+        for(QGraphicsItem *item : collidingItems(personaje))
+        {
+            if(Moneda *m = qgraphicsitem_cast<Moneda*>(item))
+            {
+                removeItem(m);
+                sonidos->reproducirMoneda();
+                puntaje->incrementar();
+            }
+        }
+    }
+    else if(estado == fire)
+    {
+        for(QGraphicsItem *item : collidingItems(personajeFire))
+        {
+            if(Moneda *m = qgraphicsitem_cast<Moneda*>(item))
+            {
+                removeItem(m);
+                sonidos->reproducirMoneda();
+                puntaje->incrementar();
+            }
+        }
+    }
+}
+
+void NivelDos::verificarColisionAyudas()
+{
+    if(estado == small)
+    {
+        PersonajeFisica *p = personajeSmall->getFisica();
+        PersonajeFisica *m = personaje->getFisica();
+        if(personajeSmall->collidesWithItem(hongo))
+        {
+            hongo->setPos(-500,-500);
+            personajeSmall->setPos(-1000,-1000);
+            sonidos->reproducirHongo();
+            estado = normal;
+            m->setVel(p->getVelX(), p->getVelY(), p->getPosX(), p->getPosY() - personajeSmall->boundingRect().height() + personaje->boundingRect().height());
+        }
+    }
+    else if(estado == normal)
+    {
+        if(personaje->collidesWithItem(hongo))
+        {
+            hongo->setPos(-500,-500);
+            sonidos->reproducirMoneda();
+        }
+        if(personaje->collidesWithItem(florFuego))
+        {
+            florFuego->setPos(-500,-500);
+            personaje->setPos(-1000,-1000);
+            sonidos->reproducirFlor();
+            estado = fire;
+            PersonajeFisica *p = personaje->getFisica();
+            PersonajeFisica *m = personajeFire->getFisica();
+            m->setVel(p->getVelX(), p->getVelY(), p->getPosX(), p->getPosY() - personaje->boundingRect().height() + personajeFire->boundingRect().height());
+        }
+    }
+    else if(estado == fire)
+    {
+        if(personajeFire->collidesWithItem(hongo))
+        {
+            hongo->setPos(-500,-500);
+            sonidos->reproducirHongo();
+        }
+    }
+}
+
+void NivelDos::verificarColisionEnemigos(PersonajeFisica *p)
+{
+    if(estado == small)
+    {
+        for(QGraphicsItem *item : collidingItems(personajeSmall))
+        {
+            if(Goomba *m = qgraphicsitem_cast<Goomba*>(item))
+            {
+                if(personajeSmall->estarTocandoPies(m) )
+                {
+                    removeItem(m);
+                    p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personajeSmall->boundingRect().height());
+                }
+                else
+                {
+                    sonidos->reproducirMuerto();
+                    repetirNivel();
+                }
+            }
+        }
+    }
+    else if(estado == normal)
+    {
+        for(QGraphicsItem *item : collidingItems(personaje))
+        {
+            if(Goomba *m = qgraphicsitem_cast<Goomba*>(item))
+            {
+                if(personaje->estarTocandoPies(m) )
+                {
+                    removeItem(m);
+                    p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personaje->boundingRect().height());
+                }
+                else
+                {
+                    //camiar de personaje
+                    estado = small;
+                    sonidos->reproducirGolpe();
+                    PersonajeFisica *p = personajeSmall->getFisica();
+                    PersonajeFisica *s = personaje->getFisica();
+                    p->setVel(s->getVelX(), s->getVelY(), s->getPosX(), s->getPosY());
+                    personaje->setPos(-1000,-1000);
+                }
+            }
+        }
+    }
+    else if(estado == fire)
+    {
+        for(QGraphicsItem *item : collidingItems(personajeFire))
+        {
+            if(Goomba *m = qgraphicsitem_cast<Goomba*>(item))
+            {
+                if(personajeFire->estarTocandoPies(m) )
+                {
+                    removeItem(m);
+                    p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personajeFire->boundingRect().height());
+                }
+                else
+                {
+                    //camiar de personaje
+                    estado = normal;
+                    sonidos->reproducirGolpe();
+                    PersonajeFisica *p = personaje->getFisica();
+                    PersonajeFisica *s = personajeFire->getFisica();
+                    p->setVel(s->getVelX(), s->getVelY(), s->getPosX(), s->getPosY());
+                    personajeFire->setPos(-1000,-1000);
+                }
+            }
+        }
+    }
+}
+
+void NivelDos::verificarColisionPlataforma(PersonajeFisica *p)
+{
+    if(estado == small)
+    {
+        for(QGraphicsItem *item : collidingItems(personajeSmall))
+        {
+            if(LadrilloSorpresa *m = qgraphicsitem_cast<LadrilloSorpresa*>(item))
+            {
+                if(personajeSmall->estarTocandoCabeza(m))
+                {
+                    p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(),p->getPosX(), p->getPosY());
+                    //verifica con que tipo de ladrillo colisiona
+                    if(m->getRegalo() == 1)
+                    {
+                        florFuego->setPos(m->pos().x(), m->pos().y() - 40);
+                        m->setRegalo(2);
+                    }
+                    else if(m->getRegalo() == 2)
+                    {
+                        sonidos->reproducirMoneda();
+                    }
+                    else if(m->getRegalo() == 3)
+                    {
+                        hongo->setPos(m->pos().x(), m->pos().y() - 40);
+                        m->setRegalo(2);
+                    }
+                }
+                else if(personajeSmall->estarTocandoPlataforma(m))
+                {
+                    p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personajeSmall->boundingRect().height());
+                    salto = true;
+                }
+            }
+            if(Ladrillo *l = qgraphicsitem_cast<Ladrillo*>(item))
+            {
+                if(personajeSmall->estarTocandoCabeza(l))
+                {
+                    p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(),p->getPosX(), p->getPosY());
+                }
+                else if(personajeSmall->estarTocandoPlataforma(l))
+                {
+                    p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - l->pos().y() + personajeSmall->boundingRect().height());
+                    salto = true;
+                }
+            }
+            else if(Tubo *t = qgraphicsitem_cast<Tubo*>(item))
+            {
+                if(personajeSmall->estarTocandoPlataforma(t))
+                {
+                    p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - t->pos().y() + personajeSmall->boundingRect().height());
+                    salto = true;
+                }
+                else
+                {
+                    p->setVel(-1*(0.2)*p->getVelX(),p->getVelY(), p->getPosX(),p->getPosY());
+                }
+            }
+        }
+    }
+    else if(estado == normal)
+    {
+        for(QGraphicsItem *item : collidingItems(personaje))
+        {
+            if(LadrilloSorpresa *m = qgraphicsitem_cast<LadrilloSorpresa*>(item))
+            {
+                if(personaje->estarTocandoCabeza(m))
+                {
+                    p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(),p->getPosX(), p->getPosY());
+                    //verifica con que tipo de ladrillo colisiona
+                    if(m->getRegalo() == 1)
+                    {
+                        florFuego->setPos(m->pos().x(), m->pos().y() - 40);
+                        m->setRegalo(2);
+                    }
+                    else if(m->getRegalo() == 2)
+                    {
+                        sonidos->reproducirMoneda();
+                    }
+                    else if(m->getRegalo() == 3)
+                    {
+                        hongo->setPos(m->pos().x(), m->pos().y() - 40);
+                        m->setRegalo(2);
+                    }
+                }
+                else if(personaje->estarTocandoPlataforma(m))
+                {
+                    p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personaje->boundingRect().height());
+                    salto = true;
+                }
+            }
+            if(Ladrillo *l = qgraphicsitem_cast<Ladrillo*>(item))
+            {
+                if(personaje->estarTocandoCabeza(l))
+                {
+                    p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(),p->getPosX(), p->getPosY());
+                }
+                else if(personaje->estarTocandoPlataforma(l))
+                {
+                    p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - l->pos().y() + personaje->boundingRect().height());
+                    salto = true;
+                }
+            }
+            else if(Tubo *t = qgraphicsitem_cast<Tubo*>(item))
+            {
+                if(personaje->estarTocandoPlataforma(t))
+                {
+                    p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - t->pos().y() + personaje->boundingRect().height());
+                    salto = true;
+                }
+                else
+                {
+                    p->setVel(-1*(0.2)*p->getVelX(),p->getVelY(), p->getPosX(),p->getPosY());
+                }
+            }
+        }
+    }
+    else if(estado == fire)
+    {
+        for(QGraphicsItem *item : collidingItems(personajeFire))
+        {
+            if(LadrilloSorpresa *m = qgraphicsitem_cast<LadrilloSorpresa*>(item))
+            {
+                if(personajeFire->estarTocandoCabeza(m))
+                {
+                    p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(),p->getPosX(), p->getPosY());
+                    //verifica con que tipo de ladrillo colisiona
+                    if(m->getRegalo() == 1)
+                    {
+                        florFuego->setPos(m->pos().x(), m->pos().y() - 40);
+                        m->setRegalo(2);
+                    }
+                    else if(m->getRegalo() == 2)
+                    {
+                        sonidos->reproducirMoneda();
+                    }
+                    else if(m->getRegalo() == 3)
+                    {
+                        hongo->setPos(m->pos().x(), m->pos().y() - 40);
+                        m->setRegalo(2);
+                    }
+                }
+                else if(personajeFire->estarTocandoPlataforma(m))
+                {
+                    p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personajeFire->boundingRect().height());
+                    salto = true;
+                }
+            }
+            if(Ladrillo *l = qgraphicsitem_cast<Ladrillo*>(item))
+            {
+                if(personajeFire->estarTocandoCabeza(l))
+                {
+                    p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(),p->getPosX(), p->getPosY());
+                }
+                else if(personajeFire->estarTocandoPlataforma(l))
+                {
+                    p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - l->pos().y() + personajeFire->boundingRect().height());
+                    salto = true;
+                }
+            }
+            else if(Tubo *t = qgraphicsitem_cast<Tubo*>(item))
+            {
+                if(personajeFire->estarTocandoPlataforma(t))
+                {
+                    p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - t->pos().y() + personajeFire->boundingRect().height());
+                    salto = true;
+                }
+                else
+                {
+                    p->setVel(-1*(0.2)*p->getVelX(),p->getVelY(), p->getPosX(),p->getPosY());
+                }
+            }
+        }
+    }
+}
+
+void NivelDos::verificarColisionBordes(PersonajeFisica *p)
+{
+    if(p->getPosX() < p->getAncho())
+    {
+        p->setVel(0,-1*(0.1)*p->getVelY(), p->getAlto(),p->getPosY());
+    }
+    if(p->getPosX() > 1280 - p->getAncho() - 200)
+    {
+        p->setVel(0,-1*(0.1)*p->getVelY(),1280 - p->getAncho() - 200,p->getPosY());
+    }
+    if(p->getPosY() < p->getAlto())
+    {
+        p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), p->getAlto());
+        salto = true;
+    }
+}
+
+void NivelDos::cambiarDireccionGomba()
+{
+    for (int i = 0; i < tubos.size(); i++)
+    {
+        for(QGraphicsItem *item : collidingItems(tubos.at(i)))
+        {
+            if(Goomba *m = qgraphicsitem_cast<Goomba*>(item))
+            {
+                if(m->getDireccion() == -1)
+                {
+                    m->setDireccion(1);
+                    m->setX(m->pos().x() - 65);
+                }
+                else
+                {
+                    m->setDireccion(-1);
+                    m->setX(m->pos().x() + 65);
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < ladrillos.size(); i++)
+    {
+        for(QGraphicsItem *item : collidingItems(ladrillos.at(i)))
+        {
+            if(Goomba *m = qgraphicsitem_cast<Goomba*>(item))
+            {
+                if(m->getDireccion() == -1)
+                {
+                    m->setDireccion(1);
+                    m->setX(m->pos().x() - 65);
+                }
+                else
+                {
+                    m->setDireccion(-1);
+                    m->setX(m->pos().x() + 65);
+                }
+            }
+        }
+    }
+}
+
+void NivelDos::actualizar()
+{
+    verificarColisionAyudas();
+    if(estado == small)
+    {
+        personajeSmall->actualizar(nivelTierra);
+        moverJugador();
+        verificarColisionPlataforma(personajeSmall->getFisica());
+        verificarColisionBordes(personajeSmall->getFisica());
+    }
+
+    else if(estado == normal)
+    {
+        personaje->actualizar(nivelTierra);
+        moverJugador();
+        verificarColisionPlataforma(personaje->getFisica());
+        verificarColisionBordes(personaje->getFisica());
+    }
+
+    else if(estado == fire)
+    {
+        personajeFire->actualizar(nivelTierra);
+        moverJugador();
+        verificarColisionPlataforma(personajeFire->getFisica());
+        verificarColisionBordes(personajeFire->getFisica());
+    }
+
+    verificarColisionMoneda();
+    cambiarDireccionGomba();
+}
+
+void NivelDos::siguienteSprite()
+{
+    if (estado == small){personajeSmall->siguienteSprite();}
+    else if (estado == normal){personaje->siguienteSprite();}
+    else if (estado == fire){personajeFire->siguienteSprite();}
+}
+
+void NivelDos::moverConMando()
+{
+    PersonajeFisica *p = personajeSmall->getFisica();
+    if(estado == normal){p = personaje->getFisica();}
+    else if(estado == fire){p = personajeFire->getFisica();}
+
+    int direccion = 0;
+    switch (mando->leerArduino()[0])
+    {
+    case 'W':
+        if(salto)
+        {
+            p->setVel(p->getVelX(), 250, p->getPosX(), p->getPosY());
+            sonidos->reproducirSalto();
+            salto = false;
+        }
+        break;
+    case 'D':
+        p->setVel(velocidad,p->getVelY(), p->getPosX(), p->getPosY());
+        direccion = 1;
+        personajeSmall->setDireccion(qBound(-1, direccion, 1));
+        personaje->setDireccion(qBound(-1, direccion, 1));
+        personajeFire->setDireccion(qBound(-1, direccion, 1));
+        checkTimer();
+        break;
+    case 'A':
+        p->setVel(-velocidad,p->getVelY(), p->getPosX(), p->getPosY());
+        direccion = -1;
+        personajeSmall->setDireccion(qBound(-1, direccion, 1));
+        personaje->setDireccion(qBound(-1, direccion, 1));
+        personajeFire->setDireccion(qBound(-1, direccion, 1));
+        checkTimer();
+        break;
+    default :
+        direccion = 0;
+        personajeSmall->setDireccion(qBound(-1, direccion, 1));
+        personaje->setDireccion(qBound(-1, direccion, 1));
+        personajeFire->setDireccion(qBound(-1, direccion, 1));
+        checkTimer();
+        break;
+    }
+}
+
+void NivelDos::keyPressEvent(QKeyEvent *event)
+{
+    PersonajeFisica *p = personajeSmall->getFisica();
+    if(estado == normal){p = personaje->getFisica();}
+    else if(estado == fire){p = personajeFire->getFisica();}
+
+    switch (event->key())
+    {
+    case Qt::Key_Right:
+        p->setVel(velocidad,p->getVelY(), p->getPosX(), p->getPosY());
+        if (event->isAutoRepeat()){return;}
+        agregarEntradaHorizontal(1);
+        break;
+    case Qt::Key_Left:
+        p->setVel(-velocidad,p->getVelY(), p->getPosX(), p->getPosY());
+        if (event->isAutoRepeat()){return;}
+        agregarEntradaHorizontal(-1);
+        break;
+    case Qt::Key_Space:
+        if(salto)
+        {
+            p->setVel(p->getVelX(), 250, p->getPosX(), p->getPosY());
+            sonidos->reproducirSalto();
+            salto = false;
+        }
+        break;
+    case Qt::Key_M:
+        mando = new AdministradorArduino();
+        if(mando->getEstado())
+        {
+            timerMando->start(200);
+        }
+        break;
+    }
+}
+
+void NivelDos::keyReleaseEvent(QKeyEvent *event)
+{
+    switch (event->key())
+    {
+    case Qt::Key_Right:
+        if (event->isAutoRepeat()) {return;}
+        agregarEntradaHorizontal(-1);
+        break;
+    case Qt::Key_Left:
+        if (event->isAutoRepeat()) {return;}
+        agregarEntradaHorizontal(1);
+        break;
+
+    default:
+        break;
+    }
 }
