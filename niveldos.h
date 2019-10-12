@@ -63,7 +63,6 @@ private:
     BackgroundItem *cielo4;
     BackgroundItem *cielo5;
     BackgroundItem *cielo6;
-    BackgroundItem *cielo7;
     BackgroundItem *tierra;
 
     qreal minX;

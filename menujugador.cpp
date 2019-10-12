@@ -10,7 +10,6 @@ MenuJugador::MenuJugador(QWidget *parent) :
     incializarEscena();
     construirInformacion();
 
-    connect(this->nivelUno, SIGNAL(repetirNivel()), this, SLOT(repetirNivel()));
     connect(ui->NuevaPartida, &QPushButton::clicked, this, &MenuJugador::nuevaPartida);
     connect(ui->CargarPartida, &QPushButton::clicked, this, &MenuJugador::cargarPartida);
 }
@@ -18,6 +17,9 @@ MenuJugador::MenuJugador(QWidget *parent) :
 MenuJugador::~MenuJugador()
 {
     delete ui;
+    delete escena;
+    delete view;
+    delete nivelUno;
     //    actualizarBaseDatos();
 }
 
@@ -72,13 +74,13 @@ void MenuJugador::correrJuego()
             break;
         case 3:
     //      comenzarNivelTres();
+            break;
         }
     }
-//    else
-//    {
-//        //Si el número de vidas es menor a cero, GAME OVER
-//    }
-
+    else
+    {
+        //Si el número de vidas es menor a cero, GAME OVER
+    }
 }
 
 void MenuJugador::nuevaPartida()
@@ -109,8 +111,8 @@ void MenuJugador::comenzarNivelUno()
     nivelUno = new NivelUno(this);
     view->setScene(nivelUno);
     view->show();
+    connect(this->nivelUno, SIGNAL(repetirNivel()), this, SLOT(repetirNivel()));
     connect(this->nivelUno, SIGNAL(finalizarNivelUno()), this,SLOT(finalizarNivelUno()));
-    //connect(this->nivelUno, SIGNAL(finalizarNivelUno()), this,SLOT(repetirNivel());
 }
 
 void MenuJugador::comenzarNivelDos()
@@ -141,13 +143,13 @@ void MenuJugador::finalizarNivelUno()
 
 void MenuJugador::finalizarNivelDos()
 {
-    delete nivelDos;
+//    delete nivelDos;
     comenzarNivelTres();
 }
 
 void MenuJugador::finalizarNivelTres()
 {
-    delete nivelTres;
+//    delete nivelTres;
     //mostrar widget con puntaje y vidas CONGRATULATIONS!
 }
 

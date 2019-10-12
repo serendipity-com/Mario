@@ -63,5 +63,12 @@
         <file>Imagenes/fondoMenu1.jpg</file>
         <file>Imagenes/fondoMenu2.jpg</file>
         <file>Imagenes/1p.svg</file>
+        <file>Imagenes/2-1.png</file>
+        <file>Imagenes/2-2.png</file>
+        <file>Imagenes/2-3.png</file>
+        <file>Imagenes/2-4.png</file>
+        <file>Imagenes/2-5.png</file>
+        <file>Imagenes/2-6.png</file>
+        <file>Imagenes/2-7.png</file>
     </qresource>
 </RCC>

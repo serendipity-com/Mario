@@ -234,6 +234,7 @@ void NivelUno::verificarColisionEnemigos(PersonajeFisica *p)
                 else
                 {
                     sonidos->reproducirMuerto();
+                    repetirNivel();
                 }
             }
         }
@@ -549,6 +550,19 @@ void NivelUno::timerEvent(QTimerEvent *)
     {
         gombas.at(i)->setX(gombas.at(i)->pos().x() + gombas.at(i)->getDireccion() * (-7));
     }
+
+    if(estado == small)
+    {
+        verificarColisionEnemigos(personajeSmall->getFisica());
+    }
+    else if(estado == normal)
+    {
+        verificarColisionEnemigos(personaje->getFisica());
+    }
+    else if(estado == fire)
+    {
+        verificarColisionEnemigos(personajeFire->getFisica());
+    }
 }
 
 void NivelUno::aplicarParalelismo(qreal propocion, QGraphicsItem *item)
@@ -693,7 +707,6 @@ void NivelUno::actualizar()
     {
         personajeSmall->actualizar(nivelTierra);
         moverJugador();
-        verificarColisionEnemigos(personajeSmall->getFisica());
         verificarColisionPlataforma(personajeSmall->getFisica());
         verificarColisionBordes(personajeSmall->getFisica());
     }
@@ -702,7 +715,6 @@ void NivelUno::actualizar()
     {
         personaje->actualizar(nivelTierra);
         moverJugador();
-        verificarColisionEnemigos(personaje->getFisica());
         verificarColisionPlataforma(personaje->getFisica());
         verificarColisionBordes(personaje->getFisica());
     }
@@ -711,7 +723,6 @@ void NivelUno::actualizar()
     {
         personajeFire->actualizar(nivelTierra);
         moverJugador();
-        verificarColisionEnemigos(personajeFire->getFisica());
         verificarColisionPlataforma(personajeFire->getFisica());
         verificarColisionBordes(personajeFire->getFisica());
     }

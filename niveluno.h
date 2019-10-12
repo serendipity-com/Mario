@@ -48,6 +48,7 @@ private:
     void verificarColisionPlataforma(PersonajeFisica *p);
     void verificarColisionBordes(PersonajeFisica *p);
     void cambiarDireccionGomba();
+
 public slots:
     void actualizar();
     void siguienteSprite();

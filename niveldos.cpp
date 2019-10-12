@@ -2,13 +2,54 @@
 
 
 NivelDos::NivelDos(NivelUno *padre) : NivelUno(padre)
+, anchoEscena(8000)
+, personaje(nullptr)
+, personajeSmall(nullptr)
+, personajeFire(nullptr)
+, salto(true)
+, estado(small)
+, cielo1(nullptr)
+, cielo2(nullptr)
+, cielo3(nullptr)
+, cielo4(nullptr)
+, cielo5(nullptr)
+, cielo6(nullptr)
+, tierra(nullptr)
+, nivelTierra(660)
+, entradaHorizontal(0)
+, velocidad(50)
+, hongo(nullptr)
+, florFuego(nullptr)
 {
-
+    iniciarEscena();
 }
 
 NivelDos::~NivelDos()
 {
+    delete personaje;
+    delete personajeSmall;
+    delete personajeFire;
 
+    delete cielo1;
+    delete cielo2;
+    delete cielo3;
+    delete cielo4;
+    delete cielo5;
+    delete cielo6;
+    delete tierra;
+
+    delete hongo;
+    delete florFuego;
+
+    delete puntaje;
+    delete puntajeLogo;
+
+    monedas.clear();
+    ladrillos.clear();
+    ladrillosSorpresa.clear();
+    tubos.clear();
+    floresCar.clear();
+    gombas.clear();
 }
 
 void NivelDos::iniciarEscena()
@@ -16,27 +57,24 @@ void NivelDos::iniciarEscena()
     setSceneRect(0,0,1280,720);
 
     //Agregamos el cielo
-    cielo1 = new BackgroundItem(QPixmap(":/Imagenes/1-1.png"));
-    cielo1->setPos(0,-100);
+    cielo1 = new BackgroundItem(QPixmap(":Imagenes/2-1.png"));
+    cielo1->setPos(0,0);
     addItem(cielo1);
-    cielo2 = new BackgroundItem(QPixmap(":Imagenes/1-2.png"));
+    cielo2 = new BackgroundItem(QPixmap(":Imagenes/2-2.png"));
     cielo2->setPos(0,0);
     addItem(cielo2);
-    cielo3 = new BackgroundItem(QPixmap(":Imagenes/1-3.png"));
+    cielo3 = new BackgroundItem(QPixmap(":Imagenes/2-3.png"));
     cielo3->setPos(0,0);
     addItem(cielo3);
-    cielo4 = new BackgroundItem(QPixmap(":Imagenes/1-4.png"));
+    cielo4 = new BackgroundItem(QPixmap(":Imagenes/2-4.png"));
     cielo4->setPos(0,0);
     addItem(cielo4);
-    cielo5 = new BackgroundItem(QPixmap(":Imagenes/1-5.png"));
-    cielo5->setPos(0,-90);
+    cielo5 = new BackgroundItem(QPixmap(":Imagenes/2-5.png"));
+    cielo5->setPos(0,0);
     addItem(cielo5);
-    cielo6 = new BackgroundItem(QPixmap(":Imagenes/1-6.png"));
-    cielo6->setPos(0,-90);
+    cielo6 = new BackgroundItem(QPixmap(":Imagenes/2-6.png"));
+    cielo6->setPos(0,0);
     addItem(cielo6);
-    cielo7 = new BackgroundItem(QPixmap(":Imagenes/1-7.png"));
-    cielo7->setPos(0,-170);
-    addItem(cielo7);
 
     //Agregamos puntaje
     puntajeLogo = new BackgroundItem(QPixmap(":/Imagenes/puntaje.png"));
@@ -47,9 +85,9 @@ void NivelDos::iniciarEscena()
     addItem(puntaje);
 
     //Agregamos el piso
-    tierra = new BackgroundItem(QPixmap(":Imagenes/1-8.png"));
+    tierra = new BackgroundItem(QPixmap(":Imagenes/2-7.png"));
     addItem(tierra);
-    tierra->setPos(0,-183);
+    tierra->setPos(0,-118);
 
 
     //Agregamos ladrillos
