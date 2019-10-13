@@ -23,7 +23,7 @@ AdministradorSonidos::AdministradorSonidos()
     muerto = new  QSoundEffect();
     muerto->setSource(QUrl("qrc:/Sonidos/death.wav"));
     muerto->setLoopCount(0);
-    muerto->setVolume(40);
+    muerto->setVolume(60);
 
     hongo = new  QSoundEffect();
     hongo->setSource(QUrl("qrc:/Sonidos/sprout.wav"));
@@ -50,6 +50,16 @@ AdministradorSonidos::~AdministradorSonidos()
     delete muerto;
     delete hongo;
     delete flor;
+}
+
+void AdministradorSonidos::pararLevel1()
+{
+    nivel1->stop();
+}
+
+void AdministradorSonidos::pararLevel2()
+{
+    nivel2->stop();
 }
 
 void AdministradorSonidos::reproducirLevel1()

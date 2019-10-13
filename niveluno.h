@@ -51,7 +51,7 @@ private:
 
     void enviarReiniciar();
 
-    public slots:
+public slots:
     void actualizar();
     void siguienteSprite();
     void moverConMando();

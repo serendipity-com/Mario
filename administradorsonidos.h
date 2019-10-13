@@ -12,6 +12,10 @@ class AdministradorSonidos
 public:
     AdministradorSonidos();
     ~AdministradorSonidos();
+
+    void pararLevel1();
+    void pararLevel2();
+
     void reproducirLevel1();
     void reproducirLevel2();
     void reproducirSalto();

@@ -52,6 +52,8 @@ private:
     void verificarColisionBordes(PersonajeFisica *p);
     void cambiarDireccionGomba();
 
+    void enviarReiniciar();
+
 public slots:
     void actualizar();
     void siguienteSprite();
