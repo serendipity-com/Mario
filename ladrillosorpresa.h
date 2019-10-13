@@ -8,7 +8,6 @@
 class LadrilloSorpresa : public QGraphicsItem
 {
 public:
-
     enum{ Type = UserType + 4};
     LadrilloSorpresa(QGraphicsItem *padre = nullptr);
 
@@ -19,6 +18,7 @@ public:
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     int type() const;
+
 private:
     enum Regalo
     {

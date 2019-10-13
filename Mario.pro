@@ -23,7 +23,9 @@ SOURCES += \
     backgrounditem.cpp \
     bandera.cpp \
     castillo.cpp \
+    fantasma.cpp \
     florfuego.cpp \
+    ladrillonota.cpp \
     ladrillosorpresa.cpp \
     main.cpp \
     niveldos.cpp \
@@ -47,7 +49,9 @@ HEADERS += \
     backgrounditem.h \
     bandera.h \
     castillo.h \
+    fantasma.h \
     florfuego.h \
+    ladrillonota.h \
     ladrillosorpresa.h \
     niveldos.h \
     personaje.h \

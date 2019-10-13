@@ -17,6 +17,8 @@
 #include "backgrounditem.h"
 #include "moneda.h"
 #include "hongo.h"
+#include "fantasma.h"
+#include "ladrillonota.h"
 #include "ladrillosorpresa.h"
 #include "ladrillo.h"
 #include "tubo.h"
@@ -94,7 +96,6 @@ private:
     qreal nivelTierra;
     qreal posicionX;
     int desplazamientoMundo;
-    int entradaHorizontal;
     int velocidad;
 
     QTimer *timer;
@@ -107,9 +108,11 @@ private:
     //complementos de la escena
     QList <Moneda *> monedas;
     QList <Ladrillo*> ladrillos;
+    QList <LadrilloSorpresa*> ladrillosSorpresa;
+    QList <LadrilloNota*> ladrillosNota;
+    QList <Fantasma*> fantasmas;
     Hongo *hongo;
     FlorFuego *florFuego;
-    QList <LadrilloSorpresa*> ladrillosSorpresa;
     QList <Tubo *> tubos;
     QList <Flor *> floresCar;
     QList <Goomba*> gombas;

@@ -16,7 +16,6 @@ NivelDos::NivelDos(NivelUno *padre) : NivelUno(padre)
 , cielo6(nullptr)
 , tierra(nullptr)
 , nivelTierra(660)
-, entradaHorizontal(0)
 , velocidad(50)
 , hongo(nullptr)
 , florFuego(nullptr)
@@ -123,6 +122,24 @@ void NivelDos::iniciarEscena()
         addItem(ladrillosSorpresa.last());
     }
 
+    //Agregamos fantasmas
+    int posFantasmas[2][2] ={{550,550}, {600,450}};
+    for (int i= 0; i < 2;i++)
+    {
+        fantasmas.append(new Fantasma());
+        fantasmas.last()->setPos(posFantasmas[i][0], posFantasmas[i][1]);
+        addItem(fantasmas.last());
+    }
+
+    //Agregamos laderillos
+    int posLadrillonNota[1][3] = {{550,500,2}};
+    for (int i = 0; i < 1; i++)
+    {
+        ladrillosNota.append(new LadrilloNota(posLadrillonNota[i][2]));
+        ladrillosNota.last()->setPos(posLadrillo[i][0],posLadrillo[i][1]);
+        addItem(ladrillosNota.last());
+    }
+
     //Agregamos monedas
     int posMonedas[24][2] ={{550,450}, {600,450}, {650,450}, {700,450}, {750,450}, {650,250}, {1150,350}, {1200,350}, {1350,150}, {1400,150}
                          , {1450,150}, {1500,150}, {1550,150}, {1600,150}, {2750,500},{2800,500}, {2850,500}, {2900,500}, {2950,500}, {3000,500}, {2950,450}
@@ -188,6 +205,7 @@ void NivelDos::iniciarEscena()
     startTimer(100);
 }
 
+//timerEvent se encarga de manejas los sprites de los objetos en escena.
 void NivelDos::timerEvent(QTimerEvent *)
 {
     for (int i = 0;i < monedas.size(); i++)
@@ -198,6 +216,10 @@ void NivelDos::timerEvent(QTimerEvent *)
     {
         ladrillosSorpresa.at(i)->siguienteSprite();
     }
+    for (int i = 0;i < ladrillosNota.size(); i++)
+    {
+        ladrillosNota.at(i)->siguienteSprite();
+    }
     for (int i = 0;i < gombas.size(); i++)
     {
         gombas.at(i)->siguienteSprite();
@@ -206,33 +228,23 @@ void NivelDos::timerEvent(QTimerEvent *)
     {
         floresCar.at(i)->siguienteSprite();
     }
+    for (int i = 0;i < fantasmas.size(); i++)
+    {
+        fantasmas.at(i)->siguienteSprite();
+    }
 
     //mueve los goomba
     for (int i = 0;i < gombas.size(); i++)
     {
         gombas.at(i)->setX(gombas.at(i)->pos().x() + gombas.at(i)->getDireccion() * (-7));
     }
-
-    if(estado == small)
-    {
-        verificarColisionEnemigos(personajeSmall->getFisica());
-    }
-    else if(estado == normal)
-    {
-        verificarColisionEnemigos(personaje->getFisica());
-    }
-    else if(estado == fire)
-    {
-        verificarColisionEnemigos(personajeFire->getFisica());
-    }
 }
 
 void NivelDos::agregarEntradaHorizontal(int entrada)
 {
-    entradaHorizontal += entrada;
-    personajeSmall->setDireccion(qBound(-1, entradaHorizontal, 1));
-    personaje->setDireccion(qBound(-1, entradaHorizontal, 1));
-    personajeFire->setDireccion(qBound(-1, entradaHorizontal, 1));
+    personajeSmall->setDireccion(qBound(-1, entrada, 1));
+    personaje->setDireccion(qBound(-1, entrada, 1));
+    personajeFire->setDireccion(qBound(-1, entrada, 1));
     checkTimer();
 }
 
@@ -291,6 +303,10 @@ void NivelDos::moverJugador()
             {
                 ladrillosSorpresa.at(i)->setX(-dx + ladrillosSorpresa.at(i)->pos().x());
             }
+            for (int i = 0;i < ladrillosNota.size(); i++)
+            {
+                ladrillosNota.at(i)->setX(-dx + ladrillosNota.at(i)->pos().x());
+            }
 
             //mueve las monedas
             for (int i = 0;i < monedas.size(); i++)
@@ -302,6 +318,12 @@ void NivelDos::moverJugador()
             for (int i = 0;i < gombas.size(); i++)
             {
                 gombas.at(i)->setX(-dx + gombas.at(i)->pos().x());
+            }
+
+            //mover fantasmas
+            for (int i = 0;i < fantasmas.size(); i++)
+            {
+                fantasmas.at(i)->setX(-dx + fantasmas.at(i)->pos().x());
             }
 
             //mover tubos
@@ -331,6 +353,12 @@ void NivelDos::moverJugador()
     }
 }
 
+/*Esta función primero verifica si el jugador se mueve.
+ *  Si no, el temporizador se detiene, porque nada tiene
+ *  que actualizarse cuando nuestro personaje se detiene.
+ *  De lo contrario, el temporizador se inicia, pero solo
+ *  si aún no se está ejecutando. Verificamos esto llamando
+ *  isActive()al temporizador.*/
 void NivelDos::checkTimer()
 {
     if(estado == small)
@@ -480,6 +508,12 @@ void NivelDos::verificarColisionEnemigos(PersonajeFisica *p)
                 {
                     sonidos->reproducirMuerto();
                     repetirNivel();
+                    timerMando->stop();
+                    timerSprite->stop();
+                    timer->stop();
+                    personaje->setDireccion(0);
+                    personajeSmall->setDireccion(0);
+                    personajeFire->setDireccion(0);
                 }
             }
         }
@@ -776,6 +810,7 @@ void NivelDos::actualizar()
     {
         personajeSmall->actualizar(nivelTierra);
         moverJugador();
+        verificarColisionEnemigos(personajeSmall->getFisica());
         verificarColisionPlataforma(personajeSmall->getFisica());
         verificarColisionBordes(personajeSmall->getFisica());
     }
@@ -784,6 +819,7 @@ void NivelDos::actualizar()
     {
         personaje->actualizar(nivelTierra);
         moverJugador();
+        verificarColisionEnemigos(personajeSmall->getFisica());
         verificarColisionPlataforma(personaje->getFisica());
         verificarColisionBordes(personaje->getFisica());
     }
@@ -792,6 +828,7 @@ void NivelDos::actualizar()
     {
         personajeFire->actualizar(nivelTierra);
         moverJugador();
+        verificarColisionEnemigos(personajeSmall->getFisica());
         verificarColisionPlataforma(personajeFire->getFisica());
         verificarColisionBordes(personajeFire->getFisica());
     }
@@ -892,11 +929,11 @@ void NivelDos::keyReleaseEvent(QKeyEvent *event)
     {
     case Qt::Key_Right:
         if (event->isAutoRepeat()) {return;}
-        agregarEntradaHorizontal(-1);
+        agregarEntradaHorizontal(0);
         break;
     case Qt::Key_Left:
         if (event->isAutoRepeat()) {return;}
-        agregarEntradaHorizontal(1);
+        agregarEntradaHorizontal(0);
         break;
 
     default:
