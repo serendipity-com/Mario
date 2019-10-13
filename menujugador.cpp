@@ -16,10 +16,10 @@ MenuJugador::MenuJugador(QWidget *parent) :
 
 MenuJugador::~MenuJugador()
 {
+    actualizarBaseDatos();
     delete ui;
     delete escena;
     delete view;
-    //    actualizarBaseDatos();
 }
 
 void MenuJugador::incializarEscena()
@@ -38,7 +38,6 @@ void MenuJugador::incializarEscena()
 
 void MenuJugador::construirInformacion()
 //Lee información de archivo que contiene nombre de usuario, nivel y puntaje en el que quedó
-
 {
     QFile inputFile("://BaseDatos.txt");
     if (inputFile.open(QIODevice::ReadOnly))
@@ -69,7 +68,7 @@ void MenuJugador::correrJuego()
             comenzarNivelUno();
             break;
         case 2:
-    //      comenzarNivelDos();
+            comenzarNivelDos();
             break;
         case 3:
     //      comenzarNivelTres();
@@ -119,12 +118,12 @@ void MenuJugador::comenzarNivelUno()
 
 void MenuJugador::comenzarNivelDos()
 {
-    //instanciar nivel dos
-    //poner en la escena el nivel dos
-    //mostrar escena
+    nivelDos = new NivelDos();
+    view->setScene(nivelDos);
+    view->show();
     informacion[jugadorActual][0] = 2; //actualizar base de datos local en map para al final escribir estos en el archivo dataBase
-    //connect(this->nivelDos, SIGNAL(finalizarNivelDos()), this,SLOT(finalizarNivelDos())); conecta señal de clase nivelDos con slot de esta clase que tiene el mismo nombre
-    //connect(this->nivelDos, SIGNAL(finalizarNivelDos()), this,SLOT(repetirNivel()));
+    connect(this->nivelDos, SIGNAL(finalizarNivelDos()), this,SLOT(finalizarNivelDos())); //conecta señal de clase nivelDos con slot de esta clase que tiene el mismo nombre
+    connect(this->nivelDos, SIGNAL(repetirNivel()), this,SLOT(repetirNivel()));
 }
 
 void MenuJugador::comenzarNivelTres()
@@ -139,13 +138,15 @@ void MenuJugador::comenzarNivelTres()
 
 void MenuJugador::finalizarNivelUno()
 {
+    escena->clear();
     delete nivelUno;
     comenzarNivelDos();
 }
 
 void MenuJugador::finalizarNivelDos()
 {
-//    delete nivelDos;
+    escena->clear();
+    delete nivelDos;
     comenzarNivelTres();
 }
 
@@ -171,18 +172,18 @@ void MenuJugador::cargarPartida()//***
     }
 }
 
-//void MenuJugador::actualizarBaseDatos()//***
-//{
+void MenuJugador::actualizarBaseDatos()
+{
 ////  una vez finalice la partida del jugador en cualquiera de los tres niveles, si desea guardarla se procede a hacer esto:
 //    QFile inputFile("://BaseDatos.txt");
-//    if (inputFile.open(QIODevice::Append)qDebug() << informacion[data];)
+//    if (inputFile.open(QIODevice::Append))
 //    {
-//       QTextStream in(&inputFile); hay que indexar en el map de base de datos y todos esos datos escribirlos en el archivo dataBase.txt
+//       QTextStream in(&inputFile); //hay que indexar en el map de base de datos y todos esos datos escribirlos en el archivo dataBase.txt
 //       in << data << ":" << "nivel" << "puntaje" <<endl;
 //       in.flush();
 //       inputFile.close();
 //    }
-//}
+}
 
 
 

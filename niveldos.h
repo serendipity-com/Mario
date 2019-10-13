@@ -10,8 +10,6 @@
 #include <QGraphicsView>
 #include <QList>
 
-#include "niveluno.h"
-
 #include "personaje.h"
 #include "personajefisica.h"
 #include "backgrounditem.h"
@@ -29,12 +27,12 @@
 #include "administradorarduino.h"
 #include "puntaje.h"
 
-class NivelDos : public NivelUno
+class NivelDos : public QGraphicsScene
 {
     Q_OBJECT
 
 public:
-    explicit NivelDos(NivelUno *padre = nullptr);
+    explicit NivelDos(QObject *padre = nullptr);
     ~NivelDos();
 
 private:

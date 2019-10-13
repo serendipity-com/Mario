@@ -26,6 +26,8 @@ public:
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
+    bool estarTocandoL(QGraphicsItem *item);
+    bool estarTocandoR(QGraphicsItem *item);
     bool estarTocandoCabeza(QGraphicsItem *item);
     bool estarTocandoPies(QGraphicsItem *item);
     bool estarTocandoPlataforma(QGraphicsItem *item);

@@ -3,6 +3,7 @@
 #include <QSplashScreen>
 #include <QTimer>
 
+#include "niveluno.h"
 #include "niveldos.h"
 #include <QGraphicsView>
 int main(int argc, char *argv[])
@@ -14,7 +15,7 @@ int main(int argc, char *argv[])
     splash->setPixmap(QPixmap(":/Imagenes/mario_splash.png"));
     splash->show();
 
-    NivelDos escena;
+    NivelUno escena;
     QGraphicsView view;
     view.setRenderHint (QPainter :: Antialiasing);
     view.setVerticalScrollBarPolicy (Qt :: ScrollBarAlwaysOff);

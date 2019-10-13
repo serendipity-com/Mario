@@ -1,7 +1,7 @@
 #include "niveldos.h"
 
 
-NivelDos::NivelDos(NivelUno *padre) : NivelUno(padre)
+NivelDos::NivelDos(QObject *padre) : QGraphicsScene(0,0,8000,720,padre)
 , anchoEscena(8000)
 , personaje(nullptr)
 , personajeSmall(nullptr)
@@ -57,6 +57,8 @@ NivelDos::~NivelDos()
     monedas.clear();
     ladrillos.clear();
     ladrillosSorpresa.clear();
+    ladrillosNota.clear();
+    fantasmas.clear();
     tubos.clear();
     floresCar.clear();
     gombas.clear();

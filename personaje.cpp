@@ -127,6 +127,20 @@ void Personaje::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     Q_UNUSED(option)
 }
 
+bool Personaje::estarTocandoL(QGraphicsItem *item)
+{
+    QRectF rect(pos().x(), pos().y(), boundingRect().width(), boundingRect().height());
+    QRectF otherRect(item->pos().x(), item->pos().y() , 10, item->boundingRect().height());
+    return rect.intersects(otherRect);
+}
+
+bool Personaje::estarTocandoR(QGraphicsItem *item)
+{
+    QRectF rect(pos().x(), pos().y(), boundingRect().width(), boundingRect().height());
+    QRectF otherRect(item->pos().x() + item->boundingRect().width() -10 , item->pos().y() , 10 , item->boundingRect().height());
+    return rect.intersects(otherRect);
+}
+
 bool Personaje::estarTocandoCabeza(QGraphicsItem *item)
 {
     QRectF rect(pos().x(), pos().y(), boundingRect().width(), 10);

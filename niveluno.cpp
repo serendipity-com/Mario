@@ -232,14 +232,16 @@ void NivelUno::verificarColisionEnemigos(PersonajeFisica *p)
                 else
                 {
                     sonidos->reproducirMuerto();
-                    repetirNivel();
-                    timerMando->stop();
-                    timerSprite->stop();
-                    timer->stop();
-                    personaje->setDireccion(0);
-                    personajeSmall->setDireccion(0);
-                    personajeFire->setDireccion(0);
+                    enviarReiniciar();
                 }
+            }
+        }
+        for(QGraphicsItem *item : collidingItems(personajeSmall))
+        {
+            if(Flor *m = qgraphicsitem_cast<Flor*>(item))
+            {
+                sonidos->reproducirMuerto();
+                enviarReiniciar();
             }
         }
     }
@@ -262,8 +264,23 @@ void NivelUno::verificarColisionEnemigos(PersonajeFisica *p)
                     PersonajeFisica *p = personajeSmall->getFisica();
                     PersonajeFisica *s = personaje->getFisica();
                     p->setVel(s->getVelX(), s->getVelY(), s->getPosX(), s->getPosY());
+                    p->setVel(p->getVelX(), 400, p->getPosX(), nivelTierra - m->pos().y() + 20);
                     personaje->setPos(-1000,-1000);
                 }
+            }
+        }
+        for(QGraphicsItem *item : collidingItems(personaje))
+        {
+            if(Flor *m = qgraphicsitem_cast<Flor*>(item))
+            {
+                //camiar de personaje
+                estado = small;
+                sonidos->reproducirGolpe();
+                PersonajeFisica *p = personajeSmall->getFisica();
+                PersonajeFisica *s = personaje->getFisica();
+                p->setVel(s->getVelX(), s->getVelY(), s->getPosX(), s->getPosY());
+                p->setVel(p->getVelX(), 400, p->getPosX(), nivelTierra - m->pos().y() + 20);
+                personaje->setPos(-1000,-1000);
             }
         }
     }
@@ -286,8 +303,23 @@ void NivelUno::verificarColisionEnemigos(PersonajeFisica *p)
                     PersonajeFisica *p = personaje->getFisica();
                     PersonajeFisica *s = personajeFire->getFisica();
                     p->setVel(s->getVelX(), s->getVelY(), s->getPosX(), s->getPosY());
+                    p->setVel(p->getVelX(), 400, p->getPosX(), nivelTierra - m->pos().y() + 20);
                     personajeFire->setPos(-1000,-1000);
                 }
+            }
+        }
+        for(QGraphicsItem *item : collidingItems(personajeFire))
+        {
+            if(Flor *m = qgraphicsitem_cast<Flor*>(item))
+            {
+                //camiar de personaje
+                estado = normal;
+                sonidos->reproducirGolpe();
+                PersonajeFisica *p = personaje->getFisica();
+                PersonajeFisica *s = personajeFire->getFisica();
+                p->setVel(s->getVelX(), s->getVelY(), s->getPosX(), s->getPosY());
+                p->setVel(p->getVelX(), 400, p->getPosX(), nivelTierra - m->pos().y() + 20);
+                personajeFire->setPos(-1000,-1000);
             }
         }
     }
@@ -337,6 +369,14 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - l->pos().y() + personajeSmall->boundingRect().height());
                     salto = true;
                 }
+                else if(personajeSmall->estarTocandoR(l))
+                {
+                    p->setVel(0,-1*(0.2)*p->getVelY(),l->pos().x() + l->boundingRect().width() + personajeSmall->boundingRect().width(),p->getPosY());
+                }
+                else if(personajeSmall->estarTocandoL(l))
+                {
+                    p->setVel(0,-1*(0.2)*p->getVelY(),l->pos().x() - personajeSmall->boundingRect().width(),p->getPosY());
+                }
             }
             else if(Tubo *t = qgraphicsitem_cast<Tubo*>(item))
             {
@@ -345,9 +385,13 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - t->pos().y() + personajeSmall->boundingRect().height());
                     salto = true;
                 }
-                else
+                else if(personajeSmall->estarTocandoR(t))
                 {
-                    p->setVel(-1*(0.2)*p->getVelX(),p->getVelY(), p->getPosX(),p->getPosY());
+                    p->setVel(0,-1*(0.2)*p->getVelY(),t->pos().x() + t->boundingRect().width() + personajeSmall->boundingRect().width(),p->getPosY());
+                }
+                else if(personajeSmall->estarTocandoL(t))
+                {
+                    p->setVel(0,-1*(0.2)*p->getVelY(),t->pos().x() - personajeSmall->boundingRect().width(),p->getPosY());
                 }
             }
         }
@@ -394,6 +438,14 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - l->pos().y() + personaje->boundingRect().height());
                     salto = true;
                 }
+                else if(personaje->estarTocandoR(l))
+                {
+                    p->setVel(0,-1*(0.2)*p->getVelY(),l->pos().x() + l->boundingRect().width() + personaje->boundingRect().width(),p->getPosY());
+                }
+                else if(personaje->estarTocandoL(l))
+                {
+                    p->setVel(0,-1*(0.2)*p->getVelY(),l->pos().x() - personaje->boundingRect().width(),p->getPosY());
+                }
             }
             else if(Tubo *t = qgraphicsitem_cast<Tubo*>(item))
             {
@@ -402,9 +454,13 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - t->pos().y() + personaje->boundingRect().height());
                     salto = true;
                 }
-                else
+                else if(personaje->estarTocandoR(t))
                 {
-                    p->setVel(-1*(0.2)*p->getVelX(),p->getVelY(), p->getPosX(),p->getPosY());
+                    p->setVel(0,-1*(0.2)*p->getVelY(),t->pos().x() + t->boundingRect().width() + personaje->boundingRect().width(),p->getPosY());
+                }
+                else if(personaje->estarTocandoL(t))
+                {
+                    p->setVel(0,-1*(0.2)*p->getVelY(),t->pos().x() - personaje->boundingRect().width(),p->getPosY());
                 }
             }
         }
@@ -451,6 +507,14 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - l->pos().y() + personajeFire->boundingRect().height());
                     salto = true;
                 }
+                else if(personajeFire->estarTocandoR(l))
+                {
+                    p->setVel(0,-1*(0.2)*p->getVelY(),l->pos().x() + l->boundingRect().width() + personajeFire->boundingRect().width(),p->getPosY());
+                }
+                else if(personajeFire->estarTocandoL(l))
+                {
+                    p->setVel(0,-1*(0.2)*p->getVelY(),l->pos().x() - personajeFire->boundingRect().width(),p->getPosY());
+                }
             }
             else if(Tubo *t = qgraphicsitem_cast<Tubo*>(item))
             {
@@ -459,9 +523,13 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - t->pos().y() + personajeFire->boundingRect().height());
                     salto = true;
                 }
-                else
+                else if(personajeFire->estarTocandoR(t))
                 {
-                    p->setVel(-1*(0.2)*p->getVelX(),p->getVelY(), p->getPosX(),p->getPosY());
+                    p->setVel(0,-1*(0.2)*p->getVelY(),t->pos().x() + t->boundingRect().width() + personajeFire->boundingRect().width(),p->getPosY());
+                }
+                else if(personajeFire->estarTocandoL(t))
+                {
+                    p->setVel(0,-1*(0.2)*p->getVelY(),t->pos().x() - personajeFire->boundingRect().width(),p->getPosY());
                 }
             }
         }
@@ -526,6 +594,19 @@ void NivelUno::cambiarDireccionGomba()
             }
         }
     }
+}
+
+void NivelUno::enviarReiniciar()
+{
+    timer->stop();
+    timerSprite->stop();
+    timerMando->stop();
+
+    personaje->setDireccion(0);
+    personajeSmall->setDireccion(0);
+    personajeFire->setDireccion(0);
+
+    emit repetirNivel();
 }
 
 //timerEvent se encarga de manejas los sprites de los objetos en escena.

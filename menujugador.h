@@ -14,6 +14,7 @@
 #include <QMessageBox>
 
 #include "niveluno.h"
+#include "niveldos.h"
 
 using namespace std;
 namespace Ui {
@@ -29,7 +30,7 @@ public:
 
 private:
     void incializarEscena();
-    //    void actualizarBaseDatos();
+    void actualizarBaseDatos();
     void correrJuego();
     void construirInformacion();
 
@@ -60,7 +61,7 @@ private:
 
     //Niveles
     NivelUno *nivelUno;
-//    NivelDos *nivelDos;
+    NivelDos *nivelDos;
 //    NivelTres *nivelTres;
 
 };
