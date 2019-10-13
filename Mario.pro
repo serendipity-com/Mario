@@ -28,6 +28,7 @@ SOURCES += \
     ladrillonota.cpp \
     ladrillosorpresa.cpp \
     main.cpp \
+    menumultijugador.cpp \
     niveldos.cpp \
     personaje.cpp \
     personajefisica.cpp \
@@ -53,6 +54,7 @@ HEADERS += \
     florfuego.h \
     ladrillonota.h \
     ladrillosorpresa.h \
+    menumultijugador.h \
     niveldos.h \
     personaje.h \
     personajefisica.h \
@@ -70,6 +72,7 @@ HEADERS += \
 
 FORMS += \
     menujugador.ui \
+    menumultijugador.ui \
     widget.ui
 
 # Default rules for deployment.

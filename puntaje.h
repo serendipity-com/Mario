@@ -13,7 +13,8 @@ public:
     
     void incrementar();
     int getPuntaje();
-    
+    void setPuntaje(int valor);
+
 private:
     int puntaje;
 };

@@ -54,6 +54,7 @@ NivelUno::~NivelUno()
 
     delete hongo;
     delete florFuego;
+    delete castillo;
 
     delete puntaje;
     delete puntajeLogo;
@@ -64,6 +65,11 @@ NivelUno::~NivelUno()
     tubos.clear();
     floresCar.clear();
     gombas.clear();
+}
+
+int NivelUno::getPuntaje()
+{
+    return puntaje->getPuntaje();
 }
 
 void NivelUno::agregarEntradaHorizontal(int entrada)
@@ -706,6 +712,16 @@ void NivelUno::iniciarEscena()
         addItem(ladrillosSorpresa.last());
     }
 
+    //Agregamos castillo
+    castillo = new Castillo();
+    castillo->setPos(4500,nivelTierra - castillo->boundingRect().height());
+    addItem(castillo);
+
+    //Agregamos bandera
+    tuboBandera = new QGraphicsPixmapItem(QPixmap(":/Imagenes/tuboBandera.png"));
+    tuboBandera->setPos(4200, nivelTierra - tuboBandera->boundingRect().height());
+    addItem(tuboBandera);
+
     //Agregamos monedas
     int posMonedas[24][2] ={{550,450}, {600,450}, {650,450}, {700,450}, {750,450}, {650,250}, {1150,350}, {1200,350}, {1350,150}, {1400,150}
                          , {1450,150}, {1500,150}, {1550,150}, {1600,150}, {2750,500},{2800,500}, {2850,500}, {2900,500}, {2950,500}, {3000,500}, {2950,450}
@@ -815,7 +831,9 @@ void NivelUno::moverJugador()
     if(estado == small){ direccion = personajeSmall->getDireccion();}
     else if (estado == normal){direccion = personaje->getDireccion();}
     else if (estado == fire){direccion = personajeFire->getDireccion();}
-    if(direccion != 0)
+    if((personaje->pos().x() >= 1035 && personaje->getDireccion()  == 1) ||
+       (personajeSmall->pos().x() >= 1035 && personajeSmall->getDireccion()  == 1) ||
+       (personajeFire->pos().x() >= 1035 && personajeFire->getDireccion()  == 1))
     {
         const int dx = 7*direccion;
         qreal newX = qBound(minX, posicionX + dx, maxX);
@@ -843,57 +861,57 @@ void NivelUno::moverJugador()
         const int maxDesplazamientoMundo = anchoEscena - qRound(width());
         desplazamientoMundo = qBound(0, desplazamientoMundo, maxDesplazamientoMundo);
 
-        if((personaje->pos().x() >= 1035 && personaje->getDireccion()  == 1) ||
-           (personajeSmall->pos().x() >= 1035 && personajeSmall->getDireccion()  == 1) ||
-           (personajeFire->pos().x() >= 1035 && personajeFire->getDireccion()  == 1))
+        //mueve los ladrillos
+        for (int i = 0;i < ladrillos.size(); i++)
         {
-            //mueve los ladrillos
-            for (int i = 0;i < ladrillos.size(); i++)
-            {
-                ladrillos.at(i)->setX(-dx + ladrillos.at(i)->pos().x());
-            }
-            for (int i = 0;i < ladrillosSorpresa.size(); i++)
-            {
-                ladrillosSorpresa.at(i)->setX(-dx + ladrillosSorpresa.at(i)->pos().x());
-            }
-
-            //mueve las monedas
-            for (int i = 0;i < monedas.size(); i++)
-            {
-                monedas.at(i)->setX(-dx + monedas.at(i)->pos().x());
-            }
-
-            //mover goombas
-            for (int i = 0;i < gombas.size(); i++)
-            {
-                gombas.at(i)->setX(-dx + gombas.at(i)->pos().x());
-            }
-
-            //mover tubos
-            for (int i = 0;i < tubos.size(); i++)
-            {
-                tubos.at(i)->setX(-dx + tubos.at(i)->pos().x());
-            }
-
-            //mover flores
-            for (int i = 0;i < floresCar.size(); i++)
-            {
-                floresCar.at(i)->setX(-dx + floresCar.at(i)->pos().x());
-            }
-
-            //mover hongo
-            hongo->setX(-dx + hongo->pos().x());
-
-            const qreal proporcion = qreal(desplazamientoMundo) / maxDesplazamientoMundo;
-            aplicarParalelismo(proporcion, cielo1);
-            aplicarParalelismo(proporcion, cielo2);
-            aplicarParalelismo(proporcion, cielo3);
-            aplicarParalelismo(proporcion, cielo4);
-            aplicarParalelismo(proporcion, cielo5);
-            aplicarParalelismo(proporcion, cielo6);
-            aplicarParalelismo(proporcion, cielo7);
-            aplicarParalelismo(proporcion, tierra);
+            ladrillos.at(i)->setX(-dx + ladrillos.at(i)->pos().x());
         }
+        for (int i = 0;i < ladrillosSorpresa.size(); i++)
+        {
+            ladrillosSorpresa.at(i)->setX(-dx + ladrillosSorpresa.at(i)->pos().x());
+        }
+
+        //mueve las monedas
+        for (int i = 0;i < monedas.size(); i++)
+        {
+            monedas.at(i)->setX(-dx + monedas.at(i)->pos().x());
+        }
+
+        //mover goombas
+        for (int i = 0;i < gombas.size(); i++)
+        {
+            gombas.at(i)->setX(-dx + gombas.at(i)->pos().x());
+        }
+
+        //mover tubos
+        for (int i = 0;i < tubos.size(); i++)
+        {
+            tubos.at(i)->setX(-dx + tubos.at(i)->pos().x());
+        }
+
+        //mover flores
+        for (int i = 0;i < floresCar.size(); i++)
+        {
+            floresCar.at(i)->setX(-dx + floresCar.at(i)->pos().x());
+        }
+
+        //mover hongo
+        hongo->setX(-dx + hongo->pos().x());
+
+        //mover castillo
+        castillo->setX(-dx + castillo->pos().x());
+        tuboBandera->setX(-dx + tuboBandera->pos().x());
+
+        const qreal proporcion = qreal(desplazamientoMundo) / maxDesplazamientoMundo;
+        aplicarParalelismo(proporcion, cielo1);
+        aplicarParalelismo(proporcion, cielo2);
+        aplicarParalelismo(proporcion, cielo3);
+        aplicarParalelismo(proporcion, cielo4);
+        aplicarParalelismo(proporcion, cielo5);
+        aplicarParalelismo(proporcion, cielo6);
+        aplicarParalelismo(proporcion, cielo7);
+        aplicarParalelismo(proporcion, tierra);
+
     }
 }
 

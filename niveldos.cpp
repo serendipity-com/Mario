@@ -1,7 +1,7 @@
 #include "niveldos.h"
 
 
-NivelDos::NivelDos(QObject *padre) : QGraphicsScene(0,0,8000,720,padre)
+NivelDos::NivelDos(int _puntaje, QObject *padre) : QGraphicsScene(0,0,8000,720,padre)
 , anchoEscena(8000)
 , personaje(nullptr)
 , personajeSmall(nullptr)
@@ -21,6 +21,8 @@ NivelDos::NivelDos(QObject *padre) : QGraphicsScene(0,0,8000,720,padre)
 , florFuego(nullptr)
 {
     iniciarEscena();
+    puntaje->setPuntaje(_puntaje);
+
     sonidos = new AdministradorSonidos();
     sonidos->reproducirLevel2();
 
@@ -63,6 +65,11 @@ NivelDos::~NivelDos()
     tubos.clear();
     floresCar.clear();
     gombas.clear();
+}
+
+int NivelDos::getPuntaje()
+{
+    return puntaje->getPuntaje();
 }
 
 void NivelDos::iniciarEscena()
@@ -290,7 +297,9 @@ void NivelDos::moverJugador()
     if(estado == small){ direccion = personajeSmall->getDireccion();}
     else if (estado == normal){direccion = personaje->getDireccion();}
     else if (estado == fire){direccion = personajeFire->getDireccion();}
-    if(direccion != 0)
+    if((personaje->pos().x() >= 1035 && personaje->getDireccion()  == 1) ||
+       (personajeSmall->pos().x() >= 1035 && personajeSmall->getDireccion()  == 1) ||
+       (personajeFire->pos().x() >= 1035 && personajeFire->getDireccion()  == 1))
     {
         const int dx = 7*direccion;
         qreal newX = qBound(minX, posicionX + dx, maxX);
@@ -318,66 +327,61 @@ void NivelDos::moverJugador()
         const int maxDesplazamientoMundo = anchoEscena - qRound(width());
         desplazamientoMundo = qBound(0, desplazamientoMundo, maxDesplazamientoMundo);
 
-        if((personaje->pos().x() >= 1035 && personaje->getDireccion()  == 1) ||
-           (personajeSmall->pos().x() >= 1035 && personajeSmall->getDireccion()  == 1) ||
-           (personajeFire->pos().x() >= 1035 && personajeFire->getDireccion()  == 1))
+        //mueve los ladrillos
+        for (int i = 0;i < ladrillos.size(); i++)
         {
-            //mueve los ladrillos
-            for (int i = 0;i < ladrillos.size(); i++)
-            {
-                ladrillos.at(i)->setX(-dx + ladrillos.at(i)->pos().x());
-            }
-            for (int i = 0;i < ladrillosSorpresa.size(); i++)
-            {
-                ladrillosSorpresa.at(i)->setX(-dx + ladrillosSorpresa.at(i)->pos().x());
-            }
-            for (int i = 0;i < ladrillosNota.size(); i++)
-            {
-                ladrillosNota.at(i)->setX(-dx + ladrillosNota.at(i)->pos().x());
-            }
-
-            //mueve las monedas
-            for (int i = 0;i < monedas.size(); i++)
-            {
-                monedas.at(i)->setX(-dx + monedas.at(i)->pos().x());
-            }
-
-            //mover goombas
-            for (int i = 0;i < gombas.size(); i++)
-            {
-                gombas.at(i)->setX(-dx + gombas.at(i)->pos().x());
-            }
-
-            //mover fantasmas
-            for (int i = 0;i < fantasmas.size(); i++)
-            {
-                fantasmas.at(i)->setX(-dx + fantasmas.at(i)->pos().x());
-            }
-
-            //mover tubos
-            for (int i = 0;i < tubos.size(); i++)
-            {
-                tubos.at(i)->setX(-dx + tubos.at(i)->pos().x());
-            }
-
-            //mover flores
-            for (int i = 0;i < floresCar.size(); i++)
-            {
-                floresCar.at(i)->setX(-dx + floresCar.at(i)->pos().x());
-            }
-
-            //mover hongo
-            hongo->setX(-dx + hongo->pos().x());
-
-            const qreal proporcion = qreal(desplazamientoMundo) / maxDesplazamientoMundo;
-            aplicarParalelismo(proporcion, cielo1);
-            aplicarParalelismo(proporcion, cielo2);
-            aplicarParalelismo(proporcion, cielo3);
-            aplicarParalelismo(proporcion, cielo4);
-            aplicarParalelismo(proporcion, cielo5);
-            aplicarParalelismo(proporcion, cielo6);
-            aplicarParalelismo(proporcion, tierra);
+            ladrillos.at(i)->setX(-dx + ladrillos.at(i)->pos().x());
         }
+        for (int i = 0;i < ladrillosSorpresa.size(); i++)
+        {
+            ladrillosSorpresa.at(i)->setX(-dx + ladrillosSorpresa.at(i)->pos().x());
+        }
+        for (int i = 0;i < ladrillosNota.size(); i++)
+        {
+            ladrillosNota.at(i)->setX(-dx + ladrillosNota.at(i)->pos().x());
+        }
+
+        //mueve las monedas
+        for (int i = 0;i < monedas.size(); i++)
+        {
+            monedas.at(i)->setX(-dx + monedas.at(i)->pos().x());
+        }
+
+        //mover goombas
+        for (int i = 0;i < gombas.size(); i++)
+        {
+            gombas.at(i)->setX(-dx + gombas.at(i)->pos().x());
+        }
+
+        //mover fantasmas
+        for (int i = 0;i < fantasmas.size(); i++)
+        {
+            fantasmas.at(i)->setX(-dx + fantasmas.at(i)->pos().x());
+        }
+
+        //mover tubos
+        for (int i = 0;i < tubos.size(); i++)
+        {
+            tubos.at(i)->setX(-dx + tubos.at(i)->pos().x());
+        }
+
+        //mover flores
+        for (int i = 0;i < floresCar.size(); i++)
+        {
+            floresCar.at(i)->setX(-dx + floresCar.at(i)->pos().x());
+        }
+
+        //mover hongo
+        hongo->setX(-dx + hongo->pos().x());
+
+        const qreal proporcion = qreal(desplazamientoMundo) / maxDesplazamientoMundo;
+        aplicarParalelismo(proporcion, cielo1);
+        aplicarParalelismo(proporcion, cielo2);
+        aplicarParalelismo(proporcion, cielo3);
+        aplicarParalelismo(proporcion, cielo4);
+        aplicarParalelismo(proporcion, cielo5);
+        aplicarParalelismo(proporcion, cielo6);
+        aplicarParalelismo(proporcion, tierra);
     }
 }
 

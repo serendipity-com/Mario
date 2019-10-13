@@ -32,8 +32,10 @@ class NivelDos : public QGraphicsScene
     Q_OBJECT
 
 public:
-    explicit NivelDos(QObject *padre = nullptr);
+    explicit NivelDos(int _puntaje, QObject *padre = nullptr);
     ~NivelDos();
+
+    int getPuntaje();
 
 private:
     void iniciarEscena();

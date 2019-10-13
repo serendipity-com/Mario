@@ -60,7 +60,7 @@ void MenuJugador::construirInformacion()
 
 void MenuJugador::correrJuego()
 {
-    if(vidas >= 0)
+    if(vidas >= 1)
     {
         switch(informacion[jugadorActual][0])
         {
@@ -118,7 +118,7 @@ void MenuJugador::comenzarNivelUno()
 
 void MenuJugador::comenzarNivelDos()
 {
-    nivelDos = new NivelDos();
+    nivelDos = new NivelDos(informacion[jugadorActual][1]);
     view->setScene(nivelDos);
     view->show();
     informacion[jugadorActual][0] = 2; //actualizar base de datos local en map para al final escribir estos en el archivo dataBase
@@ -138,6 +138,7 @@ void MenuJugador::comenzarNivelTres()
 
 void MenuJugador::finalizarNivelUno()
 {
+    informacion[jugadorActual][1] = nivelUno->getPuntaje();
     escena->clear();
     delete nivelUno;
     comenzarNivelDos();
@@ -145,6 +146,7 @@ void MenuJugador::finalizarNivelUno()
 
 void MenuJugador::finalizarNivelDos()
 {
+    informacion[jugadorActual][1] = nivelDos->getPuntaje();
     escena->clear();
     delete nivelDos;
     comenzarNivelTres();

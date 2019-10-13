@@ -24,6 +24,7 @@
 #include "administradorsonidos.h"
 #include "administradorarduino.h"
 #include "puntaje.h"
+#include "castillo.h"
 
 class NivelUno: public QGraphicsScene
 {
@@ -31,6 +32,8 @@ class NivelUno: public QGraphicsScene
 public:
     explicit NivelUno(QObject *padre = nullptr);
     ~NivelUno();
+
+    int getPuntaje();
 
 private:
     void timerEvent(QTimerEvent *);
@@ -112,6 +115,8 @@ private:
     QList <Tubo *> tubos;
     QList <Flor *> floresCar;
     QList <Goomba*> gombas;
+    Castillo *castillo;
+    QGraphicsItem *tuboBandera;
 
     Puntaje *puntaje;
     BackgroundItem *puntajeLogo;

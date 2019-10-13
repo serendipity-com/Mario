@@ -23,3 +23,8 @@ int Puntaje::getPuntaje()
 {
     return puntaje;
 }
+
+void Puntaje::setPuntaje(int valor)
+{
+    puntaje = valor;
+}
