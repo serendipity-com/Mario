@@ -22,6 +22,7 @@ NivelDos::NivelDos(QObject *padre) : QGraphicsScene(0,0,8000,720,padre)
 {
     iniciarEscena();
     sonidos = new AdministradorSonidos();
+    sonidos->reproducirLevel2();
 
     timerSprite = new QTimer(this);
     connect(timerSprite, SIGNAL(timeout()), this, SLOT(siguienteSprite()));
@@ -533,7 +534,7 @@ void NivelDos::verificarColisionEnemigos(PersonajeFisica *p)
                 }
                 else
                 {
-                    sonidos->reproducirMuerto();
+                    sonidos->reproducirMuerto2();
                     repetirNivel();
                     timerMando->stop();
                     timerSprite->stop();

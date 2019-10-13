@@ -24,6 +24,7 @@ NivelUno::NivelUno(QObject *padre):
     iniciarEscena();
 
     sonidos = new AdministradorSonidos();
+    sonidos->reproducirLevel1();
 
     timerSprite = new QTimer(this);
     connect(timerSprite, SIGNAL(timeout()), this, SLOT(siguienteSprite()));
@@ -231,7 +232,7 @@ void NivelUno::verificarColisionEnemigos(PersonajeFisica *p)
                 }
                 else
                 {
-                    sonidos->reproducirMuerto();
+                    sonidos->reproducirMuerto1();
                     enviarReiniciar();
                 }
             }
@@ -240,7 +241,7 @@ void NivelUno::verificarColisionEnemigos(PersonajeFisica *p)
         {
             if(Flor *m = qgraphicsitem_cast<Flor*>(item))
             {
-                sonidos->reproducirMuerto();
+                sonidos->reproducirMuerto1();
                 enviarReiniciar();
             }
         }

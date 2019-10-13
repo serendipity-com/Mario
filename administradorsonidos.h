@@ -12,16 +12,19 @@ class AdministradorSonidos
 public:
     AdministradorSonidos();
     ~AdministradorSonidos();
-
+    void reproducirLevel1();
+    void reproducirLevel2();
     void reproducirSalto();
     void reproducirMoneda();
-    void reproducirMuerto();
+    void reproducirMuerto1();
+    void reproducirMuerto2();
     void reproducirHongo();
     void reproducirGolpe();
     void reproducirFlor();
 
 private:
-    QMediaPlayer *nivel;
+    QMediaPlayer *nivel1;
+    QMediaPlayer *nivel2;
     QSoundEffect *salto;
     QSoundEffect *moneda;
     QSoundEffect *muerto;

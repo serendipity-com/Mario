@@ -15,5 +15,6 @@
         <file>Sonidos/shrink.wav</file>
         <file>Sonidos/sprout.wav</file>
         <file>Sonidos/ThemeSong.mp3</file>
+        <file>Sonidos/level2.mp3</file>
     </qresource>
 </RCC>
