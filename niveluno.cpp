@@ -1,8 +1,8 @@
 #include "niveluno.h"
 
 NivelUno::NivelUno(QObject *padre):
-    QGraphicsScene(0,0,8000,720,padre)
-  , anchoEscena(8000)
+    QGraphicsScene(0,0,6600,720,padre)
+  , anchoEscena(6600)
   , personaje(nullptr)
   , personajeSmall(nullptr)
   , personajeFire(nullptr)
@@ -55,6 +55,8 @@ NivelUno::~NivelUno()
     delete hongo;
     delete florFuego;
     delete castillo;
+    delete tuboBandera;
+    delete bandera;
 
     delete puntaje;
     delete puntajeLogo;
@@ -130,6 +132,40 @@ void NivelUno::checkTimer()
             personajeFire->caminar();
             timerSprite->start(50);
             //qDebug() << "Si";
+        }
+    }
+}
+
+void NivelUno::verificarColisionCastillo()
+{
+    if(estado == small)
+    {
+        if(personajeSmall->collidesWithItem(castillo))
+        {
+            if(castillo->estarTocandoPuerta(personajeSmall))
+            {
+                enviarFinalizar();
+            }
+        }
+    }
+    else if(estado == normal)
+    {
+        if(personaje->collidesWithItem(castillo))
+        {
+            if(castillo->estarTocandoPuerta(personaje))
+            {
+                enviarFinalizar();
+            }
+        }
+    }
+    else if(estado == fire)
+    {
+        if(personajeFire->collidesWithItem(castillo))
+        {
+            if(castillo->estarTocandoPuerta(personajeFire))
+            {
+                enviarFinalizar();
+            }
         }
     }
 }
@@ -373,6 +409,7 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                 }
                 else if(personajeSmall->estarTocandoPlataforma(l))
                 {
+                    p->setCd(5);
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - l->pos().y() + personajeSmall->boundingRect().height());
                     salto = true;
                 }
@@ -389,6 +426,7 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
             {
                 if(personajeSmall->estarTocandoPlataforma(t))
                 {
+                    p->setCd(5);
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - t->pos().y() + personajeSmall->boundingRect().height());
                     salto = true;
                 }
@@ -430,6 +468,7 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                 }
                 else if(personaje->estarTocandoPlataforma(m))
                 {
+                    p->setCd(5);
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personaje->boundingRect().height());
                     salto = true;
                 }
@@ -442,6 +481,7 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                 }
                 else if(personaje->estarTocandoPlataforma(l))
                 {
+                    p->setCd(5);
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - l->pos().y() + personaje->boundingRect().height());
                     salto = true;
                 }
@@ -458,6 +498,7 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
             {
                 if(personaje->estarTocandoPlataforma(t))
                 {
+                    p->setCd(5);
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - t->pos().y() + personaje->boundingRect().height());
                     salto = true;
                 }
@@ -499,6 +540,7 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                 }
                 else if(personajeFire->estarTocandoPlataforma(m))
                 {
+                    p->setCd(5);
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personajeFire->boundingRect().height());
                     salto = true;
                 }
@@ -511,6 +553,7 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                 }
                 else if(personajeFire->estarTocandoPlataforma(l))
                 {
+                    p->setCd(5);
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - l->pos().y() + personajeFire->boundingRect().height());
                     salto = true;
                 }
@@ -527,6 +570,7 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
             {
                 if(personajeFire->estarTocandoPlataforma(t))
                 {
+                    p->setCd(5);
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - t->pos().y() + personajeFire->boundingRect().height());
                     salto = true;
                 }
@@ -555,6 +599,7 @@ void NivelUno::verificarColisionBordes(PersonajeFisica *p)
     }
     if(p->getPosY() < p->getAlto())
     {
+        p->setCd(5);
         p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), p->getAlto());
         salto = true;
     }
@@ -616,6 +661,20 @@ void NivelUno::enviarReiniciar()
     emit repetirNivel();
 }
 
+void NivelUno::enviarFinalizar()
+{
+    sonidos->pararLevel1();
+    timer->stop();
+    timerSprite->stop();
+    timerMando->stop();
+
+    personaje->setDireccion(0);
+    personajeSmall->setDireccion(0);
+    personajeFire->setDireccion(0);
+
+    emit finalizarNivelUno();
+}
+
 //timerEvent se encarga de manejas los sprites de los objetos en escena.
 void NivelUno::timerEvent(QTimerEvent *)
 {
@@ -635,6 +694,7 @@ void NivelUno::timerEvent(QTimerEvent *)
     {
         floresCar.at(i)->siguienteSprite();
     }
+    bandera->siguienteSprite();
 
     //mueve los goomba
     for (int i = 0;i < gombas.size(); i++)
@@ -714,12 +774,15 @@ void NivelUno::iniciarEscena()
 
     //Agregamos castillo
     castillo = new Castillo();
-    castillo->setPos(4500,nivelTierra - castillo->boundingRect().height());
+    castillo->setPos(6200,nivelTierra - castillo->boundingRect().height());
     addItem(castillo);
 
     //Agregamos bandera
     tuboBandera = new QGraphicsPixmapItem(QPixmap(":/Imagenes/tuboBandera.png"));
-    tuboBandera->setPos(4200, nivelTierra - tuboBandera->boundingRect().height());
+    tuboBandera->setPos(5900, nivelTierra - tuboBandera->boundingRect().height());
+    bandera = new Bandera();
+    bandera->setPos(5985, tuboBandera->boundingRect().height() - 100);
+    addItem(bandera);
     addItem(tuboBandera);
 
     //Agregamos monedas
@@ -744,7 +807,7 @@ void NivelUno::iniciarEscena()
     addItem(florFuego);
 
     //Agregamos tubos
-    int posTubos[7] = {900, 1500, 2000, 2500, 3275, 4600, 4700};
+    int posTubos[7] = {900, 1500, 2000, 2500, 3295, 4600, 4700};
     for (int i = 0; i < 7; i++)
     {
         tubos.append(new Tubo());
@@ -753,7 +816,7 @@ void NivelUno::iniciarEscena()
     }
 
     //Agregamos flor carnobora
-    int posFloresCar[4] = {1475, 3250, 4575, 4675};
+    int posFloresCar[4] = {1475, 3270, 4575, 4675};
     for (int i = 0; i < 4; i++)
     {
         floresCar.append(new Flor());
@@ -795,6 +858,7 @@ void NivelUno::actualizar()
     {
         personajeSmall->actualizar(nivelTierra);
         moverJugador();
+        verificarColisionCastillo();
         verificarColisionEnemigos(personajeSmall->getFisica());
         verificarColisionPlataforma(personajeSmall->getFisica());
         verificarColisionBordes(personajeSmall->getFisica());
@@ -804,6 +868,7 @@ void NivelUno::actualizar()
     {
         personaje->actualizar(nivelTierra);
         moverJugador();
+        verificarColisionCastillo();
         verificarColisionEnemigos(personajeSmall->getFisica());
         verificarColisionPlataforma(personaje->getFisica());
         verificarColisionBordes(personaje->getFisica());
@@ -813,6 +878,7 @@ void NivelUno::actualizar()
     {
         personajeFire->actualizar(nivelTierra);
         moverJugador();
+        verificarColisionCastillo();
         verificarColisionEnemigos(personajeSmall->getFisica());
         verificarColisionPlataforma(personajeFire->getFisica());
         verificarColisionBordes(personajeFire->getFisica());
@@ -901,6 +967,7 @@ void NivelUno::moverJugador()
         //mover castillo
         castillo->setX(-dx + castillo->pos().x());
         tuboBandera->setX(-dx + tuboBandera->pos().x());
+        bandera->setX(-dx + bandera->pos().x());
 
         const qreal proporcion = qreal(desplazamientoMundo) / maxDesplazamientoMundo;
         aplicarParalelismo(proporcion, cielo1);
@@ -928,12 +995,12 @@ void NivelUno::moverConMando()
     if(estado == normal){p = personaje->getFisica();}
     else if(estado == fire){p = personajeFire->getFisica();}
 
-    int direccion = 0;
     switch (mando->leerArduino()[0])
     {
     case 'W':
         if(salto)
         {
+            p->setCd(1);
             p->setVel(p->getVelX(), 250, p->getPosX(), p->getPosY());
             sonidos->reproducirSalto();
             salto = false;
@@ -941,26 +1008,14 @@ void NivelUno::moverConMando()
         break;
     case 'D':
         p->setVel(velocidad,p->getVelY(), p->getPosX(), p->getPosY());
-        direccion = 1;
-        personajeSmall->setDireccion(qBound(-1, direccion, 1));
-        personaje->setDireccion(qBound(-1, direccion, 1));
-        personajeFire->setDireccion(qBound(-1, direccion, 1));
-        checkTimer();
+        agregarEntradaHorizontal(1);
         break;
     case 'A':
         p->setVel(-velocidad,p->getVelY(), p->getPosX(), p->getPosY());
-        direccion = -1;
-        personajeSmall->setDireccion(qBound(-1, direccion, 1));
-        personaje->setDireccion(qBound(-1, direccion, 1));
-        personajeFire->setDireccion(qBound(-1, direccion, 1));
-        checkTimer();
+        agregarEntradaHorizontal(-1);
         break;
     default :
-        direccion = 0;
-        personajeSmall->setDireccion(qBound(-1, direccion, 1));
-        personaje->setDireccion(qBound(-1, direccion, 1));
-        personajeFire->setDireccion(qBound(-1, direccion, 1));
-        checkTimer();
+        agregarEntradaHorizontal(0);
         break;
     }
 }
@@ -986,6 +1041,7 @@ void NivelUno::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Space:
         if(salto)
         {
+            p->setCd(1);
             p->setVel(p->getVelX(), 250, p->getPosX(), p->getPosY());
             sonidos->reproducirSalto();
             salto = false;

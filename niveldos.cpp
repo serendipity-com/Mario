@@ -53,6 +53,9 @@ NivelDos::~NivelDos()
 
     delete hongo;
     delete florFuego;
+    delete castillo;
+    delete tuboBandera;
+    delete bandera;
 
     delete puntaje;
     delete puntajeLogo;
@@ -138,6 +141,19 @@ void NivelDos::iniciarEscena()
         else {ladrillosSorpresa.last()->setRegalo(2);}
         addItem(ladrillosSorpresa.last());
     }
+
+    //Agregamos castillo
+    castillo = new Castillo();
+    castillo->setPos(7800,nivelTierra - castillo->boundingRect().height());
+    addItem(castillo);
+
+    //Agregamos bandera
+    tuboBandera = new QGraphicsPixmapItem(QPixmap(":/Imagenes/tuboBandera.png"));
+    tuboBandera->setPos(7500, nivelTierra - tuboBandera->boundingRect().height());
+    bandera = new Bandera();
+    bandera->setPos(7585, tuboBandera->boundingRect().height() - 100);
+    addItem(bandera);
+    addItem(tuboBandera);
 
     //Agregamos fantasmas
     int posFantasmas[18][2] ={{2200,550},{2400,550},{2600,550},{2800,550},{2200,400},{2400,400},{2600,400}
@@ -374,6 +390,11 @@ void NivelDos::moverJugador()
         //mover hongo
         hongo->setX(-dx + hongo->pos().x());
 
+        //mover castillo
+        castillo->setX(-dx + castillo->pos().x());
+        tuboBandera->setX(-dx + tuboBandera->pos().x());
+        bandera->setX(-dx + bandera->pos().x());
+
         const qreal proporcion = qreal(desplazamientoMundo) / maxDesplazamientoMundo;
         aplicarParalelismo(proporcion, cielo1);
         aplicarParalelismo(proporcion, cielo2);
@@ -436,6 +457,40 @@ void NivelDos::checkTimer()
             personajeFire->caminar();
             timerSprite->start(50);
             //qDebug() << "Si";
+        }
+    }
+}
+
+void NivelDos::verificarColisionCastillo()
+{
+    if(estado == small)
+    {
+        if(personajeSmall->collidesWithItem(castillo))
+        {
+            if(castillo->estarTocandoPuerta(personajeSmall))
+            {
+                enviarFinalizar();
+            }
+        }
+    }
+    else if(estado == normal)
+    {
+        if(personaje->collidesWithItem(castillo))
+        {
+            if(castillo->estarTocandoPuerta(personaje))
+            {
+                enviarFinalizar();
+            }
+        }
+    }
+    else if(estado == fire)
+    {
+        if(personajeFire->collidesWithItem(castillo))
+        {
+            if(castillo->estarTocandoPuerta(personajeFire))
+            {
+                enviarFinalizar();
+            }
         }
     }
 }
@@ -673,6 +728,7 @@ void NivelDos::verificarColisionPlataforma(PersonajeFisica *p)
                 }
                 else if(personajeSmall->estarTocandoPlataforma(l))
                 {
+                    p->setCd(5);
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - l->pos().y() + personajeSmall->boundingRect().height());
                     salto = true;
                 }
@@ -689,6 +745,7 @@ void NivelDos::verificarColisionPlataforma(PersonajeFisica *p)
             {
                 if(personajeSmall->estarTocandoPlataforma(t))
                 {
+                    p->setCd(5);
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - t->pos().y() + personajeSmall->boundingRect().height());
                     salto = true;
                 }
@@ -730,6 +787,7 @@ void NivelDos::verificarColisionPlataforma(PersonajeFisica *p)
                 }
                 else if(personaje->estarTocandoPlataforma(m))
                 {
+                    p->setCd(5);
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personaje->boundingRect().height());
                     salto = true;
                 }
@@ -742,6 +800,7 @@ void NivelDos::verificarColisionPlataforma(PersonajeFisica *p)
                 }
                 else if(personaje->estarTocandoPlataforma(l))
                 {
+                    p->setCd(5);
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - l->pos().y() + personaje->boundingRect().height());
                     salto = true;
                 }
@@ -758,6 +817,7 @@ void NivelDos::verificarColisionPlataforma(PersonajeFisica *p)
             {
                 if(personaje->estarTocandoPlataforma(t))
                 {
+                    p->setCd(5);
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - t->pos().y() + personaje->boundingRect().height());
                     salto = true;
                 }
@@ -799,6 +859,7 @@ void NivelDos::verificarColisionPlataforma(PersonajeFisica *p)
                 }
                 else if(personajeFire->estarTocandoPlataforma(m))
                 {
+                    p->setCd(5);
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personajeFire->boundingRect().height());
                     salto = true;
                 }
@@ -811,6 +872,7 @@ void NivelDos::verificarColisionPlataforma(PersonajeFisica *p)
                 }
                 else if(personajeFire->estarTocandoPlataforma(l))
                 {
+                    p->setCd(5);
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - l->pos().y() + personajeFire->boundingRect().height());
                     salto = true;
                 }
@@ -827,6 +889,7 @@ void NivelDos::verificarColisionPlataforma(PersonajeFisica *p)
             {
                 if(personajeFire->estarTocandoPlataforma(t))
                 {
+                    p->setCd(5);
                     p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), nivelTierra - t->pos().y() + personajeFire->boundingRect().height());
                     salto = true;
                 }
@@ -855,6 +918,7 @@ void NivelDos::verificarColisionBordes(PersonajeFisica *p)
     }
     if(p->getPosY() < p->getAlto())
     {
+        p->setCd(5);
         p->setVel(p->getVelX(), -1*(0.1)*p->getVelY(), p->getPosX(), p->getAlto());
         salto = true;
     }
@@ -916,6 +980,20 @@ void NivelDos::enviarReiniciar()
     emit repetirNivel();
 }
 
+void NivelDos::enviarFinalizar()
+{
+    sonidos->pararLevel2();
+    timer->stop();
+    timerSprite->stop();
+    timerMando->stop();
+
+    personaje->setDireccion(0);
+    personajeSmall->setDireccion(0);
+    personajeFire->setDireccion(0);
+
+    emit finalizarNivelDos();
+}
+
 void NivelDos::actualizar()
 {
     verificarColisionAyudas();
@@ -923,6 +1001,7 @@ void NivelDos::actualizar()
     {
         personajeSmall->actualizar(nivelTierra);
         moverJugador();
+        verificarColisionCastillo();
         verificarColisionEnemigos(personajeSmall->getFisica());
         verificarColisionPlataforma(personajeSmall->getFisica());
         verificarColisionBordes(personajeSmall->getFisica());
@@ -932,6 +1011,7 @@ void NivelDos::actualizar()
     {
         personaje->actualizar(nivelTierra);
         moverJugador();
+        verificarColisionCastillo();
         verificarColisionEnemigos(personajeSmall->getFisica());
         verificarColisionPlataforma(personaje->getFisica());
         verificarColisionBordes(personaje->getFisica());
@@ -941,6 +1021,7 @@ void NivelDos::actualizar()
     {
         personajeFire->actualizar(nivelTierra);
         moverJugador();
+        verificarColisionCastillo();
         verificarColisionEnemigos(personajeSmall->getFisica());
         verificarColisionPlataforma(personajeFire->getFisica());
         verificarColisionBordes(personajeFire->getFisica());
@@ -963,12 +1044,12 @@ void NivelDos::moverConMando()
     if(estado == normal){p = personaje->getFisica();}
     else if(estado == fire){p = personajeFire->getFisica();}
 
-    int direccion = 0;
     switch (mando->leerArduino()[0])
     {
     case 'W':
         if(salto)
         {
+            p->setCd(1);
             p->setVel(p->getVelX(), 250, p->getPosX(), p->getPosY());
             sonidos->reproducirSalto();
             salto = false;
@@ -976,26 +1057,14 @@ void NivelDos::moverConMando()
         break;
     case 'D':
         p->setVel(velocidad,p->getVelY(), p->getPosX(), p->getPosY());
-        direccion = 1;
-        personajeSmall->setDireccion(qBound(-1, direccion, 1));
-        personaje->setDireccion(qBound(-1, direccion, 1));
-        personajeFire->setDireccion(qBound(-1, direccion, 1));
-        checkTimer();
+        agregarEntradaHorizontal(1);
         break;
     case 'A':
         p->setVel(-velocidad,p->getVelY(), p->getPosX(), p->getPosY());
-        direccion = -1;
-        personajeSmall->setDireccion(qBound(-1, direccion, 1));
-        personaje->setDireccion(qBound(-1, direccion, 1));
-        personajeFire->setDireccion(qBound(-1, direccion, 1));
-        checkTimer();
+        agregarEntradaHorizontal(-1);
         break;
     default :
-        direccion = 0;
-        personajeSmall->setDireccion(qBound(-1, direccion, 1));
-        personaje->setDireccion(qBound(-1, direccion, 1));
-        personajeFire->setDireccion(qBound(-1, direccion, 1));
-        checkTimer();
+        agregarEntradaHorizontal(0);
         break;
     }
 }
@@ -1021,6 +1090,7 @@ void NivelDos::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Space:
         if(salto)
         {
+            p->setCd(1);
             p->setVel(p->getVelX(), 250, p->getPosX(), p->getPosY());
             sonidos->reproducirSalto();
             salto = false;

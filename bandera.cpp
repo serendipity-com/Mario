@@ -16,7 +16,7 @@ void Bandera::siguienteSprite()
 {
     //Manejo de Sprites
     //Distancia en caada sprite
-    posSprite += 332;
+    posSprite += 322;
     //Condicion volver al primer sprite, si sobre pasa la dimension la imagen plana
     if(posSprite >= 5439)
     {

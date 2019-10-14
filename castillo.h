@@ -12,6 +12,8 @@ public:
     Castillo(QGraphicsItem *padre = nullptr);
     ~Castillo();
 
+    bool estarTocandoPuerta(QGraphicsItem *item);
+
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     int type() const;

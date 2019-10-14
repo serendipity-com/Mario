@@ -8,7 +8,7 @@ PersonajeFisica::PersonajeFisica(qreal _posX, qreal _posY, qreal _alto, qreal _a
     ancho = _ancho;
 
     a = ancho*alto;
-    cd = 5;
+    cd = 1;
     vel = 0;
     velX = 0;
     velY = 0;
@@ -69,4 +69,9 @@ void PersonajeFisica::setVel(qreal _velX, qreal _velY, qreal _posX, qreal _posY)
     velY = _velY;
     posX = _posX;
     posY = _posY;
+}
+
+void PersonajeFisica::setCd(qreal _cd)
+{
+    cd = _cd;
 }

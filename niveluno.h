@@ -25,6 +25,7 @@
 #include "administradorarduino.h"
 #include "puntaje.h"
 #include "castillo.h"
+#include "bandera.h"
 
 class NivelUno: public QGraphicsScene
 {
@@ -45,6 +46,7 @@ private:
     void moverJugador();
     void checkTimer();
 
+    void verificarColisionCastillo();
     void verificarColisionMoneda();
     void verificarColisionAyudas();
     void verificarColisionEnemigos(PersonajeFisica *p);
@@ -53,6 +55,7 @@ private:
     void cambiarDireccionGomba();
 
     void enviarReiniciar();
+    void enviarFinalizar();
 
 public slots:
     void actualizar();
@@ -117,6 +120,7 @@ private:
     QList <Goomba*> gombas;
     Castillo *castillo;
     QGraphicsItem *tuboBandera;
+    Bandera *bandera;
 
     Puntaje *puntaje;
     BackgroundItem *puntajeLogo;

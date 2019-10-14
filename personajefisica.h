@@ -20,6 +20,7 @@ public:
     qreal getVel();
 
     void setVel(qreal _velX, qreal _velY, qreal _posX, qreal _posY);
+    void setCd(qreal _cd);
 
 private:
     qreal alto;
