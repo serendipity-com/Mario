@@ -42,7 +42,8 @@ SOURCES += \
     ladrillo.cpp \
     niveluno.cpp \
     menujugador.cpp \
-    widget.cpp
+    widget.cpp \
+    instrucciones.cpp
 
 HEADERS += \
     administradorarduino.h \
@@ -68,12 +69,13 @@ HEADERS += \
     ladrillo.h \
     niveluno.h \
     menujugador.h \
-    widget.h
+    widget.h \
+    instrucciones.h
 
 FORMS += \
     menujugador.ui \
-    menumultijugador.ui \
-    widget.ui
+    widget.ui \
+    instrucciones.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
