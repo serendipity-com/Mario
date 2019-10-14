@@ -42,11 +42,11 @@ private slots:
 
     void comenzarNivelUno();
     void comenzarNivelDos();
-    void comenzarNivelTres();
+//    void comenzarNivelTres();
 
     void finalizarNivelUno();
     void finalizarNivelDos();
-    void finalizarNivelTres();
+//    void finalizarNivelTres();
 
 private:
     Ui::MenuJugador *ui;
