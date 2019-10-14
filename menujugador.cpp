@@ -39,7 +39,7 @@ void MenuJugador::incializarEscena()
 void MenuJugador::construirInformacion()
 //Lee información de archivo que contiene nombre de usuario, nivel y puntaje en el que quedó
 {
-    QFile inputFile("://BaseDatos.txt");
+    QFile inputFile("BaseDatos.txt");
     if (inputFile.open(QIODevice::ReadOnly))
     {
        QTextStream in(&inputFile);

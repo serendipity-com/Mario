@@ -67,7 +67,7 @@ void MenuMultijugador::comenzarNivelUno()
     nivelUno = new NivelUno();
     view->setScene(nivelUno);
     view->show();
-    connect(this->nivelUno, SIGNAL(cambiarTurnoJugador()), this, SLOT(cambiarTurnoJugador())); //conecta señal de nivel uno con slot de esta clase que llevan igual nombre
+    connect(this->nivelUno, SIGNAL(repetirNivel()), this, SLOT(cambiarTurnoJugador())); //conecta señal de nivel uno con slot de esta clase que llevan igual nombre
     connect(this->nivelUno, SIGNAL(finalizarNivelUno()), this,SLOT(finalizarNivelUno()));
 }
 
@@ -86,7 +86,7 @@ void MenuMultijugador::comenzarNivelDos()
     view->setScene(nivelDos);
     view->show();
     connect(this->nivelDos, SIGNAL(finalizarNivelDos()), this,SLOT(finalizarNivelDos())); //conecta señal de clase nivelDos con slot de esta clase que tiene el mismo nombre
-    connect(this->nivelDos, SIGNAL(cambiarTurnoJugador()), this,SLOT(cambiarTurnoJugador()));
+    connect(this->nivelDos, SIGNAL(repetirNivel()), this,SLOT(cambiarTurnoJugador()));
 }
 
 void MenuMultijugador::finalizarNivelUno()
