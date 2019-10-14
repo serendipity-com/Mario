@@ -19,10 +19,11 @@ class MenuMultijugador : public QWidget
 public:
     explicit MenuMultijugador(QWidget *parent = nullptr);
     ~MenuMultijugador();
+public:
+    void correrJuego2(); //porque es llamado desde multiJugador() de Widget.cpp
 
 private:
     void inicializarEscena2();
-    void correrJuego2();
 
 private slots:
     void cambiarTurnoJugador();
@@ -49,6 +50,8 @@ private:
     int nivelJugador2;
     int puntajeJugador1;
     int puntajeJugador2;
+    int vidasJugador1;
+    int vidasJugador2;
 
     NivelUno *nivelUno;
     NivelDos *nivelDos;

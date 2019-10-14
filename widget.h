@@ -2,6 +2,7 @@
 #define WIDGET_H
 
 #include "menujugador.h"
+#include "menumultijugador.h"
 #include <QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -18,10 +19,12 @@ public:
 
 private slots:
     void unJugador();
+    void multiJugador();
 
 
 private:
     Ui::Widget *ui;
     MenuJugador *menuJugador;
+    MenuMultijugador *menuMultijugador;
 };
 #endif // WIDGET_H

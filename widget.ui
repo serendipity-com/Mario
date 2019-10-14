@@ -22,17 +22,11 @@
   <widget class="QWidget" name="Welcome" native="true">
    <property name="geometry">
     <rect>
-     <x>-170</x>
+     <x>-140</x>
      <y>-10</y>
      <width>1214</width>
      <height>761</height>
     </rect>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>1214</width>
-     <height>768</height>
-    </size>
    </property>
    <property name="font">
     <font>

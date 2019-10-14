@@ -74,7 +74,7 @@ void MenuJugador::correrJuego()
     }
     else
     {
-        //Si el número de vidas es menor a cero, GAME OVER
+        //Si el número de vidas es menor a uno, GAME OVER
         view->close();
     }
 }

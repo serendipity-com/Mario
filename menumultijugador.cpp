@@ -4,13 +4,18 @@
 MenuMultijugador::MenuMultijugador(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MenuMultijugador)
+  , turno(player1) , nivelJugador1(1), nivelJugador2(1), puntajeJugador1(0), puntajeJugador2(0)
+  , vidasJugador1(5), vidasJugador2(5)
 {
     ui->setupUi(this);
+    inicializarEscena2();
 }
 
 MenuMultijugador::~MenuMultijugador()
 {
     delete ui;
+    delete escena;
+    delete view;
 }
 
 void MenuMultijugador::inicializarEscena2()
@@ -31,34 +36,54 @@ void MenuMultijugador::correrJuego2()
 {
     if(turno == player1)
     {
-        switch(nivelJugador1)
+        if(vidasJugador1 >= 1)
         {
-        case 1:
-            comenzarNivelUno();
-            break;
-        case 2:
-            comenzarNivelDos();
-            break;
+            switch(nivelJugador1)
+            {
+            case 1:
+                comenzarNivelUno();
+                break;
+            case 2:
+                comenzarNivelDos();
+                break;
+            }
         }
     }
     else if(turno == player2)
     {
-        switch(nivelJugador2)
+        if(vidasJugador2 >= 1)
         {
-        case 1:
-            comenzarNivelUno();
-            break;
-        case 2:
-            comenzarNivelDos();
-            break;
+            switch(nivelJugador2)
+            {
+            case 1:
+                comenzarNivelUno();
+                break;
+            case 2:
+                comenzarNivelDos();
+                break;
+            }
         }
+    }
+    if((vidasJugador1 < 1) && (vidasJugador2 < 1))
+    {
+        //Si el número de vidas de ambos es menor a uno, GAME OVER
+        view->close();
     }
 }
 
 void MenuMultijugador::cambiarTurnoJugador() //Cuando el otro muere
 {
-    if(turno == player1) turno = player2;
-    else if(turno == player2) turno = player1;
+    if(turno == player1)
+    {
+        vidasJugador1 -= 1;
+        turno = player2;
+    }
+    else if(turno == player2)
+    {
+        vidasJugador2 -= 1;
+        turno = player1;
+    }
+    escena->clear();
     correrJuego2();
 }
 

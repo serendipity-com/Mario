@@ -28,17 +28,11 @@
   <widget class="QWidget" name="Acceso" native="true">
    <property name="geometry">
     <rect>
-     <x>-20</x>
+     <x>10</x>
      <y>0</y>
      <width>1229</width>
      <height>768</height>
     </rect>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>1229</width>
-     <height>768</height>
-    </size>
    </property>
    <property name="font">
     <font>
@@ -105,7 +99,7 @@
      <string notr="true">border-image: url(:/Imagenes/fondoMenu2.jpg);</string>
     </property>
     <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:26pt;&quot;&gt;Nombre de usuario&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Nombre de usuario&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QPushButton" name="NuevaPartida">

@@ -15,18 +15,18 @@ int main(int argc, char *argv[])
     splash->setPixmap(QPixmap(":/Imagenes/mario_splash.png"));
     splash->show();
 
-    NivelDos escena(100);
-    QGraphicsView view;
-    view.setRenderHint (QPainter :: Antialiasing);
-    view.setVerticalScrollBarPolicy (Qt :: ScrollBarAlwaysOff);
-    view.setHorizontalScrollBarPolicy (Qt :: ScrollBarAlwaysOff);
-    view.setScene (& escena);
-    view.setFixedSize (1280,720);
+//    NivelDos escena(100);
+//    QGraphicsView view;
+//    view.setRenderHint (QPainter :: Antialiasing);
+//    view.setVerticalScrollBarPolicy (Qt :: ScrollBarAlwaysOff);
+//    view.setHorizontalScrollBarPolicy (Qt :: ScrollBarAlwaysOff);
+//    view.setScene (& escena);
+//    view.setFixedSize (1280,720);
 
-//    Widget w;
-//    w.show();
+    Widget w;
+    w.show();
 
     QTimer::singleShot(2500,splash,SLOT(close()));
-    QTimer::singleShot(2500,&view,SLOT(show()));
+    QTimer::singleShot(2500,&w,SLOT(show()));
     return a.exec();
 }
