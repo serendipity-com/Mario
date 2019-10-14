@@ -70,9 +70,6 @@ void MenuJugador::correrJuego()
         case 2:
             comenzarNivelDos();
             break;
-//        case 3:
-//    //      comenzarNivelTres();
-//            break;
         }
     }
     else
@@ -92,8 +89,7 @@ void MenuJugador::nuevaPartida()
     }
     else
         informacion[jugadorActual] = {1,0};
-    //qDebug() << informacion[data];
-    ui->NombreUsuario->clear(); //Para borrar del lineEdit el nombre
+    ui->NombreUsuario->clear(); //Para borrar del lineEdit el username ingresado
 
     vidas = 5;
     correrJuego();
@@ -126,16 +122,6 @@ void MenuJugador::comenzarNivelDos()
     connect(this->nivelDos, SIGNAL(repetirNivel()), this,SLOT(repetirNivel()));
 }
 
-//void MenuJugador::comenzarNivelTres()
-//{
-    //instanciar nivel tres
-    //poner en la escena el nivel tres
-    //mostrar escena
-//    informacion[jugadorActual][0] = 3;
-    //connect(this->nivelTres, SIGNAL(finalizarNivelTres()), this,SLOT(finalizarNivelTres())); conecta señal de clase nivelTres con slot de esta clase que tiene el mismo nombre
-    //connect(this->nivelTres, SIGNAL(finalizarNivelTres()), this,SLOT(repetirNivel()));
-//}
-
 void MenuJugador::finalizarNivelUno()
 {
     informacion[jugadorActual][1] = nivelUno->getPuntaje();
@@ -149,17 +135,10 @@ void MenuJugador::finalizarNivelDos()
     informacion[jugadorActual][1] = nivelDos->getPuntaje();
     escena->clear();
     delete nivelDos;
-//    comenzarNivelTres();
     //mostrar widget con puntaje y vidas CONGRATULATIONS!
 }
 
-//void MenuJugador::finalizarNivelTres()
-//{
-//    delete nivelTres;
-    //mostrar widget con puntaje y vidas CONGRATULATIONS!
-//}
-
-void MenuJugador::cargarPartida()//***
+void MenuJugador::cargarPartida()
 {
     jugadorActual = ui->NombreUsuario->text(); //Nombre ingresado
     auto iterador = informacion.find(jugadorActual);
