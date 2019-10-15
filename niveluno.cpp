@@ -22,23 +22,11 @@ NivelUno::NivelUno(QObject *padre):
   , florFuego(nullptr)
 {
     iniciarEscena();
-
-    sonidos = new AdministradorSonidos();
-    sonidos->reproducirLevel1();
-
-    timerSprite = new QTimer(this);
-    connect(timerSprite, SIGNAL(timeout()), this, SLOT(siguienteSprite()));
-
-    timerMando = new QTimer(this);
-    connect(timerMando, SIGNAL(timeout()), this, SLOT(moverConMando()));
-
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(actualizar()));
-    timer->start(10);
 }
 
 NivelUno::~NivelUno()
 {
+    qDebug() << "1";
     delete personaje;
     delete personajeSmall;
     delete personajeFire;
@@ -72,6 +60,91 @@ NivelUno::~NivelUno()
 int NivelUno::getPuntaje()
 {
     return puntaje->getPuntaje();
+}
+
+void NivelUno::reiniciarEscena()
+{
+    sonidos->reproducirLevel1();
+    timerEscena->start(100);
+    timer->start(10);
+
+    cielo1->setPos(0,-100);
+    cielo2->setPos(0,0);
+    cielo3->setPos(0,0);
+    cielo4->setPos(0,0);
+    cielo5->setPos(0,-90);
+    cielo6->setPos(0,-90);
+    cielo7->setPos(0,-170);
+
+    puntajeLogo->setPos(50,40);
+    puntaje->setPos(puntajeLogo->pos().x() + puntajeLogo->boundingRect().width() , 25);
+
+    tierra->setPos(0,-183);
+
+    //Agregamos ladrillos
+    int posLadrillo[30][3] = {{550,500,1}, {650,500,1}, {750,500,1}, {650,300,1}, {1150,400,2}, {1350,500,2}, {1350,200,6}, {2150,450,1}
+                             , {2250,450,1}, {3050,610,4}, {3100,560,3}, {3150,510,2}, {3200,460,1}, {3425,460,1}, {3425,510,2}, {3425,560,3}
+                             , {3425,610,4}, {4000,500,1}, {4100,500,3}, {4100,300,1}, {4250,200,6}, {4650,200,1}, {4850,200,1}, {5400,610,7}
+                             , {5450,560,6}, {5500,510,5}, {5550,460,4}, {5600,410,3}, {5650,360,2}, {5700,310,1}};
+    int posLadrilloSorpresa[4][2] = {{600,500}, {700,500}, {2200,450}, {4050,500}};
+    for (int i = 0; i < 30; i++)
+    {
+        ladrillos.at(i)->setPos(posLadrillo[i][0],posLadrillo[i][1]);
+    }
+    for (int j = 0; j < 4; j++)
+    {
+        ladrillosSorpresa.at(j)->setPos(posLadrilloSorpresa[j][0],posLadrilloSorpresa[j][1]);
+        if(j == 0){ladrillosSorpresa.at(j)->setRegalo(3);}
+        else if(j == 1){ladrillosSorpresa.at(j)->setRegalo(1);}
+        else {ladrillosSorpresa.at(j)->setRegalo(2);}
+    }
+
+    castillo->setPos(6200,nivelTierra - castillo->boundingRect().height());
+    tuboBandera->setPos(5900, nivelTierra - tuboBandera->boundingRect().height());
+    bandera->setPos(5985, tuboBandera->boundingRect().height() - 100);
+
+    //Agregamos monedas
+    int posMonedas[24][2] ={{550,450}, {600,450}, {650,450}, {700,450}, {750,450}, {650,250}, {1150,350}, {1200,350}, {1350,150}, {1400,150}
+                         , {1450,150}, {1500,150}, {1550,150}, {1600,150}, {2750,500},{2800,500}, {2850,500}, {2900,500}, {2950,500}, {3000,500}, {2950,450}
+                         , {2950,550}, {2900,400}, {2900,600}};
+    for (int i= 0; i < 24;i++)
+    {
+        monedas.at(i)->setPos(posMonedas[i][0], posMonedas[i][1]);
+    }
+
+    hongo->setPos(-500, -500);
+    florFuego->setPos(-500,-500);
+
+    //Agregamos tubos
+    int posTubos[7] = {900, 1500, 2000, 2500, 3295, 4600, 4700};
+    for (int i = 0; i < 7; i++)
+    {
+        tubos.at(i)->setPos(posTubos[i], nivelTierra - tubos.at(i)->boundingRect().height());
+    }
+
+    //Agregamos flor carnobora
+    int posFloresCar[4] = {1475, 3270, 4575, 4675};
+    for (int i = 0; i < 4; i++)
+    {
+        floresCar.at(i)->setPos(posFloresCar[i], tubos.at(1)->pos().y() - floresCar.at(i)->boundingRect().height());
+    }
+
+    //Agregamos enemigo Goomba
+    int posGombas[10] = {800, 1000, 1600, 1800, 2100, 2200, 2300, 2400, 3300, 3700};
+    for (int i = 0; i < 10; i++)
+    {
+        gombas.at(i)->setPos(posGombas[i], nivelTierra - gombas.at(i)->boundingRect().height());
+    }
+
+    desplazamientoMundo = 0;
+
+    personaje->setPos(-1000,-1000);
+    personajeFire->setPos(-1000,-1000);
+
+    minX = personajeSmall->boundingRect().width();
+    maxX = anchoEscena - personajeSmall->boundingRect().width() / 2;
+    personajeSmall->setPos(0,0);
+    posicionX = minX;
 }
 
 void NivelUno::agregarEntradaHorizontal(int entrada)
@@ -184,7 +257,7 @@ void NivelUno::verificarColisionMoneda()
         {
             if(Moneda *m = qgraphicsitem_cast<Moneda*>(item))
             {
-                removeItem(m);
+                m->setPos(-1000,1000);
                 sonidos->reproducirMoneda();
                 puntaje->incrementar();
             }
@@ -196,7 +269,7 @@ void NivelUno::verificarColisionMoneda()
         {
             if(Moneda *m = qgraphicsitem_cast<Moneda*>(item))
             {
-                removeItem(m);
+                m->setPos(-1000,1000);
                 sonidos->reproducirMoneda();
                 puntaje->incrementar();
             }
@@ -208,7 +281,7 @@ void NivelUno::verificarColisionMoneda()
         {
             if(Moneda *m = qgraphicsitem_cast<Moneda*>(item))
             {
-                removeItem(m);
+                m->setPos(-1000,1000);
                 sonidos->reproducirMoneda();
                 puntaje->incrementar();
             }
@@ -269,11 +342,12 @@ void NivelUno::verificarColisionEnemigos(PersonajeFisica *p)
             {
                 if(personajeSmall->estarTocandoPies(m) )
                 {
-                    removeItem(m);
+                    m->setPos(-1000,1000);
                     p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personajeSmall->boundingRect().height());
                 }
                 else
                 {
+                    m->setPos(-1000,1000);
                     sonidos->reproducirMuerto1();
                     enviarReiniciar();
                 }
@@ -283,6 +357,7 @@ void NivelUno::verificarColisionEnemigos(PersonajeFisica *p)
         {
             if(Flor *m = qgraphicsitem_cast<Flor*>(item))
             {
+                m->setPos(-1000,1000);
                 sonidos->reproducirMuerto1();
                 enviarReiniciar();
             }
@@ -296,7 +371,7 @@ void NivelUno::verificarColisionEnemigos(PersonajeFisica *p)
             {
                 if(personaje->estarTocandoPies(m) )
                 {
-                    removeItem(m);
+                    m->setPos(-1000,1000);
                     p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personaje->boundingRect().height());
                 }
                 else
@@ -335,7 +410,7 @@ void NivelUno::verificarColisionEnemigos(PersonajeFisica *p)
             {
                 if(personajeFire->estarTocandoPies(m) )
                 {
-                    removeItem(m);
+                    m->setPos(-1000,1000);
                     p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personajeFire->boundingRect().height());
                 }
                 else
@@ -650,7 +725,9 @@ void NivelUno::cambiarDireccionGomba()
 
 void NivelUno::enviarReiniciar()
 {
+    sonidos->pararLevel1();
     timer->stop();
+    timerEscena->stop();
     timerSprite->stop();
     timerMando->stop();
 
@@ -665,6 +742,7 @@ void NivelUno::enviarFinalizar()
 {
     sonidos->pararLevel1();
     timer->stop();
+    timerEscena->stop();
     timerSprite->stop();
     timerMando->stop();
 
@@ -675,8 +753,8 @@ void NivelUno::enviarFinalizar()
     emit finalizarNivelUno();
 }
 
-//timerEvent se encarga de manejas los sprites de los objetos en escena.
-void NivelUno::timerEvent(QTimerEvent *)
+// se encarga de manejas los sprites de los objetos en escena.
+void NivelUno::correrEscena()
 {
     for (int i = 0;i < monedas.size(); i++)
     {
@@ -711,6 +789,22 @@ void NivelUno::aplicarParalelismo(qreal propocion, QGraphicsItem *item)
 //crea valores inciales
 void NivelUno::iniciarEscena()
 {
+    sonidos = new AdministradorSonidos();
+
+    timerSprite = new QTimer(this);
+    connect(timerSprite, SIGNAL(timeout()), this, SLOT(siguienteSprite()));
+
+    timerEscena = new QTimer(this);
+    connect(timerEscena, SIGNAL(timeout()), this, SLOT(correrEscena()));
+    timerEscena->start(100);
+
+    timerMando = new QTimer(this);
+    connect(timerMando, SIGNAL(timeout()), this, SLOT(moverConMando()));
+
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(actualizar()));
+    timer->start(10);
+
     setSceneRect(0,0,1280,720);
 
     //Agregamos el cielo
@@ -835,9 +929,11 @@ void NivelUno::iniciarEscena()
 
     //Agregamos personaje
     personaje =  new Personaje(1);
+    personaje->setPos(-1000,-1000);
     addItem(personaje);
 
     personajeFire = new Personaje(3);
+    personajeFire->setPos(-1000,-1000);
     addItem(personajeFire);
 
     personajeSmall = new Personaje(2);
@@ -847,7 +943,6 @@ void NivelUno::iniciarEscena()
     posicionX = minX;
     addItem(personajeSmall);
 
-    startTimer(100);
 }
 
 //cambiar posicion actual del personaje

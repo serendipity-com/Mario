@@ -39,6 +39,7 @@ NivelDos::NivelDos(int _puntaje, QObject *padre) : QGraphicsScene(0,0,8000,720,p
 
 NivelDos::~NivelDos()
 {
+    qDebug() << "2";
     delete personaje;
     delete personajeSmall;
     delete personajeFire;

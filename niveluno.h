@@ -3,7 +3,6 @@
 
 #include <QGraphicsScene>
 #include <QTimer>
-#include <QTimerEvent>
 #include <QKeyEvent>
 #include <QPropertyAnimation>
 #include <QDebug>
@@ -35,14 +34,13 @@ public:
     ~NivelUno();
 
     int getPuntaje();
+    void reiniciarEscena();
+    void iniciarEscena();
 
 private:
-    void timerEvent(QTimerEvent *);
-
     void agregarEntradaHorizontal(int entrada);
     void aplicarParalelismo(qreal propocion, QGraphicsItem *item);
 
-    void iniciarEscena();
     void moverJugador();
     void checkTimer();
 
@@ -58,6 +56,7 @@ private:
     void enviarFinalizar();
 
 public slots:
+    void correrEscena();
     void actualizar();
     void siguienteSprite();
     void moverConMando();
@@ -103,6 +102,7 @@ private:
     int velocidad;
 
     QTimer *timer;
+    QTimer *timerEscena;
     QTimer *timerSprite;
     QTimer *timerMando;
 
