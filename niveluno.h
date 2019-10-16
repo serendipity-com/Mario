@@ -16,6 +16,8 @@
 #include "hongo.h"
 #include "ladrillosorpresa.h"
 #include "ladrillo.h"
+#include "ladrillonota.h"
+#include "fantasma.h"
 #include "tubo.h"
 #include "flor.h"
 #include "florfuego.h"
@@ -35,7 +37,9 @@ public:
 
     int getPuntaje();
     void reiniciarEscena();
+    void reiniciarEscenaDos(int _puntaje);
     void iniciarEscena();
+    void iniciarEscenaDos();
 
 private:
     void agregarEntradaHorizontal(int entrada);
@@ -115,6 +119,8 @@ private:
     Hongo *hongo;
     FlorFuego *florFuego;
     QList <LadrilloSorpresa*> ladrillosSorpresa;
+    QList <LadrilloNota*> ladrillosNota;
+    QList <Fantasma*> fantasmas;
     QList <Tubo *> tubos;
     QList <Flor *> floresCar;
     QList <Goomba*> gombas;

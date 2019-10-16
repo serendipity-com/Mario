@@ -27,4 +27,5 @@ int Puntaje::getPuntaje()
 void Puntaje::setPuntaje(int valor)
 {
     puntaje = valor;
+    setPlainText(QString("") + QString::number(puntaje));
 }

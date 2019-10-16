@@ -8,9 +8,6 @@
 #include "niveluno.h"
 #include "niveldos.h"
 
-namespace Ui {
-class MenuMultijugador;
-}
 
 class MenuMultijugador : public QWidget
 {
@@ -35,7 +32,6 @@ private slots:
     void finalizarNivelDos();
 
 private:
-    Ui::MenuMultijugador *ui;
     QGraphicsScene *escena;
     QGraphicsView *view;
 

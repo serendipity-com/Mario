@@ -1,19 +1,15 @@
 #include "menumultijugador.h"
-#include "ui_menumultijugador.h"
 
 MenuMultijugador::MenuMultijugador(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::MenuMultijugador)
+    QWidget(parent)
   , turno(player1) , nivelJugador1(1), nivelJugador2(1), puntajeJugador1(0), puntajeJugador2(0)
   , vidasJugador1(5), vidasJugador2(5)
 {
-    ui->setupUi(this);
     inicializarEscena2();
 }
 
 MenuMultijugador::~MenuMultijugador()
 {
-    delete ui;
     delete escena;
     delete view;
 }

@@ -150,7 +150,7 @@ bool Personaje::estarTocandoCabeza(QGraphicsItem *item)
 
 bool Personaje::estarTocandoPies(QGraphicsItem *item)
 {
-    QRectF rect(pos().x(), (pos().y() + boundingRect().height()) -10, boundingRect().width(), 10);
+    QRectF rect(pos().x(), (pos().y() + boundingRect().height()) -20, boundingRect().width(), 20);
     QRectF otherRect(item->pos().x(), item->pos().y(), item->boundingRect().width(), 20);
     return rect.intersects(otherRect);
 }

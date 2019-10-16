@@ -22,6 +22,7 @@ public:
 private:
     enum Regalo
     {
+        nada = 0,
         flor = 1,
         moneda = 2,
         hongo = 3

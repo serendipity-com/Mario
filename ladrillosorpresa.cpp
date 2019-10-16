@@ -11,6 +11,8 @@ void LadrilloSorpresa::setRegalo(int in)
 {
     switch (in)
     {
+        case 0: regalo = nada;
+            break;
         case 1: regalo = flor;
             break;
         case 2: regalo = moneda;

@@ -52,6 +52,8 @@ NivelUno::~NivelUno()
     monedas.clear();
     ladrillos.clear();
     ladrillosSorpresa.clear();
+    ladrillosNota.clear();
+    fantasmas.clear();
     tubos.clear();
     floresCar.clear();
     gombas.clear();
@@ -64,10 +66,14 @@ int NivelUno::getPuntaje()
 
 void NivelUno::reiniciarEscena()
 {
+
+    puntaje->setPuntaje(0);
+
     sonidos->reproducirLevel1();
     timerEscena->start(100);
     timer->start(10);
 
+    //Ponemos posicion incial del cielo
     cielo1->setPos(0,-100);
     cielo2->setPos(0,0);
     cielo3->setPos(0,0);
@@ -75,7 +81,9 @@ void NivelUno::reiniciarEscena()
     cielo5->setPos(0,-90);
     cielo6->setPos(0,-90);
     cielo7->setPos(0,-170);
+    cielo7->show();
 
+    //Ponemos posicion incial del puntaje
     puntajeLogo->setPos(50,40);
     puntaje->setPos(puntajeLogo->pos().x() + puntajeLogo->boundingRect().width() , 25);
 
@@ -143,8 +151,17 @@ void NivelUno::reiniciarEscena()
 
     minX = personajeSmall->boundingRect().width();
     maxX = anchoEscena - personajeSmall->boundingRect().width() / 2;
-    personajeSmall->setPos(0,0);
+    personajeSmall->setPos(0,720);
+    PersonajeFisica *p = personajeSmall->getFisica();
+    p->setVel(0,0,0,720);
     posicionX = minX;
+
+    desplazamientoMundo = 0;
+}
+
+void NivelUno::reiniciarEscenaDos(int _puntaje)
+{
+
 }
 
 void NivelUno::agregarEntradaHorizontal(int entrada)
@@ -342,8 +359,8 @@ void NivelUno::verificarColisionEnemigos(PersonajeFisica *p)
             {
                 if(personajeSmall->estarTocandoPies(m) )
                 {
-                    m->setPos(-1000,1000);
                     p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personajeSmall->boundingRect().height());
+                    m->setPos(-1000,1000);
                 }
                 else
                 {
@@ -371,8 +388,8 @@ void NivelUno::verificarColisionEnemigos(PersonajeFisica *p)
             {
                 if(personaje->estarTocandoPies(m) )
                 {
-                    m->setPos(-1000,1000);
                     p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personaje->boundingRect().height());
+                    m->setPos(-1000,1000);
                 }
                 else
                 {
@@ -410,8 +427,8 @@ void NivelUno::verificarColisionEnemigos(PersonajeFisica *p)
             {
                 if(personajeFire->estarTocandoPies(m) )
                 {
-                    m->setPos(-1000,1000);
                     p->setVel(p->getVelX(), -1*(0.8)*p->getVelY(), p->getPosX(), nivelTierra - m->pos().y() + personajeFire->boundingRect().height());
+                    m->setPos(-1000,1000);
                 }
                 else
                 {
@@ -463,6 +480,8 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                     else if(m->getRegalo() == 2)
                     {
                         sonidos->reproducirMoneda();
+                        m->setRegalo(0);
+                        puntaje->incrementar();
                     }
                     else if(m->getRegalo() == 3)
                     {
@@ -534,6 +553,8 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                     else if(m->getRegalo() == 2)
                     {
                         sonidos->reproducirMoneda();
+                        m->setRegalo(0);
+                        puntaje->incrementar();
                     }
                     else if(m->getRegalo() == 3)
                     {
@@ -606,6 +627,8 @@ void NivelUno::verificarColisionPlataforma(PersonajeFisica *p)
                     else if(m->getRegalo() == 2)
                     {
                         sonidos->reproducirMoneda();
+                        m->setRegalo(0);
+                        puntaje->incrementar();
                     }
                     else if(m->getRegalo() == 3)
                     {
@@ -943,6 +966,26 @@ void NivelUno::iniciarEscena()
     posicionX = minX;
     addItem(personajeSmall);
 
+}
+
+void NivelUno::iniciarEscenaDos()
+{
+    //Cambiamos el fondo
+    cielo1->setPixmap(QPixmap(":Imagenes/2-1.png"));
+    cielo1->setPos(0,0);
+    cielo2->setPixmap(QPixmap(":Imagenes/2-2.png"));
+    cielo2->setPos(0,0);
+    cielo3->setPixmap(QPixmap(":Imagenes/2-3.png"));
+    cielo3->setPos(0,0);
+    cielo4->setPixmap(QPixmap(":Imagenes/2-4.png"));
+    cielo4->setPos(0,0);
+    cielo5->setPixmap(QPixmap(":Imagenes/2-5.png"));
+    cielo5->setPos(0,0);
+    cielo6->setPixmap(QPixmap(":Imagenes/2-6.png"));
+    cielo6->setPos(0,0);
+    cielo7->hide();
+    tierra->setPixmap(QPixmap(":Imagenes/2-7.png"));
+    tierra->setPos(0,-118);
 }
 
 //cambiar posicion actual del personaje

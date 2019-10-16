@@ -10,7 +10,8 @@ MenuJugador::MenuJugador(QWidget *parent) :
     incializarEscena();
     construirInformacion();
 
-    nivelUno = new NivelUno();
+    nivelUno = new NivelUno;
+
     connect(ui->NuevaPartida, &QPushButton::clicked, this, &MenuJugador::nuevaPartida);
     connect(ui->CargarPartida, &QPushButton::clicked, this, &MenuJugador::cargarPartida);
 }
@@ -119,28 +120,29 @@ void MenuJugador::comenzarNivelUno()
 
 void MenuJugador::comenzarNivelDos()
 {
-//    nivelDos = new NivelDos(informacion[jugadorActual][1]);
-//    view->setScene(nivelDos);
-//    view->show();
-//    informacion[jugadorActual][0] = 2; //actualizar base de datos local en map para al final escribir estos en el archivo dataBase
-//    connect(this->nivelDos, SIGNAL(finalizarNivelDos()), this,SLOT(finalizarNivelDos())); //conecta señal de clase nivelDos con slot de esta clase que tiene el mismo nombre
-//    connect(this->nivelDos, SIGNAL(repetirNivel()), this,SLOT(repetirNivel()));
+    nivelUno->iniciarEscenaDos();
+    view->setScene(nivelUno);
+    view->show();
+    informacion[jugadorActual][0] = 2; //actualizar base de datos local en map para al final escribir estos en el archivo dataBase
+    connect(this->nivelDos, SIGNAL(finalizarNivelDos()), this,SLOT(finalizarNivelDos())); //conecta señal de clase nivelDos con slot de esta clase que tiene el mismo nombre
+    connect(this->nivelDos, SIGNAL(repetirNivel()), this,SLOT(repetirNivel()));
 }
 
 void MenuJugador::finalizarNivelUno()
 {
     informacion[jugadorActual][1] = nivelUno->getPuntaje();
     escena->clear();
+    nivelUno->iniciarEscenaDos();
     comenzarNivelDos();
 }
 
 void MenuJugador::finalizarNivelDos()
 {
-//    informacion[jugadorActual][1] = nivelDos->getPuntaje();
-//    escena->clear();
-//    view->close();
-//    delete nivelDos;
-    //mostrar widget con puntaje y vidas CONGRATULATIONS!
+    informacion[jugadorActual][1] = nivelDos->getPuntaje();
+    escena->clear();
+    view->close();
+    delete nivelDos;
+//    mostrar widget con puntaje y vidas CONGRATULATIONS!
 }
 
 void MenuJugador::cargarPartida()
