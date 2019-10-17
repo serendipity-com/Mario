@@ -92,18 +92,26 @@ void MenuJugador::correrJuego()
 void MenuJugador::nuevaPartida()
 {
     jugadorActual = ui->NombreUsuario->text(); //Nombre ingresado
-    auto iterador = informacion.find(jugadorActual);
-    if(iterador == informacion.end()) //Si no está en el map de base de datos
+    if(jugadorActual.size() >= 1)
     {
-        informacion.insert({jugadorActual, {1,0}});
+        auto iterador = informacion.find(jugadorActual);
+        if(iterador == informacion.end()) //Si no está en el map de base de datos
+        {
+            informacion.insert({jugadorActual, {1,0}});
+        }
+        else
+            informacion[jugadorActual] = {1,0};
+        ui->NombreUsuario->clear(); //Para borrar del lineEdit el username ingresado
+
+        vidas = 5;
+        nivelUno->iniciarEscenaUno();
+        correrJuego();
     }
     else
-        informacion[jugadorActual] = {1,0};
-    ui->NombreUsuario->clear(); //Para borrar del lineEdit el username ingresado
+    {
+        QMessageBox::warning(this, tr("Información"), tr("Ingrese nombre"));
+    }
 
-    vidas = 5;
-    nivelUno->iniciarEscenaUno();
-    correrJuego();
 
 }
 

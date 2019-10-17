@@ -15,8 +15,12 @@ public:
     explicit Instrucciones(QWidget *parent = 0);
     ~Instrucciones();
 
+private slots:
+    void cerrar();
+
 private:
     Ui::Instrucciones *ui;
+
 };
 
 #endif // INSTRUCCIONES_H

@@ -28,10 +28,10 @@
   <widget class="QWidget" name="Acceso" native="true">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>0</x>
      <y>0</y>
-     <width>1229</width>
-     <height>768</height>
+     <width>1280</width>
+     <height>720</height>
     </rect>
    </property>
    <property name="font">
@@ -43,7 +43,8 @@
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-image: url(:/Imagenes/fondoMenu2.jpg);</string>
+    <string notr="true">
+</string>
    </property>
    <widget class="QLineEdit" name="NombreUsuario">
     <property name="geometry">
@@ -75,10 +76,10 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>780</x>
-      <y>100</y>
-      <width>351</width>
-      <height>91</height>
+      <x>750</x>
+      <y>110</y>
+      <width>411</width>
+      <height>141</height>
      </rect>
     </property>
     <property name="font">
@@ -96,19 +97,19 @@
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:22pt;&quot;&gt;&lt;br/&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-image: url(:/Imagenes/fondoMenu2.jpg);</string>
+     <string notr="true">border-image: url(:/Imagenes/nombreDeUsuario.png);</string>
     </property>
     <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Nombre de usuario&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QPushButton" name="NuevaPartida">
     <property name="geometry">
      <rect>
       <x>780</x>
-      <y>290</y>
-      <width>311</width>
-      <height>151</height>
+      <y>300</y>
+      <width>320</width>
+      <height>160</height>
      </rect>
     </property>
     <property name="font">
@@ -120,10 +121,10 @@
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-image: url(:/Imagenes/fondoMenu2.jpg);</string>
+     <string notr="true">border-image: url(:/Imagenes/nuevaPartida.png);</string>
     </property>
     <property name="text">
-     <string>Nueva partida</string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="CargarPartida">
@@ -131,8 +132,8 @@
      <rect>
       <x>780</x>
       <y>470</y>
-      <width>311</width>
-      <height>151</height>
+      <width>320</width>
+      <height>160</height>
      </rect>
     </property>
     <property name="font">
@@ -144,12 +145,33 @@
      </font>
     </property>
     <property name="styleSheet">
+     <string notr="true">border-image: url(:/Imagenes/cargarPartida.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1280</width>
+      <height>720</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
      <string notr="true">border-image: url(:/Imagenes/fondoMenu2.jpg);</string>
     </property>
     <property name="text">
-     <string>Cargar partida</string>
+     <string/>
     </property>
    </widget>
+   <zorder>label</zorder>
+   <zorder>NombreDeUsuario</zorder>
+   <zorder>NuevaPartida</zorder>
+   <zorder>CargarPartida</zorder>
+   <zorder>NombreUsuario</zorder>
   </widget>
  </widget>
  <resources/>

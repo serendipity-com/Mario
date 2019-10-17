@@ -70,5 +70,14 @@
         <file>Imagenes/2-5.png</file>
         <file>Imagenes/2-6.png</file>
         <file>Imagenes/2-7.png</file>
+        <file>Imagenes/cargarPartida.png</file>
+        <file>Imagenes/control.png</file>
+        <file>Imagenes/info.png</file>
+        <file>Imagenes/instrucciones.png</file>
+        <file>Imagenes/multijugador.png</file>
+        <file>Imagenes/nombreDeUsuario.png</file>
+        <file>Imagenes/nuevaPartida.png</file>
+        <file>Imagenes/score.png</file>
+        <file>Imagenes/unJugador.png</file>
     </qresource>
 </RCC>

@@ -36,15 +36,16 @@
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-image: url(:/Imagenes/fondoMenu1.jpg);</string>
+    <string notr="true">
+</string>
    </property>
    <widget class="QPushButton" name="UnJugador">
     <property name="geometry">
      <rect>
-      <x>400</x>
-      <y>90</y>
-      <width>221</width>
-      <height>121</height>
+      <x>210</x>
+      <y>290</y>
+      <width>231</width>
+      <height>120</height>
      </rect>
     </property>
     <property name="font">
@@ -59,11 +60,11 @@
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: transparent;
+     <string notr="true">border-image: url(:/Imagenes/unJugador.png);
 </string>
     </property>
     <property name="text">
-     <string>UN JUGADOR</string>
+     <string/>
     </property>
     <property name="iconSize">
      <size>
@@ -75,10 +76,10 @@
    <widget class="QPushButton" name="Multijugador">
     <property name="geometry">
      <rect>
-      <x>620</x>
-      <y>90</y>
-      <width>221</width>
-      <height>121</height>
+      <x>210</x>
+      <y>430</y>
+      <width>220</width>
+      <height>120</height>
      </rect>
     </property>
     <property name="font">
@@ -91,12 +92,48 @@
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: transparent;</string>
+     <string notr="true">border-image: url(:/Imagenes/multijugador.png);</string>
     </property>
     <property name="text">
-     <string>MULTIJUGADOR</string>
+     <string/>
     </property>
    </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1280</width>
+      <height>720</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(:/Imagenes/fondoMenu1.jpg);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Info">
+    <property name="geometry">
+     <rect>
+      <x>910</x>
+      <y>560</y>
+      <width>101</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(:/Imagenes/info.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <zorder>label</zorder>
+   <zorder>UnJugador</zorder>
+   <zorder>Multijugador</zorder>
+   <zorder>Info</zorder>
   </widget>
  </widget>
  <resources/>

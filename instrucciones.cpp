@@ -6,9 +6,15 @@ Instrucciones::Instrucciones(QWidget *parent) :
     ui(new Ui::Instrucciones)
 {
     ui->setupUi(this);
+    connect(ui->OK, SIGNAL(clicked()), this, SLOT(cerrar()));
 }
 
 Instrucciones::~Instrucciones()
 {
     delete ui;
+}
+
+void Instrucciones::cerrar()
+{
+    this->close();
 }
