@@ -36,8 +36,7 @@
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">
-</string>
+    <string notr="true"/>
    </property>
    <widget class="QPushButton" name="UnJugador">
     <property name="geometry">
@@ -118,9 +117,9 @@
     <property name="geometry">
      <rect>
       <x>910</x>
-      <y>560</y>
+      <y>550</y>
       <width>101</width>
-      <height>61</height>
+      <height>81</height>
      </rect>
     </property>
     <property name="styleSheet">

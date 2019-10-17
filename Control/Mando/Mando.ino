@@ -99,13 +99,13 @@ void loop() {
      case btnUP:
        {
        Serial.println("W");
-       delay(500);
+       delay(200);
        break;
        }
      case btnDOWN:
        {
-       Serial.println("Z");
-       delay(500);
+       //Serial.println("Z");
+       //delay(500);
        break;
        }
      case btnSELECT:
@@ -144,9 +144,9 @@ void loop() {
           Serial.print(gx); Serial.print("\t");
           Serial.print(gy); Serial.print("\t");
           Serial.println(gz);*/
-          if (ax > 8){Serial.println("A");delay(200);}
-          if (ax < -8){Serial.println("D");delay(200);}
-          if (ay > 8){Serial.println("W");delay(500);}
+          if (ax > 8){Serial.println("W");delay(200);}
+          if (ay < -8){Serial.println("A");delay(200);}
+          if (ay > 8){Serial.println("D");delay(200);}
       #endif
     }
 }

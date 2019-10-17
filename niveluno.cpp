@@ -1060,6 +1060,7 @@ void NivelUno::iniciarEscenaUno()
     {
         removeItem(ladrillos.at(i));
     }
+    ladrillos.clear();
     for (int i = 0; i < 30; i++)
     {
         ladrillos.append(new Ladrillo(posLadrillo[i][2]));
@@ -1481,17 +1482,17 @@ void NivelUno::keyPressEvent(QKeyEvent *event)
 
     switch (event->key())
     {
-    case Qt::Key_Right:
+    case Qt::Key_D:
         p->setVel(velocidad,p->getVelY(), p->getPosX(), p->getPosY());
         if (event->isAutoRepeat()){return;}
         agregarEntradaHorizontal(1);
         break;
-    case Qt::Key_Left:
+    case Qt::Key_A:
         p->setVel(-velocidad,p->getVelY(), p->getPosX(), p->getPosY());
         if (event->isAutoRepeat()){return;}
         agregarEntradaHorizontal(-1);
         break;
-    case Qt::Key_Space:
+    case Qt::Key_W:
         if(salto)
         {
             p->setCd(1);
@@ -1514,11 +1515,11 @@ void NivelUno::keyReleaseEvent(QKeyEvent *event)
 {
     switch (event->key())
     {
-    case Qt::Key_Right:
+    case Qt::Key_D:
         if (event->isAutoRepeat()) {return;}
         agregarEntradaHorizontal(0);
         break;
-    case Qt::Key_Left:
+    case Qt::Key_A:
         if (event->isAutoRepeat()) {return;}
         agregarEntradaHorizontal(0);
         break;
