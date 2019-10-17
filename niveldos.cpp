@@ -167,7 +167,7 @@ void NivelDos::iniciarEscena()
         addItem(fantasmas.last());
     }
 
-//    //Agregamos ladrillos de notas musicales
+    //Agregamos ladrillos de notas musicales
     int posLadrillonNota[18][3] = {{2200,500,2},{2400,500,2},{2600,500,2},{2800,500,2},{2200,350,2},{2400,350,2}
                                   ,{2600,350,2},{2800,350,2},{5350,500,2},{5550,500,2},{5750,500,2},{5950,500,2}
                                    ,{6150,500,2},{5350,350,2},{5550,350,2},{5750,350,2},{5950,350,2},{6150,350,2}};

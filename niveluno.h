@@ -36,9 +36,9 @@ public:
     ~NivelUno();
 
     int getPuntaje();
-    void reiniciarEscena();
+    void reiniciarEscenaUno();
     void reiniciarEscenaDos(int _puntaje);
-    void iniciarEscena();
+    void iniciarEscenaUno();
     void iniciarEscenaDos();
 
 private:
@@ -57,7 +57,8 @@ private:
     void cambiarDireccionGomba();
 
     void enviarReiniciar();
-    void enviarFinalizar();
+    void enviarFinalizarUno();
+    void enviarFinalizarDos();
 
 public slots:
     void correrEscena();
@@ -71,6 +72,7 @@ protected:
 
 signals:
     void finalizarNivelUno();
+    void finalizarNivelDos();
     void repetirNivel();
 
 private:
@@ -88,6 +90,13 @@ private:
         fire
     };
     Estado estado;
+
+    enum Nivel
+    {
+        uno,
+        dos
+    };
+    Nivel nivel;
 
     BackgroundItem *cielo1;
     BackgroundItem *cielo2;

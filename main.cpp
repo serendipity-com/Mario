@@ -15,14 +15,6 @@ int main(int argc, char *argv[])
     splash->setPixmap(QPixmap(":/Imagenes/mario_splash.png"));
     splash->show();
 
-//    NivelDos escena(100);
-//    QGraphicsView view;
-//    view.setRenderHint (QPainter :: Antialiasing);
-//    view.setVerticalScrollBarPolicy (Qt :: ScrollBarAlwaysOff);
-//    view.setHorizontalScrollBarPolicy (Qt :: ScrollBarAlwaysOff);
-//    view.setScene (& escena);
-//    view.setFixedSize (1280,720);
-
     Widget w;
     w.show();
 

@@ -10,8 +10,6 @@ MenuJugador::MenuJugador(QWidget *parent) :
     incializarEscena();
     construirInformacion();
 
-    nivelUno = new NivelUno;
-
     connect(ui->NuevaPartida, &QPushButton::clicked, this, &MenuJugador::nuevaPartida);
     connect(ui->CargarPartida, &QPushButton::clicked, this, &MenuJugador::cargarPartida);
 }
@@ -24,7 +22,6 @@ MenuJugador::~MenuJugador()
     delete view;
 
     delete nivelUno;
-    delete nivelDos;
 }
 
 void MenuJugador::incializarEscena()
@@ -39,6 +36,13 @@ void MenuJugador::incializarEscena()
     view->setFixedSize(1280,720);
 
     view->setScene(escena);
+
+    nivelUno = new NivelUno;
+    view->setScene(nivelUno);
+
+    connect(this->nivelUno, SIGNAL(repetirNivel()), this, SLOT(repetirNivel()));
+    connect(this->nivelUno, SIGNAL(finalizarNivelUno()), this, SLOT(finalizarNivelUno()));
+    connect(this->nivelUno, SIGNAL(finalizarNivelDos()), this, SLOT(finalizarNivelDos()));
 }
 
 void MenuJugador::construirInformacion()
@@ -98,6 +102,7 @@ void MenuJugador::nuevaPartida()
     ui->NombreUsuario->clear(); //Para borrar del lineEdit el username ingresado
 
     vidas = 5;
+    nivelUno->iniciarEscenaUno();
     correrJuego();
 
 }
@@ -111,27 +116,21 @@ void MenuJugador::repetirNivel()
 
 void MenuJugador::comenzarNivelUno()
 {
-    nivelUno->reiniciarEscena();
-    view->setScene(nivelUno);
+    nivelUno->reiniciarEscenaUno();
     view->show();
-    connect(this->nivelUno, SIGNAL(repetirNivel()), this, SLOT(repetirNivel()));
-    connect(this->nivelUno, SIGNAL(finalizarNivelUno()), this,SLOT(finalizarNivelUno()));
 }
 
 void MenuJugador::comenzarNivelDos()
 {
-    nivelUno->iniciarEscenaDos();
-    view->setScene(nivelUno);
+    nivelUno->reiniciarEscenaDos(informacion[jugadorActual][1]);
     view->show();
-    informacion[jugadorActual][0] = 2; //actualizar base de datos local en map para al final escribir estos en el archivo dataBase
-    connect(this->nivelDos, SIGNAL(finalizarNivelDos()), this,SLOT(finalizarNivelDos())); //conecta señal de clase nivelDos con slot de esta clase que tiene el mismo nombre
-    connect(this->nivelDos, SIGNAL(repetirNivel()), this,SLOT(repetirNivel()));
 }
 
 void MenuJugador::finalizarNivelUno()
 {
     informacion[jugadorActual][1] = nivelUno->getPuntaje();
-    escena->clear();
+    //actualizar base de datos local en map para al final escribir estos en el archivo dataBase
+    informacion[jugadorActual][0] = 2;
     nivelUno->iniciarEscenaDos();
     comenzarNivelDos();
 }
@@ -139,7 +138,6 @@ void MenuJugador::finalizarNivelUno()
 void MenuJugador::finalizarNivelDos()
 {
     informacion[jugadorActual][1] = nivelDos->getPuntaje();
-    escena->clear();
     view->close();
     delete nivelDos;
 //    mostrar widget con puntaje y vidas CONGRATULATIONS!
@@ -155,6 +153,17 @@ void MenuJugador::cargarPartida()
     }
     else
     {
+        //verifica que nivel inicializar
+        switch(informacion[jugadorActual][0])
+        {
+        case 1:
+            nivelUno->iniciarEscenaUno();
+            break;
+        case 2:
+            nivelUno->iniciarEscenaDos();
+            break;
+        }
+
         ui->NombreUsuario->clear(); //Para borrar del lineEdit el nombre
         vidas = 5;
         correrJuego();
@@ -164,14 +173,14 @@ void MenuJugador::cargarPartida()
 void MenuJugador::actualizarBaseDatos()
 {
     //  una vez finalice la partida del jugador en cualquiera de los niveles, se procede a hacer esto:
-        int nivel = informacion[jugadorActual][0];
-        int puntaje = informacion[jugadorActual][1];
-        QFile inputFile(":/BaseDatos.txt");
-        if (inputFile.open(QIODevice::Append | QIODevice::Text))
-        {
-           QTextStream in(&inputFile); //hay que indexar en el map de base de datos y todos esos datos escribirlos en el archivo dataBase.txt
-           in << jugadorActual << ":" << nivel << puntaje << endl;
-           in.flush();
-        }
-        inputFile.close();
+    int nivel = informacion[jugadorActual][0];
+    int puntaje = informacion[jugadorActual][1];
+    QFile inputFile(":/BaseDatos.txt");
+    if (inputFile.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        QTextStream in(&inputFile); //hay que indexar en el map de base de datos y todos esos datos escribirlos en el archivo dataBase.txt
+        in << jugadorActual << ":" << nivel << puntaje << "\n";
+        in.flush();
+    }
+    inputFile.close();
 }

@@ -21,7 +21,74 @@ NivelUno::NivelUno(QObject *padre):
   , hongo(nullptr)
   , florFuego(nullptr)
 {
-    iniciarEscena();
+    sonidos = new AdministradorSonidos();
+
+    //inicializamos timer
+    timerSprite = new QTimer(this);
+    connect(timerSprite, SIGNAL(timeout()), this, SLOT(siguienteSprite()));
+
+    timerEscena = new QTimer(this);
+    connect(timerEscena, SIGNAL(timeout()), this, SLOT(correrEscena()));
+
+    timerMando = new QTimer(this);
+    connect(timerMando, SIGNAL(timeout()), this, SLOT(moverConMando()));
+
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(actualizar()));
+
+    setSceneRect(0,0,1280,720);
+
+    //Agregamos el cielo
+    cielo1 = new BackgroundItem(QPixmap(":/Imagenes/1-1.png"));
+    addItem(cielo1);
+    cielo2 = new BackgroundItem(QPixmap(":Imagenes/1-2.png"));
+    addItem(cielo2);
+    cielo3 = new BackgroundItem(QPixmap(":Imagenes/1-3.png"));
+    addItem(cielo3);
+    cielo4 = new BackgroundItem(QPixmap(":Imagenes/1-4.png"));
+    addItem(cielo4);
+    cielo5 = new BackgroundItem(QPixmap(":Imagenes/1-5.png"));
+    addItem(cielo5);
+    cielo6 = new BackgroundItem(QPixmap(":Imagenes/1-6.png"));
+    addItem(cielo6);
+    cielo7 = new BackgroundItem(QPixmap(":Imagenes/1-7.png"));
+    addItem(cielo7);
+
+    //Agregamos puntaje
+    puntajeLogo = new BackgroundItem(QPixmap(":/Imagenes/puntaje.png"));
+    addItem(puntajeLogo);
+    puntaje = new Puntaje();
+    addItem(puntaje);
+
+    //Agregamos el piso
+    tierra = new BackgroundItem(QPixmap(":Imagenes/1-8.png"));
+    addItem(tierra);
+
+    //Agregamos castillo
+    castillo = new Castillo();
+    addItem(castillo);
+
+    //Agregamos bandera
+    tuboBandera = new QGraphicsPixmapItem(QPixmap(":/Imagenes/tuboBandera.png"));
+    bandera = new Bandera();
+    addItem(bandera);
+    addItem(tuboBandera);
+
+    //Agregamos hongos
+    hongo = new Hongo();
+    addItem(hongo);
+
+    //Agregamos flor de bonus
+    florFuego = new FlorFuego();
+    addItem(florFuego);
+
+    //Agregamos personaje
+    personaje =  new Personaje(1);
+    addItem(personaje);
+    personajeFire = new Personaje(3);
+    addItem(personajeFire);
+    personajeSmall = new Personaje(2);
+    addItem(personajeSmall);
 }
 
 NivelUno::~NivelUno()
@@ -64,11 +131,13 @@ int NivelUno::getPuntaje()
     return puntaje->getPuntaje();
 }
 
-void NivelUno::reiniciarEscena()
+void NivelUno::reiniciarEscenaUno()
 {
+    nivel = uno;
 
     puntaje->setPuntaje(0);
 
+    //iniciamos los timer
     sonidos->reproducirLevel1();
     timerEscena->start(100);
     timer->start(10);
@@ -155,13 +224,146 @@ void NivelUno::reiniciarEscena()
     PersonajeFisica *p = personajeSmall->getFisica();
     p->setVel(0,0,0,720);
     posicionX = minX;
+    estado = small;
 
     desplazamientoMundo = 0;
 }
 
 void NivelUno::reiniciarEscenaDos(int _puntaje)
 {
+    nivel = dos;
 
+    //conserva puntaje
+    puntaje->setPuntaje(_puntaje);
+
+    sonidos->reproducirLevel2();
+    timerEscena->start(100);
+    timer->start(10);
+
+    //Ponemos posicion incial del cielo
+    cielo1->setPos(0,0);
+    cielo2->setPos(0,0);
+    cielo3->setPos(0,0);
+    cielo4->setPos(0,0);
+    cielo5->setPos(0,0);
+    cielo6->setPos(0,0);
+
+    //Ponemos posicion incial del puntaje
+    puntajeLogo->setPos(50,40);
+    puntaje->setPos(puntajeLogo->pos().x() + puntajeLogo->boundingRect().width() , 25);
+
+    //nivel de la tierra
+    tierra->setPos(0,-118);
+
+    //Agregamos ladrillos
+    int posLadrillo[74][3] = {{200,450,1},{250,400,1},{400,250,1},{450,250,1},{500,250,1},{550,250,1},{600,250,1}
+                              ,{200,450,1},{650,250,1},{800,250,1},{950,250,1},{450,100,1},{550,100,1},{1100,100,1}
+                              ,{1150,100,1},{1300,250,1},{1500,250,1},{1550,250,1},{1600,250,1},{1100,400,1}
+                              ,{1150,400,1},{1300,400,1},{1350,400,1},{2050,400,1},{2100,300,1},{2150,200,1},{2300,200,1}
+                              ,{2350,200,1},{2400,200,1},{2700,200,1},{2750,200,1},{2800,200,1},{3100,200,1},{3400,200,1}
+                              ,{3550,200,1},{4300,500,1},{4400,300,1},{4450,200,1},{4350,100,1},{4200,100,1},{3800,100,1}
+                              ,{4750,200,1},{5050,200,1},{5350,200,1},{5650,200,1},{5950,200,1},{6350,200,1},{7000,610,1}
+                              ,{7050,610,1},{7100,610,1},{7150,610,1},{7200,610,1},{7250,610,1},{7300,610,1},{7050,560,1}
+                              ,{7100,560,1},{7150,560,1},{7200,560,1},{7250,560,1},{7300,560,1},{7100,510,1},{7150,510,1}
+                              ,{7200,510,1},{7250,510,1},{7300,510,1},{7150,460,1},{7200,460,1},{7250,460,1},{7300,460,1}
+                              ,{7200,410,1},{7250,410,1},{7300,410,1},{7250,360,1},{7300,360,1}};
+    int posLadrilloSorpresa[4][2] = {{500,100},{600,100},{2350,50},{3550,350}};
+    for (int i = 0; i < 74; i++)
+    {
+        ladrillos.at(i)->setPos(posLadrillo[i][0],posLadrillo[i][1]);
+    }
+    for (int j = 0; j < 4; j++)
+    {
+        ladrillosSorpresa.at(j)->setPos(posLadrilloSorpresa[j][0],posLadrilloSorpresa[j][1]);
+        if(j == 0){ladrillosSorpresa.at(j)->setRegalo(3);}
+        else if(j == 1){ladrillosSorpresa.at(j)->setRegalo(1);}
+        else {ladrillosSorpresa.at(j)->setRegalo(2);}
+    }
+
+    castillo->setPos(7800,nivelTierra - castillo->boundingRect().height());
+    tuboBandera->setPos(7500, nivelTierra - tuboBandera->boundingRect().height());
+    bandera->setPos(7585, tuboBandera->boundingRect().height() - 100);
+
+    //Agregamos fantasmas
+    int posFantasmas[18][2] ={{2200,550},{2400,550},{2600,550},{2800,550},{2200,400},{2400,400},{2600,400}
+                             ,{2800,400},{5350,550},{5550,550},{5750,550},{5950,550},{6150,550},{5350,400}
+                              ,{5550,400},{5750,400},{5950,400},{6150,400}};
+    for (int i= 0; i < 18;i++)
+    {
+        fantasmas.at(i)->setPos(posFantasmas[i][0], posFantasmas[i][1]);
+    }
+
+    //Agregamos ladrillos de notas musicales
+    int posLadrillonNota[18][3] = {{2200,500,2},{2400,500,2},{2600,500,2},{2800,500,2},{2200,350,2},{2400,350,2}
+                                  ,{2600,350,2},{2800,350,2},{5350,500,2},{5550,500,2},{5750,500,2},{5950,500,2}
+                                   ,{6150,500,2},{5350,350,2},{5550,350,2},{5750,350,2},{5950,350,2},{6150,350,2}};
+    for (int i = 0; i < 18; i++)
+    {
+        ladrillosNota.at(i)->setPos(posLadrillonNota[i][0],posLadrillonNota[i][1]);
+    }
+
+    //Agregamos monedas
+    //Agregamos monedas
+    int posMonedas[80][2] = {{200,400},{250,350},{450,50},{500,50},{550,50},{600,50},{1100,50},{1150,50}
+                             ,{1300,200},{1100,350},{1150,350},{1300,350},{1350,350},{1500,200}
+                             ,{1550,200},{1600,200},{1000,500},{1050,500},{1100,500},{1150,500},{1200,500}
+                             ,{1250,500},{1300,500},{1350,500},{1400,500},{2300,150},{2350,150},{2400,150}
+                             ,{2700,150},{2750,150},{2800,150},{3100,150},{3400,150},{3550,150},{3700,250}
+                             ,{3700,300},{3750,200},{3750,350},{3800,150},{3800,350},{3850,100},{3850,350}
+                             ,{3850,150},{3850,200},{3850,250},{3850,300},{3850,400},{3900,450},{3950,450}
+                             ,{4000,450},{4050,450},{3900,100},{3900,150},{3900,200},{3900,50},{3950,200}
+                             ,{3950,50},{4000,200},{4000,50},{4050,100},{4050,150},{4050,200},{4050,50}
+                             ,{3900,300},{4050,300},{4100,100},{4100,150},{4100,200},{4100,250},{4100,300}
+                             ,{4100,350},{4100,400},{4150,150},{4150,350},{4200,200},{4200,350},{4250,250}
+                             ,{4250,300},{3950,400},{4000,400}};
+    for (int i= 0; i < 80;i++)
+    {
+        monedas.at(i)->setPos(posMonedas[i][0], posMonedas[i][1]);
+    }
+
+    hongo->setPos(-500, -500);
+    florFuego->setPos(-500,-500);
+
+    //Agregamos tubos
+    int posTubos[20] = {400,500,600,700,800,900,1450,2000,3000,3550,4450,4550,4650,4750,4850,4950,5050,5150,5250
+                       ,6350};
+    for (int i = 0; i < 20; i++)
+    {
+        tubos.at(i)->setPos(posTubos[i], nivelTierra - tubos.at(i)->boundingRect().height());
+    }
+
+    //Agregamos flor carnobora
+    int posFloresCar[17] = {375,475,575,675,775,875,1425,2975,4425,4525,4625,4725,4825,4925,5025,5125,5225};
+    for (int i = 0; i < 17; i++)
+    {
+        floresCar.at(i)->setPos(posFloresCar[i], tubos.at(1)->pos().y() - floresCar.at(i)->boundingRect().height());
+    }
+
+    //Agregamos enemigo Goomba
+    int posGombas[47] = {1050,1100,1150,1200,1300,1350,1400,1475,1525,1625,1675,1725
+                        ,1775,1875,1925,1975,2125,2175,2275,2325,2425
+                         ,2525,2575,2675,2775,3025,3075,3175,3275,3325
+                         ,3375,3525,5300,5350,5450,5500,5600,5650,5700,5750
+                        ,5800,5900,5950,6000,6100,6150,6250};
+    for (int i = 0; i < 47; i++)
+    {
+        gombas.at(i)->setPos(posGombas[i], nivelTierra - gombas.at(i)->boundingRect().height());
+    }
+
+    desplazamientoMundo = 0;
+
+    personaje->setPos(-1000,-1000);
+    personajeFire->setPos(-1000,-1000);
+
+    minX = personajeSmall->boundingRect().width();
+    maxX = anchoEscena - personajeSmall->boundingRect().width() / 2;
+    personajeSmall->setPos(0,720);
+    PersonajeFisica *p = personajeSmall->getFisica();
+    p->setVel(0,0,0,720);
+    posicionX = minX;
+    estado = small;
+
+    desplazamientoMundo = 0;
 }
 
 void NivelUno::agregarEntradaHorizontal(int entrada)
@@ -234,7 +436,8 @@ void NivelUno::verificarColisionCastillo()
         {
             if(castillo->estarTocandoPuerta(personajeSmall))
             {
-                enviarFinalizar();
+                if(nivel == uno){enviarFinalizarUno();}
+                else if(nivel == dos){enviarFinalizarDos();}
             }
         }
     }
@@ -244,7 +447,8 @@ void NivelUno::verificarColisionCastillo()
         {
             if(castillo->estarTocandoPuerta(personaje))
             {
-                enviarFinalizar();
+                if(nivel == uno){enviarFinalizarUno();}
+                else if(nivel == dos){enviarFinalizarDos();}
             }
         }
     }
@@ -254,7 +458,8 @@ void NivelUno::verificarColisionCastillo()
         {
             if(castillo->estarTocandoPuerta(personajeFire))
             {
-                enviarFinalizar();
+                if(nivel == uno){enviarFinalizarUno();}
+                else if(nivel == dos){enviarFinalizarDos();}
             }
         }
     }
@@ -364,6 +569,7 @@ void NivelUno::verificarColisionEnemigos(PersonajeFisica *p)
                 }
                 else
                 {
+                    timer->stop();
                     m->setPos(-1000,1000);
                     sonidos->reproducirMuerto1();
                     enviarReiniciar();
@@ -374,6 +580,7 @@ void NivelUno::verificarColisionEnemigos(PersonajeFisica *p)
         {
             if(Flor *m = qgraphicsitem_cast<Flor*>(item))
             {
+                timer->stop();
                 m->setPos(-1000,1000);
                 sonidos->reproducirMuerto1();
                 enviarReiniciar();
@@ -748,6 +955,7 @@ void NivelUno::cambiarDireccionGomba()
 
 void NivelUno::enviarReiniciar()
 {
+    sonidos->pararLevel2();
     sonidos->pararLevel1();
     timer->stop();
     timerEscena->stop();
@@ -761,8 +969,9 @@ void NivelUno::enviarReiniciar()
     emit repetirNivel();
 }
 
-void NivelUno::enviarFinalizar()
+void NivelUno::enviarFinalizarUno()
 {
+    sonidos->pararLevel2();
     sonidos->pararLevel1();
     timer->stop();
     timerEscena->stop();
@@ -774,6 +983,22 @@ void NivelUno::enviarFinalizar()
     personajeFire->setDireccion(0);
 
     emit finalizarNivelUno();
+}
+
+void NivelUno::enviarFinalizarDos()
+{
+    sonidos->pararLevel2();
+    sonidos->pararLevel1();
+    timer->stop();
+    timerEscena->stop();
+    timerSprite->stop();
+    timerMando->stop();
+
+    personaje->setDireccion(0);
+    personajeSmall->setDireccion(0);
+    personajeFire->setDireccion(0);
+
+    emit finalizarNivelDos();
 }
 
 // se encarga de manejas los sprites de los objetos en escena.
@@ -810,62 +1035,20 @@ void NivelUno::aplicarParalelismo(qreal propocion, QGraphicsItem *item)
 }
 
 //crea valores inciales
-void NivelUno::iniciarEscena()
+void NivelUno::iniciarEscenaUno()
 {
-    sonidos = new AdministradorSonidos();
-
-    timerSprite = new QTimer(this);
-    connect(timerSprite, SIGNAL(timeout()), this, SLOT(siguienteSprite()));
-
-    timerEscena = new QTimer(this);
-    connect(timerEscena, SIGNAL(timeout()), this, SLOT(correrEscena()));
-    timerEscena->start(100);
-
-    timerMando = new QTimer(this);
-    connect(timerMando, SIGNAL(timeout()), this, SLOT(moverConMando()));
-
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(actualizar()));
-    timer->start(10);
-
-    setSceneRect(0,0,1280,720);
 
     //Agregamos el cielo
-    cielo1 = new BackgroundItem(QPixmap(":/Imagenes/1-1.png"));
-    cielo1->setPos(0,-100);
-    addItem(cielo1);
-    cielo2 = new BackgroundItem(QPixmap(":Imagenes/1-2.png"));
-    cielo2->setPos(0,0);
-    addItem(cielo2);
-    cielo3 = new BackgroundItem(QPixmap(":Imagenes/1-3.png"));
-    cielo3->setPos(0,0);
-    addItem(cielo3);
-    cielo4 = new BackgroundItem(QPixmap(":Imagenes/1-4.png"));
-    cielo4->setPos(0,0);
-    addItem(cielo4);
-    cielo5 = new BackgroundItem(QPixmap(":Imagenes/1-5.png"));
-    cielo5->setPos(0,-90);
-    addItem(cielo5);
-    cielo6 = new BackgroundItem(QPixmap(":Imagenes/1-6.png"));
-    cielo6->setPos(0,-90);
-    addItem(cielo6);
-    cielo7 = new BackgroundItem(QPixmap(":Imagenes/1-7.png"));
-    cielo7->setPos(0,-170);
-    addItem(cielo7);
-
-    //Agregamos puntaje
-    puntajeLogo = new BackgroundItem(QPixmap(":/Imagenes/puntaje.png"));
-    puntajeLogo->setPos(50,40);
-    addItem(puntajeLogo);
-    puntaje = new Puntaje();
-    puntaje->setPos(puntajeLogo->pos().x() + puntajeLogo->boundingRect().width() , 25);
-    addItem(puntaje);
+    cielo1->setPixmap(QPixmap(":/Imagenes/1-1.png"));
+    cielo2->setPixmap(QPixmap(":Imagenes/1-2.png"));
+    cielo3->setPixmap(QPixmap(":Imagenes/1-3.png"));
+    cielo4->setPixmap(QPixmap(":Imagenes/1-4.png"));
+    cielo5->setPixmap(QPixmap(":Imagenes/1-5.png"));
+    cielo6->setPixmap(QPixmap(":Imagenes/1-6.png"));
+    cielo7->setPixmap(QPixmap(":Imagenes/1-7.png"));
 
     //Agregamos el piso
-    tierra = new BackgroundItem(QPixmap(":Imagenes/1-8.png"));
-    addItem(tierra);
-    tierra->setPos(0,-183);
-
+    tierra->setPixmap(QPixmap(":Imagenes/1-8.png"));
 
     //Agregamos ladrillos
     int posLadrillo[30][3] = {{550,500,1}, {650,500,1}, {750,500,1}, {650,300,1}, {1150,400,2}, {1350,500,2}, {1350,200,6}, {2150,450,1}
@@ -873,12 +1056,21 @@ void NivelUno::iniciarEscena()
                              , {3425,610,4}, {4000,500,1}, {4100,500,3}, {4100,300,1}, {4250,200,6}, {4650,200,1}, {4850,200,1}, {5400,610,7}
                              , {5450,560,6}, {5500,510,5}, {5550,460,4}, {5600,410,3}, {5650,360,2}, {5700,310,1}};
     int posLadrilloSorpresa[4][2] = {{600,500}, {700,500}, {2200,450}, {4050,500}};
+    for (int i = ladrillos.size() - 1; 0 <= i; i--)
+    {
+        removeItem(ladrillos.at(i));
+    }
     for (int i = 0; i < 30; i++)
     {
         ladrillos.append(new Ladrillo(posLadrillo[i][2]));
         ladrillos.last()->setPos(posLadrillo[i][0],posLadrillo[i][1]);
         addItem(ladrillos.last());
     }
+    for (int i = ladrillosSorpresa.size() - 1; 0 <= i; i--)
+    {
+        removeItem(ladrillosSorpresa.at(i));
+    }
+    ladrillosSorpresa.clear();
     for (int j = 0; j < 4; j++)
     {
         ladrillosSorpresa.append(new LadrilloSorpresa());
@@ -889,23 +1081,15 @@ void NivelUno::iniciarEscena()
         addItem(ladrillosSorpresa.last());
     }
 
-    //Agregamos castillo
-    castillo = new Castillo();
-    castillo->setPos(6200,nivelTierra - castillo->boundingRect().height());
-    addItem(castillo);
-
-    //Agregamos bandera
-    tuboBandera = new QGraphicsPixmapItem(QPixmap(":/Imagenes/tuboBandera.png"));
-    tuboBandera->setPos(5900, nivelTierra - tuboBandera->boundingRect().height());
-    bandera = new Bandera();
-    bandera->setPos(5985, tuboBandera->boundingRect().height() - 100);
-    addItem(bandera);
-    addItem(tuboBandera);
-
     //Agregamos monedas
     int posMonedas[24][2] ={{550,450}, {600,450}, {650,450}, {700,450}, {750,450}, {650,250}, {1150,350}, {1200,350}, {1350,150}, {1400,150}
                          , {1450,150}, {1500,150}, {1550,150}, {1600,150}, {2750,500},{2800,500}, {2850,500}, {2900,500}, {2950,500}, {3000,500}, {2950,450}
                          , {2950,550}, {2900,400}, {2900,600}};
+    for (int i = monedas.size() - 1; 0 <= i; i--)
+    {
+        removeItem(monedas.at(i));
+    }
+    monedas.clear();
     for (int i= 0; i < 24;i++)
     {
         monedas.append(new Moneda());
@@ -913,18 +1097,13 @@ void NivelUno::iniciarEscena()
         addItem(monedas.last());
     }
 
-    //Agregamos hongos
-    hongo = new Hongo();
-    hongo->setPos(-500, -500);
-    addItem(hongo);
-
-    //Agregamos flor de bonus
-    florFuego = new FlorFuego();
-    florFuego->setPos(-500,-500);
-    addItem(florFuego);
-
     //Agregamos tubos
     int posTubos[7] = {900, 1500, 2000, 2500, 3295, 4600, 4700};
+    for (int i = tubos.size() - 1; 0 <= i; i--)
+    {
+        removeItem(tubos.at(i));
+    }
+    tubos.clear();
     for (int i = 0; i < 7; i++)
     {
         tubos.append(new Tubo());
@@ -934,6 +1113,11 @@ void NivelUno::iniciarEscena()
 
     //Agregamos flor carnobora
     int posFloresCar[4] = {1475, 3270, 4575, 4675};
+    for (int i = floresCar.size() - 1; 0 <= i; i--)
+    {
+        removeItem(floresCar.at(i));
+    }
+    floresCar.clear();
     for (int i = 0; i < 4; i++)
     {
         floresCar.append(new Flor());
@@ -943,29 +1127,17 @@ void NivelUno::iniciarEscena()
 
     //Agregamos enemigo Goomba
     int posGombas[10] = {800, 1000, 1600, 1800, 2100, 2200, 2300, 2400, 3300, 3700};
+    for (int i = gombas.size() - 1 ; 0 <= i; i--)
+    {
+        removeItem(gombas.at(i));
+    }
+    gombas.clear();
     for (int i = 0; i < 10; i++)
     {
         gombas.append(new Goomba());
         gombas.last()->setPos(posGombas[i], nivelTierra - gombas.last()->boundingRect().height());
         addItem(gombas.last());
     }
-
-    //Agregamos personaje
-    personaje =  new Personaje(1);
-    personaje->setPos(-1000,-1000);
-    addItem(personaje);
-
-    personajeFire = new Personaje(3);
-    personajeFire->setPos(-1000,-1000);
-    addItem(personajeFire);
-
-    personajeSmall = new Personaje(2);
-    minX = personajeSmall->boundingRect().width();
-    maxX = anchoEscena - personajeSmall->boundingRect().width() / 2;
-    personajeSmall->setPos(minX,nivelTierra - personajeSmall->boundingRect().height());
-    posicionX = minX;
-    addItem(personajeSmall);
-
 }
 
 void NivelUno::iniciarEscenaDos()
@@ -986,6 +1158,149 @@ void NivelUno::iniciarEscenaDos()
     cielo7->hide();
     tierra->setPixmap(QPixmap(":Imagenes/2-7.png"));
     tierra->setPos(0,-118);
+
+    //Agregamos ladrillos
+    int posLadrillo[74][3] = {{200,450,1},{250,400,1},{400,250,1},{450,250,1},{500,250,1},{550,250,1},{600,250,1}
+                              ,{200,450,1},{650,250,1},{800,250,1},{950,250,1},{450,100,1},{550,100,1},{1100,100,1}
+                              ,{1150,100,1},{1300,250,1},{1500,250,1},{1550,250,1},{1600,250,1},{1100,400,1}
+                              ,{1150,400,1},{1300,400,1},{1350,400,1},{2050,400,1},{2100,300,1},{2150,200,1},{2300,200,1}
+                              ,{2350,200,1},{2400,200,1},{2700,200,1},{2750,200,1},{2800,200,1},{3100,200,1},{3400,200,1}
+                              ,{3550,200,1},{4300,500,1},{4400,300,1},{4450,200,1},{4350,100,1},{4200,100,1},{3800,100,1}
+                              ,{4750,200,1},{5050,200,1},{5350,200,1},{5650,200,1},{5950,200,1},{6350,200,1},{7000,610,1}
+                              ,{7050,610,1},{7100,610,1},{7150,610,1},{7200,610,1},{7250,610,1},{7300,610,1},{7050,560,1}
+                              ,{7100,560,1},{7150,560,1},{7200,560,1},{7250,560,1},{7300,560,1},{7100,510,1},{7150,510,1}
+                              ,{7200,510,1},{7250,510,1},{7300,510,1},{7150,460,1},{7200,460,1},{7250,460,1},{7300,460,1}
+                              ,{7200,410,1},{7250,410,1},{7300,410,1},{7250,360,1},{7300,360,1}};
+    int posLadrilloSorpresa[4][2] = {{500,100},{600,100},{2350,50},{3550,350}};
+    for (int i = ladrillos.size() - 1; 0 <= i; i--)
+    {
+        removeItem(ladrillos.at(i));
+    }
+    ladrillos.clear();
+    for (int i = 0; i < 74; i++)
+    {
+        ladrillos.append(new Ladrillo(posLadrillo[i][2]));
+        ladrillos.last()->setPos(posLadrillo[i][0],posLadrillo[i][1]);
+        addItem(ladrillos.last());
+    }
+    for (int i = ladrillosSorpresa.size() - 1; 0 <= i; i--)
+    {
+        removeItem(ladrillosSorpresa.at(i));
+    }
+    ladrillosSorpresa.clear();
+    for (int j = 0; j < 4; j++)
+    {
+        ladrillosSorpresa.append(new LadrilloSorpresa());
+        ladrillosSorpresa.last()->setPos(posLadrilloSorpresa[j][0],posLadrilloSorpresa[j][1]);
+        if(j == 0){ladrillosSorpresa.last()->setRegalo(3);}
+        else if(j == 1){ladrillosSorpresa.last()->setRegalo(1);}
+        else {ladrillosSorpresa.last()->setRegalo(2);}
+        addItem(ladrillosSorpresa.last());
+    }
+
+    //Agregamos fantasmas
+    int posFantasmas[18][2] ={{2200,550},{2400,550},{2600,550},{2800,550},{2200,400},{2400,400},{2600,400}
+                             ,{2800,400},{5350,550},{5550,550},{5750,550},{5950,550},{6150,550},{5350,400}
+                              ,{5550,400},{5750,400},{5950,400},{6150,400}};
+    for (int i = fantasmas.size() - 1; 0 <= i; i--)
+    {
+        removeItem(fantasmas.at(i));
+    }
+    fantasmas.clear();
+    for (int i= 0; i < 18;i++)
+    {
+        fantasmas.append(new Fantasma());
+        fantasmas.last()->setPos(posFantasmas[i][0], posFantasmas[i][1]);
+        addItem(fantasmas.last());
+    }
+
+    //Agregamos ladrillos de notas musicales
+    int posLadrillonNota[18][3] = {{2200,500,2},{2400,500,2},{2600,500,2},{2800,500,2},{2200,350,2},{2400,350,2}
+                                  ,{2600,350,2},{2800,350,2},{5350,500,2},{5550,500,2},{5750,500,2},{5950,500,2}
+                                   ,{6150,500,2},{5350,350,2},{5550,350,2},{5750,350,2},{5950,350,2},{6150,350,2}};
+    for (int i = ladrillosNota.size() - 1; 0 <= i; i--)
+    {
+        removeItem(ladrillosNota.at(i));
+    }
+    ladrillosNota.clear();
+    for (int i = 0; i < 18; i++)
+    {
+        ladrillosNota.append(new LadrilloNota(posLadrillonNota[i][2]));
+        ladrillosNota.last()->setPos(posLadrillonNota[i][0],posLadrillonNota[i][1]);
+        addItem(ladrillosNota.last());
+    }
+
+    //Agregamos monedas
+    int posMonedas[80][2] = {{200,400},{250,350},{450,50},{500,50},{550,50},{600,50},{1100,50},{1150,50}
+                             ,{1300,200},{1100,350},{1150,350},{1300,350},{1350,350},{1500,200}
+                             ,{1550,200},{1600,200},{1000,500},{1050,500},{1100,500},{1150,500},{1200,500}
+                             ,{1250,500},{1300,500},{1350,500},{1400,500},{2300,150},{2350,150},{2400,150}
+                             ,{2700,150},{2750,150},{2800,150},{3100,150},{3400,150},{3550,150},{3700,250}
+                             ,{3700,300},{3750,200},{3750,350},{3800,150},{3800,350},{3850,100},{3850,350}
+                             ,{3850,150},{3850,200},{3850,250},{3850,300},{3850,400},{3900,450},{3950,450}
+                             ,{4000,450},{4050,450},{3900,100},{3900,150},{3900,200},{3900,50},{3950,200}
+                             ,{3950,50},{4000,200},{4000,50},{4050,100},{4050,150},{4050,200},{4050,50}
+                             ,{3900,300},{4050,300},{4100,100},{4100,150},{4100,200},{4100,250},{4100,300}
+                             ,{4100,350},{4100,400},{4150,150},{4150,350},{4200,200},{4200,350},{4250,250}
+                             ,{4250,300},{3950,400},{4000,400}};
+    for (int i = monedas.size() - 1; 0 <= i; i--)
+    {
+        removeItem(monedas.at(i));
+    }
+    monedas.clear();
+    for (int i= 0; i < 80; i++)
+    {
+        monedas.append(new Moneda());
+        monedas.last()->setPos(posMonedas[i][0], posMonedas[i][1]);
+        addItem(monedas.last());
+    }
+
+    //Agregamos tubos
+    int posTubos[20] = {400,500,600,700,800,900,1450,2000,3000,3550,4450,4550,4650,4750,4850,4950,5050,5150,5250
+                       ,6350};
+    for (int i = tubos.size() - 1; 0 <= i; i--)
+    {
+        removeItem(tubos.at(i));
+    }
+    tubos.clear();
+    for (int i = 0; i < 20; i++)
+    {
+        tubos.append(new Tubo());
+        tubos.last()->setPos(posTubos[i], nivelTierra - tubos.last()->boundingRect().height());
+        addItem(tubos.last());
+    }
+
+    //Agregamos flor carnobora
+    int posFloresCar[17] = {375,475,575,675,775,875,1425,2975,4425,4525,4625,4725,4825,4925,5025,5125,5225};
+    for (int i = floresCar.size() - 1; 0 <= i; i--)
+    {
+        removeItem(floresCar.at(i));
+    }
+    floresCar.clear();
+    for (int i = 0; i < 17; i++)
+    {
+        floresCar.append(new Flor());
+        floresCar.last()->setPos(posFloresCar[i], tubos.at(1)->pos().y() - floresCar.last()->boundingRect().height());
+        addItem(floresCar.last());
+    }
+
+    //Agregamos enemigo Goomba
+    int posGombas[47] = {1050,1100,1150,1200,1300,1350,1400,1475,1525,1625,1675,1725
+                        ,1775,1875,1925,1975,2125,2175,2275,2325,2425
+                         ,2525,2575,2675,2775,3025,3075,3175,3275,3325
+                         ,3375,3525,5300,5350,5450,5500,5600,5650,5700,5750
+                        ,5800,5900,5950,6000,6100,6150,6250};
+    for (int i = gombas.size() - 1 ; 0 <= i; i--)
+    {
+        removeItem(gombas.at(i));
+    }
+    gombas.clear();
+    for (int i = 0; i < 47; i++)
+    {
+        gombas.append(new Goomba());
+        gombas.last()->setPos(posGombas[i], nivelTierra - gombas.last()->boundingRect().height());
+        addItem(gombas.last());
+    }
 }
 
 //cambiar posicion actual del personaje
