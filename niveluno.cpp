@@ -21,6 +21,11 @@ NivelUno::NivelUno(QObject *padre):
   , hongo(nullptr)
   , florFuego(nullptr)
 {
+    //inicilizamos el mando
+    mando = new AdministradorArduino();
+    mandoImagen = new QGraphicsPixmapItem(QPixmap(":/Imagenes/control.png"));
+    mandoImagen->setPos(1280- mandoImagen->boundingRect().width(), 10);
+
     sonidos = new AdministradorSonidos();
 
     //inicializamos timer
@@ -1027,6 +1032,17 @@ void NivelUno::correrEscena()
     {
         gombas.at(i)->setX(gombas.at(i)->pos().x() + gombas.at(i)->getDireccion() * (-7));
     }
+
+    //verifica si el mando esta activo
+    if(mando->getEstado() && !timerMando->isActive())
+    {
+        timerMando->start(200);
+        mandoImagen->show();
+    }
+    else
+    {
+        mandoImagen->hide();
+    }
 }
 
 void NivelUno::aplicarParalelismo(qreal propocion, QGraphicsItem *item)
@@ -1499,13 +1515,6 @@ void NivelUno::keyPressEvent(QKeyEvent *event)
             p->setVel(p->getVelX(), 250, p->getPosX(), p->getPosY());
             sonidos->reproducirSalto();
             salto = false;
-        }
-        break;
-    case Qt::Key_M:
-        mando = new AdministradorArduino();
-        if(mando->getEstado())
-        {
-            timerMando->start(200);
         }
         break;
     }

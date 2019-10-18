@@ -162,6 +162,70 @@ bool Personaje::estarTocandoPlataforma(QGraphicsItem *item)
     return rect.intersects(otherRect);
 }
 
+void Personaje::cambiarPersonaje()
+{
+    if(jugador == mario)
+    {
+        if(tipo == 1)
+        {
+            spriteCaminando = QPixmap(":Imagenes/mario.png");
+            spriteQuieto = QPixmap(":Imagenes/mariostop.png");
+            spriteSaltando = QPixmap(":Imagenes/mario_jump.png");
+            spriteAtacando = QPixmap(":Imagenes/mariostop.png");
+            ancho = 45;
+            alto = 73;
+        }
+        else if(tipo == 2)
+        {
+            spriteCaminando = QPixmap(":/Imagenes/mario_small.png");
+            spriteQuieto = QPixmap(":/Imagenes/smallMarioStop.png");
+            spriteSaltando = QPixmap(":/Imagenes/smallMarioStop.png");
+            spriteAtacando = QPixmap(":/Imagenes/smallMarioStop.png");
+            ancho = 45;
+            alto = 45;
+        }
+        else if(tipo == 3)
+        {
+            spriteCaminando = QPixmap(":/Imagenes/firemario.png");
+            spriteQuieto = QPixmap(":/Imagenes/firemariostop.png");
+            spriteSaltando = QPixmap(":/Imagenes/firemariostop.png");
+            spriteAtacando = QPixmap(":/Imagenes/firemariostop.png");
+            ancho = 45;
+            alto = 73;
+        }
+    }
+    else if(jugador == luigi)
+    {
+        if(tipo == 1)
+        {
+            spriteCaminando = QPixmap(":Imagenes/mario.png");
+            spriteQuieto = QPixmap(":Imagenes/mariostop.png");
+            spriteSaltando = QPixmap(":Imagenes/mario_jump.png");
+            spriteAtacando = QPixmap(":Imagenes/mariostop.png");
+            ancho = 45;
+            alto = 73;
+        }
+        else if(tipo == 2)
+        {
+            spriteCaminando = QPixmap(":/Imagenes/mario_small.png");
+            spriteQuieto = QPixmap(":/Imagenes/smallMarioStop.png");
+            spriteSaltando = QPixmap(":/Imagenes/smallMarioStop.png");
+            spriteAtacando = QPixmap(":/Imagenes/smallMarioStop.png");
+            ancho = 45;
+            alto = 45;
+        }
+        else if(tipo == 3)
+        {
+            spriteCaminando = QPixmap(":/Imagenes/firemario.png");
+            spriteQuieto = QPixmap(":/Imagenes/firemariostop.png");
+            spriteSaltando = QPixmap(":/Imagenes/firemariostop.png");
+            spriteAtacando = QPixmap(":/Imagenes/firemariostop.png");
+            ancho = 45;
+            alto = 73;
+        }
+    }
+}
+
 void Personaje::actualizar(int lim)
 {
     personaje->actualizar();

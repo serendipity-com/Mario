@@ -32,6 +32,8 @@ public:
     bool estarTocandoPies(QGraphicsItem *item);
     bool estarTocandoPlataforma(QGraphicsItem *item);
 
+    void cambiarPersonaje();
+
     void actualizar(int lim);
     PersonajeFisica *getFisica();
 
@@ -43,11 +45,17 @@ private:
         quieto,
         atacando,
     };
+    enum Jugador
+    {
+        mario = 1,
+        luigi = 2,
+    };
 
     int alto;
     int ancho;
 
     Estado estado;
+    Jugador jugador;
 
     QPixmap sprite;
     QPixmap spriteCaminando;

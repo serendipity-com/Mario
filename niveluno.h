@@ -121,6 +121,7 @@ private:
 
     AdministradorSonidos *sonidos;
     AdministradorArduino *mando;
+    QGraphicsItem *mandoImagen;
 
     //complementos de la escena
     QList <Moneda *> monedas;
