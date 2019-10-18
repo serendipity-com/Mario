@@ -12,6 +12,8 @@ MenuMultijugador::~MenuMultijugador()
 {
     delete escena;
     delete view;
+
+    delete nivelUno;
 }
 
 void MenuMultijugador::inicializarEscena2()
@@ -26,6 +28,13 @@ void MenuMultijugador::inicializarEscena2()
     view->setFixedSize(1280,720);
 
     view->setScene(escena);
+
+    nivelUno = new NivelUno;
+    view->setScene(nivelUno);
+
+    connect(this->nivelUno, SIGNAL(repetirNivel()), this, SLOT(repetirNivel()));
+    connect(this->nivelUno, SIGNAL(finalizarNivelUno()), this, SLOT(finalizarNivelUno()));
+    connect(this->nivelUno, SIGNAL(finalizarNivelDos()), this, SLOT(finalizarNivelDos()));
 }
 
 void MenuMultijugador::correrJuego2()
@@ -64,6 +73,7 @@ void MenuMultijugador::correrJuego2()
     {
         //Si el número de vidas de ambos es menor a uno, GAME OVER
         view->close();
+
     }
 }
 
@@ -73,41 +83,50 @@ void MenuMultijugador::cambiarTurnoJugador() //Cuando el otro muere
     {
         vidasJugador1 -= 1;
         turno = player2;
+        if(nivelJugador2 == 2 && nivelJugador1 == 1)
+        {
+            nivelUno->iniciarEscenaUno();
+        }
+        else if(nivelJugador2 == 1 && nivelJugador1 == 2)
+        {
+            nivelUno->iniciarEscenaDos();
+        }
     }
     else if(turno == player2)
     {
         vidasJugador2 -= 1;
         turno = player1;
+        if(nivelJugador1 == 2 && nivelJugador2 == 1)
+        {
+            nivelUno->iniciarEscenaUno();
+        }
+        else if(nivelJugador1 == 1 && nivelJugador2 == 2)
+        {
+            nivelUno->iniciarEscenaDos();
+        }
     }
-    escena->clear();
     correrJuego2();
 }
 
 void MenuMultijugador::comenzarNivelUno()
 {
-    nivelUno = new NivelUno();
-    view->setScene(nivelUno);
+    nivelUno->reiniciarEscenaUno();
     view->show();
-    connect(this->nivelUno, SIGNAL(repetirNivel()), this, SLOT(cambiarTurnoJugador())); //conecta señal de nivel uno con slot de esta clase que llevan igual nombre
-    connect(this->nivelUno, SIGNAL(finalizarNivelUno()), this,SLOT(finalizarNivelUno()));
 }
 
 void MenuMultijugador::comenzarNivelDos()
 {
     if(turno == player1)
     {
-        nivelDos = new NivelDos(puntajeJugador1);
+        nivelUno->reiniciarEscenaDos(puntajeJugador1);
         nivelJugador1 = 2;
     }
     else if(turno == player2)
     {
-       nivelDos = new NivelDos(puntajeJugador2);
+       nivelUno->reiniciarEscenaDos(puntajeJugador2);
        nivelJugador2 = 2;
     }
-    view->setScene(nivelDos);
     view->show();
-    connect(this->nivelDos, SIGNAL(finalizarNivelDos()), this,SLOT(finalizarNivelDos())); //conecta señal de clase nivelDos con slot de esta clase que tiene el mismo nombre
-    connect(this->nivelDos, SIGNAL(repetirNivel()), this,SLOT(cambiarTurnoJugador()));
 }
 
 void MenuMultijugador::finalizarNivelUno()
@@ -120,8 +139,6 @@ void MenuMultijugador::finalizarNivelUno()
     {
         puntajeJugador2 = nivelUno->getPuntaje();
     }
-    escena->clear();
-    delete nivelUno;
     comenzarNivelDos();
 }
 
@@ -129,13 +146,11 @@ void MenuMultijugador::finalizarNivelDos()
 {
     if(turno == player1)
     {
-        puntajeJugador1 = nivelDos->getPuntaje();
+        puntajeJugador1 = nivelUno->getPuntaje();
     }
     else if(turno == player2)
     {
-        puntajeJugador2 = nivelDos->getPuntaje();
+        puntajeJugador2 = nivelUno->getPuntaje();
     }
-    escena->clear();
-    delete nivelDos;
     //mostrar widget con puntaje y vidas CONGRATULATIONS!
 }

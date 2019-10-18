@@ -50,8 +50,6 @@ private:
     int vidasJugador2;
 
     NivelUno *nivelUno;
-    NivelDos *nivelDos;
-
 };
 
 #endif // MENUMULTIJUGADOR_H

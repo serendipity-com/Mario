@@ -79,5 +79,11 @@
         <file>Imagenes/nuevaPartida.png</file>
         <file>Imagenes/score.png</file>
         <file>Imagenes/unJugador.png</file>
+        <file>Imagenes/fireLuigi.png</file>
+        <file>Imagenes/fireLuigiStop.png</file>
+        <file>Imagenes/luigi.png</file>
+        <file>Imagenes/luigi_small.png</file>
+        <file>Imagenes/luigiStop.png</file>
+        <file>Imagenes/smallLuigiStop.png</file>
     </qresource>
 </RCC>

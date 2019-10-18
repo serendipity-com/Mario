@@ -2,11 +2,12 @@
 
 //En el constructor, establecemos direccion  a 0, lo que significa que Jugador no se mueve en absoluto.
 //Si direccion es 1, Personje se mueve hacia la derecha, y si el valor es -1, se mueve hacia la izquierda.
-Personaje::Personaje(int tipo, QGraphicsItem *padre) : QGraphicsItem(padre)
+Personaje::Personaje(int _tipo, QGraphicsItem *padre) : QGraphicsItem(padre)
   , estado(quieto)
   , direccion(0)
 {
     setFlag(ItemClipsToShape);
+    tipo = _tipo;
     if(tipo == 1)
     {
         spriteCaminando = QPixmap(":Imagenes/mario.png");
@@ -198,28 +199,28 @@ void Personaje::cambiarPersonaje()
     {
         if(tipo == 1)
         {
-            spriteCaminando = QPixmap(":Imagenes/mario.png");
-            spriteQuieto = QPixmap(":Imagenes/mariostop.png");
-            spriteSaltando = QPixmap(":Imagenes/mario_jump.png");
-            spriteAtacando = QPixmap(":Imagenes/mariostop.png");
+            spriteCaminando = QPixmap(":/Imagenes/luigi.png");
+            spriteQuieto = QPixmap(":/Imagenes/luigiStop.png");
+            spriteSaltando = QPixmap(":/Imagenes/luigiStop.png");
+            spriteAtacando = QPixmap(":/Imagenes/luigiStop.png");
             ancho = 45;
             alto = 73;
         }
         else if(tipo == 2)
         {
-            spriteCaminando = QPixmap(":/Imagenes/mario_small.png");
-            spriteQuieto = QPixmap(":/Imagenes/smallMarioStop.png");
-            spriteSaltando = QPixmap(":/Imagenes/smallMarioStop.png");
-            spriteAtacando = QPixmap(":/Imagenes/smallMarioStop.png");
+            spriteCaminando = QPixmap(":/Imagenes/luigi_small.png");
+            spriteQuieto = QPixmap(":/Imagenes/smallLuigiStop.png");
+            spriteSaltando = QPixmap(":/Imagenes/smallLuigiStop.png");
+            spriteAtacando = QPixmap(":/Imagenes/smallLuigiStop.png");
             ancho = 45;
             alto = 45;
         }
         else if(tipo == 3)
         {
-            spriteCaminando = QPixmap(":/Imagenes/firemario.png");
-            spriteQuieto = QPixmap(":/Imagenes/firemariostop.png");
-            spriteSaltando = QPixmap(":/Imagenes/firemariostop.png");
-            spriteAtacando = QPixmap(":/Imagenes/firemariostop.png");
+            spriteCaminando = QPixmap(":/Imagenes/fireLuigi.png");
+            spriteQuieto = QPixmap(":/Imagenes/fireLuigiStop.png");
+            spriteSaltando = QPixmap(":/Imagenes/fireLuigiStop.png");
+            spriteAtacando = QPixmap(":/Imagenes/fireLuigiStop.pngs");
             ancho = 45;
             alto = 73;
         }
