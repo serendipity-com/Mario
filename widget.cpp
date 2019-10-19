@@ -31,7 +31,7 @@ void Widget::unJugador()
 
 void Widget::multiJugador()
 {
-    menuMultijugador->correrJuego2();
+    menuMultijugador->correrJuego();
 }
 
 void Widget::mostrarInstrucciones()

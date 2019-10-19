@@ -124,13 +124,13 @@ void MenuJugador::repetirNivel()
 
 void MenuJugador::comenzarNivelUno()
 {
-    nivelUno->reiniciarEscenaUno();
+    nivelUno->reiniciarEscenaUno(0);
     view->show();
 }
 
 void MenuJugador::comenzarNivelDos()
 {
-    nivelUno->reiniciarEscenaDos(informacion[jugadorActual][1]);
+    nivelUno->reiniciarEscenaDos(informacion[jugadorActual][1], 0);
     view->show();
 }
 

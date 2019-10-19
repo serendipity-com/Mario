@@ -5,7 +5,7 @@ MenuMultijugador::MenuMultijugador(QWidget *parent) :
   , turno(player1) , nivelJugador1(1), nivelJugador2(1), puntajeJugador1(0), puntajeJugador2(0)
   , vidasJugador1(5), vidasJugador2(5)
 {
-    inicializarEscena2();
+    inicializarEscena();
 }
 
 MenuMultijugador::~MenuMultijugador()
@@ -16,7 +16,7 @@ MenuMultijugador::~MenuMultijugador()
     delete nivelUno;
 }
 
-void MenuMultijugador::inicializarEscena2()
+void MenuMultijugador::inicializarEscena()
 {
     escena = new QGraphicsScene();
 
@@ -31,13 +31,14 @@ void MenuMultijugador::inicializarEscena2()
 
     nivelUno = new NivelUno;
     view->setScene(nivelUno);
+    nivelUno->iniciarEscenaUno();
 
-    connect(this->nivelUno, SIGNAL(repetirNivel()), this, SLOT(repetirNivel()));
+    connect(this->nivelUno, SIGNAL(repetirNivel()), this, SLOT(cambiarTurnoJugador()));
     connect(this->nivelUno, SIGNAL(finalizarNivelUno()), this, SLOT(finalizarNivelUno()));
     connect(this->nivelUno, SIGNAL(finalizarNivelDos()), this, SLOT(finalizarNivelDos()));
 }
 
-void MenuMultijugador::correrJuego2()
+void MenuMultijugador::correrJuego()
 {
     if(turno == player1)
     {
@@ -105,12 +106,19 @@ void MenuMultijugador::cambiarTurnoJugador() //Cuando el otro muere
             nivelUno->iniciarEscenaDos();
         }
     }
-    correrJuego2();
+    correrJuego();
 }
 
 void MenuMultijugador::comenzarNivelUno()
 {
-    nivelUno->reiniciarEscenaUno();
+    if(turno == player1)
+    {
+        nivelUno->reiniciarEscenaUno(1);
+    }
+    else if(turno == player2)
+    {
+        nivelUno->reiniciarEscenaUno(2);
+    }
     view->show();
 }
 
@@ -118,12 +126,12 @@ void MenuMultijugador::comenzarNivelDos()
 {
     if(turno == player1)
     {
-        nivelUno->reiniciarEscenaDos(puntajeJugador1);
+        nivelUno->reiniciarEscenaDos(puntajeJugador1, 1);
         nivelJugador1 = 2;
     }
     else if(turno == player2)
     {
-       nivelUno->reiniciarEscenaDos(puntajeJugador2);
+       nivelUno->reiniciarEscenaDos(puntajeJugador2, 2);
        nivelJugador2 = 2;
     }
     view->show();
@@ -139,6 +147,7 @@ void MenuMultijugador::finalizarNivelUno()
     {
         puntajeJugador2 = nivelUno->getPuntaje();
     }
+    nivelUno->iniciarEscenaDos();
     comenzarNivelDos();
 }
 

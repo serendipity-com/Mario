@@ -17,10 +17,10 @@ public:
     explicit MenuMultijugador(QWidget *parent = nullptr);
     ~MenuMultijugador();
 public:
-    void correrJuego2(); //porque es llamado desde multiJugador() de Widget.cpp
+    void correrJuego(); //porque es llamado desde multiJugador() de Widget.cpp
 
 private:
-    void inicializarEscena2();
+    void inicializarEscena();
 
 private slots:
     void cambiarTurnoJugador();

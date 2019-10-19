@@ -29,6 +29,21 @@ AdministradorArduino::~AdministradorArduino()
 
 bool AdministradorArduino::getEstado()
 {
+    foreach (const QSerialPortInfo &serial_info, QSerialPortInfo::availablePorts())
+    {
+        //Lee toda la información del serial
+//        qDebug()<<"Puerto: "<<serial_info.portName();
+        portName = serial_info.portName(); //Coloca el puerto serial disponible
+//        qDebug()<<"vendorId: "<<serial_info.vendorIdentifier();
+        vendorId = serial_info.vendorIdentifier(); //Coloca el id del dispositivo conectado en ese momento
+//        qDebug()<<"ProductId: "<<serial_info.productIdentifier();
+        productId = serial_info.productIdentifier();
+        isAvailable = true;
+    }
+
+    if(isAvailable){
+        incializarArduino(); //Este método establece todos los parámetros necesarios para iniciar la comunicación
+    }
     return isAvailable;
 }
 

@@ -36,8 +36,8 @@ public:
     ~NivelUno();
 
     int getPuntaje();
-    void reiniciarEscenaUno();
-    void reiniciarEscenaDos(int _puntaje);
+    void reiniciarEscenaUno(int in);
+    void reiniciarEscenaDos(int _puntaje, int in);
     void iniciarEscenaUno();
     void iniciarEscenaDos();
 

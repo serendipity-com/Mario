@@ -163,8 +163,15 @@ bool Personaje::estarTocandoPlataforma(QGraphicsItem *item)
     return rect.intersects(otherRect);
 }
 
-void Personaje::cambiarPersonaje()
+void Personaje::cambiarPersonaje(int in)
 {
+    if (in == 1)
+    {
+        jugador = mario;
+    }
+    else if (in == 2){
+        jugador = luigi;
+    }
     if(jugador == mario)
     {
         if(tipo == 1)

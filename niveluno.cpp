@@ -1,7 +1,7 @@
 #include "niveluno.h"
 
 NivelUno::NivelUno(QObject *padre):
-    QGraphicsScene(0,0,6600,720,padre)
+    QGraphicsScene(0,0,8000,720,padre)
   , anchoEscena(6600)
   , personaje(nullptr)
   , personajeSmall(nullptr)
@@ -24,7 +24,8 @@ NivelUno::NivelUno(QObject *padre):
     //inicilizamos el mando
     mando = new AdministradorArduino();
     mandoImagen = new QGraphicsPixmapItem(QPixmap(":/Imagenes/control.png"));
-    mandoImagen->setPos(1280- mandoImagen->boundingRect().width(), 10);
+    addItem(mandoImagen);
+    mandoImagen->setPos(1200- mandoImagen->boundingRect().width(), 10);
 
     sonidos = new AdministradorSonidos();
 
@@ -136,9 +137,22 @@ int NivelUno::getPuntaje()
     return puntaje->getPuntaje();
 }
 
-void NivelUno::reiniciarEscenaUno()
+void NivelUno::reiniciarEscenaUno(int in)
 {
     nivel = uno;
+
+    if(in == 1)
+    {
+        personaje->cambiarPersonaje(in);
+        personajeFire->cambiarPersonaje(in);
+        personajeSmall->cambiarPersonaje(in);
+    }
+    else if (in == 2)
+    {
+        personaje->cambiarPersonaje(in);
+        personajeFire->cambiarPersonaje(in);
+        personajeSmall->cambiarPersonaje(in);
+    }
 
     puntaje->setPuntaje(0);
 
@@ -234,9 +248,22 @@ void NivelUno::reiniciarEscenaUno()
     desplazamientoMundo = 0;
 }
 
-void NivelUno::reiniciarEscenaDos(int _puntaje)
+void NivelUno::reiniciarEscenaDos(int _puntaje, int in)
 {
     nivel = dos;
+
+    if(in == 1)
+    {
+        personaje->cambiarPersonaje(in);
+        personajeFire->cambiarPersonaje(in);
+        personajeSmall->cambiarPersonaje(in);
+    }
+    else if (in == 2)
+    {
+        personaje->cambiarPersonaje(in);
+        personajeFire->cambiarPersonaje(in);
+        personajeSmall->cambiarPersonaje(in);
+    }
 
     //conserva puntaje
     puntaje->setPuntaje(_puntaje);
@@ -1034,14 +1061,17 @@ void NivelUno::correrEscena()
     }
 
     //verifica si el mando esta activo
-    if(mando->getEstado() && !timerMando->isActive())
+    if(mando->getEstado() && timerMando->isActive() != true)
     {
         timerMando->start(200);
         mandoImagen->show();
+        qDebug() << "1";
     }
-    else
+    else if(mando->getEstado() == false)
     {
         mandoImagen->hide();
+        timerMando->stop();
+        qDebug() << "2";
     }
 }
 
@@ -1433,6 +1463,9 @@ void NivelUno::moverJugador()
 
         //mover hongo
         hongo->setX(-dx + hongo->pos().x());
+
+        //mover flor
+        florFuego->setX(-dx + hongo->pos().x());
 
         //mover castillo
         castillo->setX(-dx + castillo->pos().x());

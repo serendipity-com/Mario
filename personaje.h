@@ -32,7 +32,7 @@ public:
     bool estarTocandoPies(QGraphicsItem *item);
     bool estarTocandoPlataforma(QGraphicsItem *item);
 
-    void cambiarPersonaje();
+    void cambiarPersonaje(int in);
 
     void actualizar(int lim);
     PersonajeFisica *getFisica();
